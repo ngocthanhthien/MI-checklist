@@ -179,6 +179,18 @@ select.big-inp{cursor:pointer}
 .it-extra input{flex:1 1 220px;min-height:36px;padding:6px 10px}
 .it-extra input.reason{border-color:var(--fail)}
 .note-btn{border:0;background:none;color:var(--muted);font-size:13px;padding:2px 0;text-decoration:underline dotted}
+/* thẻ thiết bị đã xong → thu gọn */
+.eq.collapsed .eq-head{border-bottom:0;cursor:pointer;width:100%;text-align:left;background:var(--surface);border:0;font:inherit;color:inherit}
+.eq.collapsed .eq-head:hover{background:var(--surface2)}
+.eq.collapsed .eq-name{color:var(--muted)}
+.eq-sum{font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center}
+.eq-toggle{border:0;background:none;color:var(--muted);font-size:13px;font-weight:600;padding:4px 6px;min-height:32px}
+.it.flash{animation:itflash 1.6s ease-out}
+@keyframes itflash{0%,30%{box-shadow:inset 4px 0 0 var(--focus),0 0 0 3px color-mix(in srgb,var(--focus) 35%,transparent)}100%{box-shadow:none}}
+@media (prefers-reduced-motion:reduce){.it.flash{animation:none;box-shadow:inset 4px 0 0 var(--focus)}}
+.chips{display:flex;gap:6px;flex-wrap:wrap;flex-basis:100%}
+.rchip{border:1px dashed color-mix(in srgb,var(--fail) 45%,var(--line));background:var(--surface);color:var(--fail);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:600;min-height:30px}
+.rchip:hover{background:var(--fail-bg)}
 .locked .seg,.locked .eq-actions{pointer-events:none}
 .locked .eq-actions{opacity:.4}
 
@@ -244,6 +256,8 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
 /* ===================== [RESPONSIVE] ===================== */
 @media (min-width:1024px){.dashgrid{grid-template-columns:repeat(6,1fr)}}
 @media (max-width:900px){
+  header.top{position:static}
+  nav.tabs{top:0}
   .it{grid-template-columns:28px minmax(0,1fr)}
   .it-ctrl{grid-column:2/-1;flex-wrap:wrap}
   .seg{flex:1}
@@ -253,7 +267,7 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
   header.top{padding:8px 12px;gap:8px}
   .app-title{font-size:15px}
   .app-title small{display:none}
-  nav.tabs{padding:4px 8px 0;top:49px}
+  nav.tabs{padding:4px 8px 0}
   .tab{padding:8px 10px 10px;font-size:14px}
   main{padding:12px 12px 140px}
   .card{padding:12px}
@@ -271,8 +285,15 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
   .eq-head{padding:8px 12px}
   .it{padding:10px 12px}
   .bar{padding:8px 12px}
-  .bar .stat{gap:4px 10px;font-size:13px}
+  .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -12px;padding:0 12px}
+  .chips::-webkit-scrollbar{display:none}
+  .rchip{flex:none}
+  .bar .stat{gap:4px 10px;font-size:13px;width:100%;flex-wrap:nowrap;overflow:hidden}
   .bar .stat b{font-size:14px}
+  .bar .spacer{display:none}
+  .bar-in{gap:8px}
+  .bar .btn{min-height:46px;padding:6px 8px}
+  .bar #bView{flex:0 0 52px}
   .bar .btn{flex:1;justify-content:center}
   .hide-sm{display:none}
 }
@@ -458,6 +479,7 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
         <li>Với từng hạng mục, chọn <b>Run / Not run</b> (thiết bị đang chạy hay dừng) rồi <b>Đạt / Không đạt</b>. Bấm lại nút đang chọn để bỏ chọn.</li>
         <li>Chọn <b>Không đạt</b> thì phải ghi <b>Lý do</b>. Bấm “+ Ghi chú” để thêm Remark cho bất kỳ mục nào.</li>
         <li>Nút <b>✓ Run · Đạt</b> trên mỗi thiết bị đánh nhanh cả nhóm; <b>⏸ Not run</b> đánh dấu thiết bị đang dừng. Nút <b>Còn trống → Run · Đạt</b> điền các mục chưa chọn.</li>
+        <li>Thiết bị đã xong và Đạt hết sẽ <b>tự thu gọn</b> (bấm để mở lại; tắt bằng ô “Thu gọn thiết bị đã xong”). Nút <b>↓ Mục tiếp</b> ở thanh đáy nhảy tới mục còn sót. Khi Không đạt có sẵn các <b>chip lý do</b> để chạm nhanh.</li>
         <li>Phiếu <b>tự lưu</b> từng thao tác (trạng thái <i>Nháp</i>). Kiểm xong bấm <b>Hoàn tất (Checked by)</b> — app báo các mục còn thiếu.</li>
         <li>Trưởng ca / giám sát mở tab <b>Lịch sử phiếu</b> → <b>Xác nhận</b> để ký <b>Verified by</b>. Phiếu đã xác nhận bị khoá; muốn sửa phải <b>Huỷ xác nhận</b>.</li>
         <li>Tab <b>Không đạt</b> gom mọi mục lỗi của các phiếu; đánh dấu <b>Đã khắc phục</b> khi xử lý xong.</li>
@@ -477,11 +499,12 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
       <span>Đã kiểm <b id="bDone">0</b>/<span id="bTotal">0</span></span>
       <span style="color:var(--ok)">Đạt <b id="bOk">0</b></span>
       <span style="color:var(--fail)">Không đạt <b id="bNg">0</b></span>
-      <span class="muted">Not run <b id="bNr">0</b></span>
+      <span class="muted hide-sm">Not run <b id="bNr">0</b></span>
     </div>
     <div class="spacer"></div>
-    <button class="btn" onclick="viewRecord(curRec()&&curRec().id)" id="bView">👁 Xem phiếu</button>
-    <button class="btn primary" onclick="completeRecord()" id="bDoneBtn">✔ Hoàn tất (Checked by)</button>
+    <button class="btn" onclick="goNextOpen()" id="bNext" title="Đến mục chưa xong tiếp theo">↓ Mục tiếp<span class="hide-sm"> chưa xong</span></button>
+    <button class="btn" onclick="viewRecord(curRec()&&curRec().id)" id="bView" title="Xem phiếu">👁<span class="hide-sm"> Xem phiếu</span></button>
+    <button class="btn primary" onclick="completeRecord()" id="bDoneBtn">✔ Hoàn tất<span class="hide-sm"> (Checked by)</span></button>
   </div>
 </div>
 
@@ -568,7 +591,19 @@ function switchTab(t){curTab=t;document.querySelectorAll('.tab').forEach(b=>b.cl
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(!b)return;if(curTab==='editor'&&ED.dirty&&b.dataset.tab!=='editor'&&!window.confirm('Checklist đang sửa chưa lưu. Rời tab và bỏ thay đổi?'))return;if(b.dataset.tab!=='editor')ED.dirty=false;switchTab(b.dataset.tab);});
 
 /* ===================== [RECORDS / LOGIC] ===================== */
-const UI={shift:'S1',date:todayISO(),area:'',onlyOpen:false,noteOpen:{}};
+const UI={shift:'S1',date:todayISO(),area:'',onlyOpen:false,noteOpen:{},expanded:{},collapse:true};
+try{UI.collapse=localStorage.getItem('ild_mi_collapse')!=='0';}catch(e){}
+const REASONS=['Leak','Tiếng ồn lạ','Rung bất thường','Thiếu dầu','Dầu đổi màu','Nhiệt độ cao','Áp suất thấp','Hư dây belt'];
+const buzz=()=>{try{navigator.vibrate&&matchMedia('(pointer:coarse)').matches&&navigator.vibrate(8);}catch(e){}};
+function eqToggle(gi){UI.expanded[gi]=!UI.expanded[gi];renderCheck();}
+function addReason(i,t){const el=$('it-'+i)&&$('it-'+i).querySelector('.reason');if(!el)return;const v=el.value.trim();if(v.split(/,\s*/).includes(t))return;el.value=v?v+', '+t:t;setTxt(i,'reason',el.value);el.focus();}
+function goNextOpen(){const r=curRec(),items=curItems(),res=r?r.results:{},req=STATE.settings.reqOkNotRun;
+  const open=items.map((it,i)=>itemState(it,res,req)==='open'?i:-1).filter(i=>i>=0);
+  if(!open.length){toast('✔ Đã kiểm hết — bấm Hoàn tất');return;}
+  if(open.some(i=>!$('it-'+i))){UI.area='';UI.onlyOpen=false;renderCheck();}
+  const topNow=window.scrollY+140,next=open.find(i=>$('it-'+i)&&$('it-'+i).getBoundingClientRect().top+window.scrollY>topNow)??open[0],el=$('it-'+next);
+  if(!el)return;el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'center'});
+  el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash');}
 /* Phiên làm việc = người kiểm + ca. Lưu ở sessionStorage: tải lại trang vẫn giữ, mở app lần mới thì hỏi lại. */
 let SESSION=null,STARTING=false;
 const PICK={code:'',shift:''};
@@ -620,7 +655,7 @@ function showStart(){STARTING=true;PICK.code=SESSION?SESSION.code:'';PICK.shift=
 function cancelStart(){if(!SESSION)return;STARTING=false;UI.shift=SESSION.shift;UI.date=SESSION.date||UI.date;renderCheck();}
 function startSession(){const emp=empByCode(PICK.code);if(!emp||!PICK.shift){toast('Chọn ca và người kiểm tra trước');return;}
   SESSION={code:emp.code,name:emp.name,func:emp.func,dept:emp.dept,shift:PICK.shift,date:UI.date};
-  UI.shift=PICK.shift;UI.area='';UI.onlyOpen=false;STARTING=false;saveUI();rememberPerson(emp.name);
+  UI.shift=PICK.shift;UI.area='';UI.onlyOpen=false;UI.expanded={};STARTING=false;saveUI();rememberPerson(emp.name);
   logAudit(`Bắt đầu ${shiftName(UI.shift)} ${fmtDate(UI.date)}`);save();renderCheck();window.scrollTo(0,0);}
 function renderSession(){const r=curRec(),t=STATE.templates[UI.shift];
   $('sesAva').textContent=initials(SESSION.name);$('sesName').textContent=SESSION.name;
@@ -652,8 +687,9 @@ function renderCheck(){
   const r=curRec(),items=curItems(),res=r?r.results:{},lk=locked(r);
   // filters
   $('ckFilters').innerHTML=(UI.area?`<button class="chip active" onclick="UI.area='';renderCheck()">✕ Đang lọc: ${esc(UI.area)}</button>`:'<span class="small muted">Bấm vào khu vực ở trên để lọc.</span>')+
-    `<span class="spacer"></span><label class="small" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="ckOnlyOpen"${UI.onlyOpen?' checked':''}> Chỉ hiện mục chưa xong / không đạt</label>`;
+    `<span class="spacer"></span><label class="small" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="ckOnlyOpen"${UI.onlyOpen?' checked':''}> Chỉ hiện mục chưa xong / không đạt</label><label class="small" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="ckCollapse"${UI.collapse?' checked':''}> Thu gọn thiết bị đã xong</label>`;
   $('ckOnlyOpen').onchange=e=>{UI.onlyOpen=e.target.checked;renderCheck();};
+  $('ckCollapse').onchange=e=>{UI.collapse=e.target.checked;UI.expanded={};try{localStorage.setItem('ild_mi_collapse',UI.collapse?'1':'0');}catch(_){}renderCheck();};
   // lock banner
   if(lk){const vb=r.status==='verified'?` · Xác nhận: <b>${esc(r.verifiedBy)}</b> ${fmtDT(r.verifiedAt)}`:'';
     $('ckLock').innerHTML=`<div class="lock-banner">🔒 Phiếu ${STATUS[r.status].toLowerCase()} — Checked by <b>${esc(r.checker)}</b> ${fmtDT(r.doneAt)}${vb}<span class="spacer"></span>${r.status==='done'?'<button class="btn sm" onclick="reopenRecord()">✎ Mở lại để sửa</button>':''}</div>`;}
@@ -669,8 +705,11 @@ function renderCheck(){
     if(g.area!==lastArea){html+=`<div class="area-title">${esc(g.area||'—')}</div>`;lastArea=g.area;}
     const e=splitEquip(g.equip),gi=g.idx[0];
     const nDone=g.idx.filter(i=>itemState(items[i],res,req)==='done').length;
+    const nNg=g.idx.filter(i=>(res[items[i].id]||{}).ok==='NG').length,nNr=g.idx.filter(i=>(res[items[i].id]||{}).run==='NOTRUN').length;
+    if(UI.collapse&&!UI.onlyOpen&&nDone===g.idx.length&&!nNg&&!UI.expanded[gi]){
+      html+=`<div class="eq collapsed"><button type="button" class="eq-head" onclick="eqToggle(${gi})" aria-expanded="false" title="Bấm để mở lại"><span><span class="eq-name">✓ ${esc(e.name)}${e.code?`<code>${esc(e.code)}</code>`:''}</span></span><span class="eq-sum">${nNr?`Not run ${nNr} · `:''}${pctBadge(100)} ▸</span></button></div>`;return;}
     html+=`<div class="eq${lk?' locked':''}"><div class="eq-head"><div><span class="eq-name">${esc(e.name)}${e.code?`<code>${esc(e.code)}</code>`:''}</span><span class="eq-meta">${nDone}/${g.idx.length} ${pctBadge(pctOf(nDone,g.idx.length))}</span></div>
-      <div class="eq-actions"><button class="btn sm" onclick="eqSet(${gi},'RUN','OK')">✓ Run · Đạt</button><button class="btn sm" onclick="eqSet(${gi},'NOTRUN')">⏸ Not run</button></div></div>`;
+      <div class="eq-actions">${UI.expanded[gi]?`<button class="eq-toggle" onclick="eqToggle(${gi})" aria-expanded="true">▴ Thu gọn</button>`:''}<button class="btn sm" onclick="eqSet(${gi},'RUN','OK')">✓ Run · Đạt</button><button class="btn sm" onclick="eqSet(${gi},'NOTRUN')">⏸ Not run</button></div></div>`;
     show.forEach(i=>html+=rowHTML(items[i],i,res,lk));
     html+='</div>';});
   $('ckList').innerHTML=html||`<div class="card muted">Không có mục nào phù hợp bộ lọc.</div>`;
@@ -684,14 +723,14 @@ function rowHTML(it,i,res,lk){
     <div><div class="it-task">${esc(it.task)}</div><div class="it-std"><b>Tiêu chuẩn:</b> ${esc(it.std).replace(/\n/g,'<br>')}${it.method?` · <i>${esc(it.method)}</i>`:''}</div></div>
     <div class="it-ctrl"><div class="seg">${b('run','RUN','v-run','Run')}${b('run','NOTRUN','v-notrun','Not run')}</div>
       <div class="seg">${b('ok','OK','v-ok','Đạt')}${b('ok','NG','v-ng','Không đạt')}</div></div>
-    <div class="it-extra">${x.ok==='NG'?`<input class="reason" placeholder="Lý do không đạt (bắt buộc)" value="${esc(x.reason||'')}" oninput="setTxt(${i},'reason',this.value)" ${lk?'readonly':''}>`:''}
+    <div class="it-extra">${x.ok==='NG'?`<input class="reason" placeholder="Lý do không đạt (bắt buộc)" value="${esc(x.reason||'')}" oninput="setTxt(${i},'reason',this.value)" ${lk?'readonly':''}>${lk?'':`<div class="chips">${REASONS.map(t=>`<button type="button" class="rchip" onclick="addReason(${i},'${t}')">+ ${t}</button>`).join('')}</div>`}`:''}
       ${showNote?`<input placeholder="Ghi chú / Remark" value="${esc(x.note||'')}" oninput="setTxt(${i},'note',this.value)" ${lk?'readonly':''}>`:(lk?'':`<button type="button" class="note-btn" onclick="UI.noteOpen['${it.id}']=1;redrawRow(${i},true)">+ Ghi chú</button>`)}</div>
   </div>`;
 }
 function redrawRow(i,focusNote){const r=curRec(),items=curItems(),el=$('it-'+i);if(!el)return;el.outerHTML=rowHTML(items[i],i,r?r.results:{},locked(r));
   if(focusNote){const ins=$('it-'+i).querySelectorAll('.it-extra input');ins[ins.length-1]&&ins[ins.length-1].focus();}}
 function touch(r){r.updatedAt=new Date().toISOString();if(!r.checker&&SESSION){r.checker=SESSION.name;r.checkerCode=SESSION.code;}save();}
-function setRes(i,k,v){let r=curRec();if(locked(r))return;const isNew=!r;r=ensureRec();const it=r.items[i],x=r.results[it.id]||(r.results[it.id]={});
+function setRes(i,k,v){let r=curRec();if(locked(r))return;buzz();const isNew=!r;r=ensureRec();const it=r.items[i],x=r.results[it.id]||(r.results[it.id]={});
   x[k]=x[k]===v?undefined:v;
   if(k==='ok'&&x.ok&&!x.run)x.run='RUN';
   touch(r);if(isNew){renderCheck();return;}
@@ -711,7 +750,7 @@ function refreshEqMeta(){const r=curRec();if(!r)return;const req=STATE.settings.
   document.querySelectorAll('#ckList .eq').forEach(eq=>{const ids=[...eq.querySelectorAll('.it')].map(e=>+e.id.slice(3));if(!ids.length)return;const g=groups(r.items).find(g=>g.idx.includes(ids[0]));if(!g)return;
     const d=g.idx.filter(i=>itemState(r.items[i],r.results,req)==='done').length;eq.querySelector('.eq-meta').innerHTML=d+'/'+g.idx.length+' '+pctBadge(pctOf(d,g.idx.length));});}
 function updateBar(){const r=curRec(),s=recStats(r);$('bDone').textContent=s.done;$('bTotal').textContent=s.total;$('bOk').textContent=s.ok;$('bNg').textContent=s.ng;$('bNr').textContent=s.nr;
-  const p=pctOf(s.done,s.total),bp=$('bPct');bp.textContent=p+'%';bp.className='pct tier-'+tierOf(p);if(SESSION&&!STARTING)renderDash();$('bDoneBtn').disabled=locked(r);$('bView').disabled=!r;updateNgCount();}
+  const p=pctOf(s.done,s.total),bp=$('bPct');bp.textContent=p+'%';bp.className='pct tier-'+tierOf(p);$('bNext').disabled=locked(r)||s.done===s.total;if(SESSION&&!STARTING)renderDash();$('bDoneBtn').disabled=locked(r);$('bView').disabled=!r;updateNgCount();}
 async function completeRecord(){
   if(!SESSION){showStart();return;}const who=SESSION.name;
   let r=curRec();if(!r){toast('Phiếu chưa có dữ liệu');return;}
