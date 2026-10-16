@@ -94,15 +94,9 @@ textarea{resize:vertical}
 .step-h{display:flex;gap:8px;align-items:center;font-weight:700;margin-bottom:10px;flex-wrap:wrap}
 .step-h .n{width:26px;height:26px;border-radius:50%;background:var(--red);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex:none}
 .step-h .sel{font-weight:600;color:var(--ok);font-size:14px}
-.step-h input{margin-left:auto;min-width:0;flex:0 1 240px}
-.emp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
-.emp{display:flex;gap:10px;align-items:center;border:2px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 10px;text-align:left;min-height:58px;box-shadow:var(--shadow);min-width:0}
-.emp:hover{border-color:var(--input)}
-.emp.active{border-color:var(--primary);background:var(--selected)}
-.emp b{display:block;font-size:15px;line-height:1.2;overflow-wrap:anywhere}
-.emp small{color:var(--muted);font-size:12px}
+.big-inp{width:min(420px,100%);min-height:50px;font-size:16px;font-weight:600;padding:10px 12px;border-radius:10px}
+select.big-inp{cursor:pointer}
 .ava{width:40px;height:40px;border-radius:50%;background:var(--gray-bg);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex:none}
-.emp.active .ava{background:var(--primary);color:var(--primary-text)}
 .start-foot{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
 .btn.lg{min-height:50px;padding:10px 22px;font-size:16px}
 /* session bar */
@@ -268,11 +262,7 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
   .shift-btn b{font-size:16px}
   .shift-btn span{font-size:11px}
   .shift-btn .st{float:none;display:inline-block;margin-top:4px}
-  .emp-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
-  .emp{padding:8px;gap:8px}
-  .emp .ava{width:32px;height:32px;font-size:12px}
-  .emp b{font-size:14px}
-  .step-h input{flex:1 1 100%;margin-left:0}
+  .big-inp{width:100%}
   .sess-acts{width:100%}
   .sess-acts .btn{flex:1;justify-content:center}
   .start-foot .btn{flex:1;justify-content:center}
@@ -310,15 +300,18 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
     <!-- Bước bắt buộc: chọn người kiểm tra & ca trước khi vào biểu mẫu -->
     <div class="card start" id="ckStart">
       <h2>Bắt đầu phiếu kiểm tra</h2>
-      <p class="small muted" style="margin:0">Chọn <b>người kiểm tra</b> và <b>ca</b> trước khi mở biểu mẫu. Tên này được ký ở ô <i>Checked by</i>.</p>
+      <p class="small muted" style="margin:0">Chọn lần lượt <b>Ngày</b> → <b>Ca</b> → <b>Người kiểm tra</b> trước khi mở biểu mẫu. Tên người kiểm tra được ký ở ô <i>Checked by</i>.</p>
       <div class="step">
-        <div class="step-h"><span class="n">1</span>Người kiểm tra <span class="sel" id="stPickedWho"></span><input type="search" id="empQ" placeholder="🔍 Tìm tên hoặc mã NV" autocomplete="off"></div>
-        <div class="emp-grid" id="empGrid"></div>
+        <div class="step-h"><span class="n">1</span>Ngày kiểm tra <span class="sel" id="stPickedDate"></span></div>
+        <input type="date" id="ckDate" class="big-inp" aria-label="Ngày kiểm tra">
       </div>
       <div class="step">
         <div class="step-h"><span class="n">2</span>Ca làm việc <span class="sel" id="stPickedShift"></span></div>
         <div class="shift-pick" id="shiftPick"></div>
-        <label class="fld" style="max-width:200px">Ngày kiểm tra<input type="date" id="ckDate"></label>
+      </div>
+      <div class="step">
+        <div class="step-h"><span class="n">3</span>Người kiểm tra <span class="sel" id="stPickedWho"></span></div>
+        <select id="empSel" class="big-inp" aria-label="Người kiểm tra"></select>
       </div>
       <div class="start-foot">
         <button class="btn primary lg" id="btnStart" onclick="startSession()">Bắt đầu kiểm tra ▶</button>
@@ -460,7 +453,7 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
     <div class="card">
       <h2>Hướng dẫn sử dụng</h2>
       <ol>
-        <li>Mở tab <b>Kiểm tra</b>: bắt buộc <b>chọn người kiểm tra</b> (danh sách nhân viên M&amp;I) và <b>chọn ca</b> (Ca 1 / Ca 2 / Ca 3), rồi bấm <b>Bắt đầu kiểm tra</b>. Mỗi ca có danh sách thiết bị riêng theo biểu mẫu ENG.M&amp;I.F.001. Mỗi lần mở app sẽ hỏi lại; đổi giữa chừng bằng nút <b>⇄ Đổi người / ca</b>.</li>
+        <li>Mở tab <b>Kiểm tra</b>: chọn lần lượt <b>Ngày</b> → <b>Ca</b> (Ca 1 / Ca 2 / Ca 3) → <b>Người kiểm tra</b> (danh sách thả xuống nhân viên M&amp;I), rồi bấm <b>Bắt đầu kiểm tra</b>. Mỗi ca có danh sách thiết bị riêng theo biểu mẫu ENG.M&amp;I.F.001. Mỗi lần mở app sẽ hỏi lại; đổi giữa chừng bằng nút <b>⇄ Đổi người / ca</b>.</li>
         <li>Ô <b>tiến độ</b> ở đầu phiếu cho biết % hoàn thành, số Đạt / Không đạt / Not run, và % theo từng khu vực (bấm vào khu vực để lọc). Màu %: xám 0% · đỏ &lt;30% · cam &lt;60% · xanh dương &lt;100% · xanh lá 100%.</li>
         <li>Với từng hạng mục, chọn <b>Run / Not run</b> (thiết bị đang chạy hay dừng) rồi <b>Đạt / Không đạt</b>. Bấm lại nút đang chọn để bỏ chọn.</li>
         <li>Chọn <b>Không đạt</b> thì phải ghi <b>Lý do</b>. Bấm “+ Ghi chú” để thêm Remark cho bất kỳ mục nào.</li>
@@ -578,7 +571,7 @@ $('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(!b)re
 const UI={shift:'S1',date:todayISO(),area:'',onlyOpen:false,noteOpen:{}};
 /* Phiên làm việc = người kiểm + ca. Lưu ở sessionStorage: tải lại trang vẫn giữ, mở app lần mới thì hỏi lại. */
 let SESSION=null,STARTING=false;
-const PICK={code:'',shift:'',q:''};
+const PICK={code:'',shift:''};
 try{const s=JSON.parse(sessionStorage.getItem('ild_mi_session')||'null');if(s&&s.code&&s.shift){SESSION=s;UI.shift=s.shift;UI.date=s.date||UI.date;}}catch(e){}
 const saveUI=()=>{if(!SESSION)return;SESSION.shift=UI.shift;SESSION.date=UI.date;try{sessionStorage.setItem('ild_mi_session',JSON.stringify(SESSION));}catch(e){}};
 const empByCode=c=>STATE.employees.find(e=>e.code===c);
@@ -608,25 +601,24 @@ function renderShiftPick(){
 }
 $('shiftPick').addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(!b)return;PICK.shift=b.dataset.s;renderStart();});
 $('ckDate').addEventListener('change',e=>{UI.date=e.target.value||todayISO();renderStart();});
-$('empGrid').addEventListener('click',e=>{const b=e.target.closest('[data-c]');if(!b)return;PICK.code=b.dataset.c;renderStart();});
-$('empQ').addEventListener('input',e=>{PICK.q=e.target.value;renderEmpGrid();});
+$('empSel').addEventListener('change',e=>{PICK.code=e.target.value;renderStart();});
 $('ckDash').addEventListener('click',e=>{const b=e.target.closest('[data-area]');if(!b)return;UI.area=UI.area===b.dataset.area?'':b.dataset.area;renderCheck();});
 
-function renderEmpGrid(){const q=fold(PICK.q.trim());
-  const list=STATE.employees.filter(e=>!q||fold(e.name+' '+e.code).includes(q));
-  $('empGrid').innerHTML=list.map(e=>`<button type="button" class="emp${e.code===PICK.code?' active':''}" data-c="${esc(e.code)}" aria-pressed="${e.code===PICK.code}"><span class="ava">${esc(initials(e.name))}</span><span style="min-width:0"><b>${esc(e.name)}</b><small>${esc(e.code)}<span class="hide-sm"> · ${esc(e.func)} · ${esc(e.dept)}</span></small></span></button>`).join('')||
-    `<p class="small muted">${STATE.employees.length?'Không tìm thấy nhân viên phù hợp.':'Chưa có nhân viên — thêm ở tab ⚙️ Cài đặt.'}</p>`;}
+function renderEmpSel(){
+  $('empSel').innerHTML=`<option value="">${STATE.employees.length?'— Chọn người kiểm tra —':'Chưa có nhân viên — thêm ở tab ⚙️ Cài đặt'}</option>`+
+    STATE.employees.map(e=>`<option value="${esc(e.code)}"${e.code===PICK.code?' selected':''}>${esc(e.name)} · ${esc(e.code)}</option>`).join('');}
 function renderStart(){
-  $('ckDate').value=UI.date;renderEmpGrid();renderShiftPick();
+  $('ckDate').value=UI.date;renderEmpSel();renderShiftPick();
+  $('stPickedDate').textContent='✓ '+fmtDate(UI.date);
   const emp=empByCode(PICK.code);
   $('stPickedWho').textContent=emp?'✓ '+emp.name:'';
   $('stPickedShift').textContent=PICK.shift?'✓ '+shiftName(PICK.shift):'';
   $('btnStart').disabled=!(emp&&PICK.shift);
-  $('stHint').textContent=!emp?'Chọn người kiểm tra':!PICK.shift?'Chọn ca làm việc':'';
+  $('stHint').textContent=!PICK.shift?'Chọn ca làm việc':!emp?'Chọn người kiểm tra':'';
   $('btnStartBack').classList.toggle('hidden',!SESSION);}
-function showStart(){STARTING=true;PICK.code=SESSION?SESSION.code:'';PICK.shift=SESSION?UI.shift:'';PICK.q='';$('empQ').value='';renderCheck();window.scrollTo(0,0);}
+function showStart(){STARTING=true;PICK.code=SESSION?SESSION.code:'';PICK.shift=SESSION?UI.shift:'';renderCheck();window.scrollTo(0,0);}
 function cancelStart(){if(!SESSION)return;STARTING=false;UI.shift=SESSION.shift;UI.date=SESSION.date||UI.date;renderCheck();}
-function startSession(){const emp=empByCode(PICK.code);if(!emp||!PICK.shift){toast('Chọn người kiểm tra và ca trước');return;}
+function startSession(){const emp=empByCode(PICK.code);if(!emp||!PICK.shift){toast('Chọn ca và người kiểm tra trước');return;}
   SESSION={code:emp.code,name:emp.name,func:emp.func,dept:emp.dept,shift:PICK.shift,date:UI.date};
   UI.shift=PICK.shift;UI.area='';UI.onlyOpen=false;STARTING=false;saveUI();rememberPerson(emp.name);
   logAudit(`Bắt đầu ${shiftName(UI.shift)} ${fmtDate(UI.date)}`);save();renderCheck();window.scrollTo(0,0);}
