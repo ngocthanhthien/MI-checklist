@@ -1,0 +1,16 @@
+rules_version = '2';
+
+// M&I Daily Checklist — chỉ tài khoản đã đăng nhập (Firebase Auth) mới đọc/ghi được.
+// Đã Publish trên Firebase Console (project ild-mi-checklist) ngày 16/10/2026.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Cấu hình chung: checklist 3 ca, nhân viên, cài đặt
+    match /mi/{doc} {
+      allow read, write: if request.auth != null;
+    }
+    // Phiếu kiểm tra (mỗi phiếu = 1 document: rec_<yyyy-mm-dd>_<S1|S2|S3>)
+    match /mi_records/{recordId} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

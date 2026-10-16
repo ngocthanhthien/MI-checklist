@@ -62,6 +62,10 @@ nav.tabs{display:flex;gap:4px;padding:8px 18px 0;background:var(--surface);borde
 .tab{border:0;background:none;padding:9px 14px 11px;border-bottom:3px solid transparent;white-space:nowrap;color:var(--muted);font-weight:600}
 .tab:hover{color:var(--text)}
 .tab.active{color:var(--text);border-bottom-color:var(--red)}
+#cloudBtn[data-state="ok"]{color:var(--ok)}
+#cloudBtn[data-state="err"]{color:var(--fail);border-color:var(--fail)}
+#cloudBtn[data-state="pending"],#cloudBtn[data-state="sync"]{color:var(--info)}
+#cloudBtn[data-state="nouser"],#cloudBtn[data-state="off"]{color:var(--muted)}
 .tab .cnt[hidden]{display:none}
 .tab .cnt{display:inline-block;min-width:20px;padding:0 6px;border-radius:999px;background:var(--fail-bg);color:var(--fail);font-size:12px;margin-left:4px}
 
@@ -312,6 +316,7 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
   <div class="logo-wrap"><img id="logo" alt="iLD"></div>
   <div class="app-title">M&amp;I Daily Checklist<small>ENG.M&amp;I.F.001 · Engineering · ILD Coffee Vietnam</small></div>
   <div class="spacer"></div>
+  <button class="hbtn" id="cloudBtn" onclick="cloudMenu()" data-state="off" title="Đồng bộ Firebase">☁︎<span class="hide-sm"> Đồng bộ</span></button>
   <button class="hbtn hidden" id="btnInstall" onclick="installApp()" title="Cài app lên màn hình chính">📲<span class="hide-sm"> Cài app</span></button>
   <span class="hbtn hidden" id="offBadge" title="Đang mất mạng — app vẫn chạy, dữ liệu lưu trên máy" style="color:var(--warn)">⚡<span class="hide-sm"> Offline</span></span>
   <button class="hbtn" onclick="toggleTheme()" title="Sáng / Tối">🌓<span class="hide-sm"> Giao diện</span></button>
@@ -463,8 +468,13 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
       <p class="small muted" style="margin:8px 0 0">Nhập Excel: file có cột <b>Employee code · Full name · Function · Dept.</b> — trùng mã thì cập nhật.</p>
     </div>
     <div class="card">
+      <div class="row" style="align-items:center"><h3 style="margin:0">Đồng bộ Firebase</h3><div class="spacer"></div><button class="btn" onclick="cloudMenu()">☁ Tài khoản &amp; đồng bộ</button></div>
+      <p class="small" id="cloudInfo" style="margin:8px 0 0"></p>
+      <p class="small muted" style="margin:6px 0 0">Project <b>ild-mi-checklist</b> · mỗi phiếu là 1 bản ghi theo ngày + ca; nhiều máy kiểm cùng 1 ca sẽ gộp theo từng hạng mục. Tạo / đổi mật khẩu tài khoản ở Firebase Console → Authentication → Users.</p>
+    </div>
+    <div class="card">
       <h3>Dữ liệu</h3>
-      <p class="small muted" style="margin-top:0">Dữ liệu lưu trên trình duyệt của máy này (<code>localStorage</code>). Hãy sao lưu định kỳ để không mất dữ liệu khi xoá lịch sử trình duyệt hoặc đổi máy.</p>
+      <p class="small muted" style="margin-top:0">Dữ liệu lưu trên máy (<code>localStorage</code>) và tự đồng bộ lên Firebase khi đã đăng nhập. Sao lưu JSON vẫn dùng được như bản dự phòng.</p>
       <div class="row">
         <button class="btn" onclick="backupJson()">⬇ Sao lưu JSON</button>
         <button class="btn" onclick="restoreJson()">⬆ Phục hồi JSON</button>
@@ -494,6 +504,7 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
         <li>Trưởng ca / giám sát mở tab <b>Lịch sử phiếu</b> → <b>Xác nhận</b> để ký <b>Verified by</b>. Phiếu đã xác nhận bị khoá; muốn sửa phải <b>Huỷ xác nhận</b>.</li>
         <li>Tab <b>Không đạt</b> gom mọi mục lỗi của các phiếu; đánh dấu <b>Đã khắc phục</b> khi xử lý xong.</li>
         <li><b>In / PDF</b>: mở phiếu ở Lịch sử → 🖨 In (A4 ngang, đúng bố cục biểu mẫu giấy). <b>Xuất Excel</b> có ở từng phiếu, lịch sử và danh sách lỗi.</li>
+        <li><b>Đồng bộ:</b> mỗi máy đăng nhập 1 lần bằng tài khoản chung của tổ. Nút ☁ ở góc trên cho biết trạng thái (Đã đồng bộ / Chờ gửi / Lỗi). Mất mạng vẫn kiểm bình thường; có mạng lại app tự gửi.</li>
         <li>Danh sách nhân viên quản lý ở tab <b>Cài đặt</b> (thêm, sửa, xoá, nhập Excel).</li>
         <li>Tab <b>Checklist</b>: sửa / thêm / bớt hạng mục từng ca, hoặc <b>Nhập Excel</b> lại từ file biểu mẫu (mỗi sheet “Shift N check list” là một ca).</li>
       </ol>
@@ -503,7 +514,7 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
         <li><b>iPad / iPhone (Safari):</b> bấm nút Chia sẻ <b>⬆</b> → <i>Thêm vào MH chính</i>.</li>
         <li>Sau khi mở app 1 lần khi có mạng, app <b>chạy được khi mất mạng</b>. Có mạng lại, app tự lấy bản mới nhất.</li>
       </ul>
-      <p class="small muted">Dữ liệu chỉ lưu trên trình duyệt của máy đang dùng. Sao lưu JSON ở tab Cài đặt để chuyển sang máy khác.</p>
+      <p class="small muted">Dữ liệu lưu trên máy và đồng bộ qua Firebase khi đã đăng nhập.</p>
     </div>
   </section>
 </main>
@@ -525,6 +536,20 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
 </div>
 
 <div id="printArea"></div>
+<div class="ov hidden" id="loginGate" style="z-index:70;align-items:center">
+  <div class="dlg" style="width:min(400px,100%)">
+    <div style="text-align:center"><div class="logo-wrap" style="display:inline-flex"><img id="logo2" alt="iLD"></div>
+      <h2 style="margin-top:10px">M&amp;I Daily Checklist</h2>
+      <p class="small muted">Đăng nhập tài khoản chung của tổ M&amp;I để đồng bộ phiếu giữa các máy. Mỗi máy chỉ cần đăng nhập <b>1 lần</b>.</p></div>
+    <form id="loginForm" autocomplete="on">
+      <label class="fld">Email<input type="email" id="lgEmail" autocomplete="username" required style="width:100%"></label>
+      <label class="fld" style="margin-top:10px">Mật khẩu<input type="password" id="lgPass" autocomplete="current-password" required style="width:100%"></label>
+      <p id="lgErr" class="small" style="color:var(--fail);min-height:1.2em;margin:8px 0" role="alert"></p>
+      <button class="btn primary lg" id="lgBtn" style="width:100%;justify-content:center">Đăng nhập</button>
+    </form>
+    <p class="small muted" style="margin:12px 0 0;text-align:center">Đang mất mạng? <button type="button" class="note-btn" onclick="cloudSkipLogin()">Dùng tạm trên máy này</button></p>
+  </div>
+</div>
 <div id="toast" role="status" aria-live="polite"></div>
 <input type="file" id="fileIn" hidden>
 
@@ -544,7 +569,7 @@ const DEFAULT_EMPLOYEES=[
   {code:'ILD0161',name:'Lê Phạm Thanh Đồng',func:'M&I',dept:'ENG'},
   {code:'ILD0165',name:'Nguyễn Minh Chiến',func:'M&I',dept:'ENG'},
   {code:'ILD0168',name:'Hoàng Văn Hùng',func:'M&I',dept:'ENG'}];
-document.getElementById('logo').src=LOGO;
+document.getElementById('logo').src=LOGO;document.getElementById('logo2').src=LOGO;
 
 /* ===================== [STATE / STORAGE] ===================== */
 const clone=o=>JSON.parse(JSON.stringify(o));
@@ -555,11 +580,13 @@ function freshState(){return {v:1,templates:freshTemplates(),records:[],people:[
 function load(){
   try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&s.templates&&Array.isArray(s.records)){
     const f=freshState();s.settings=Object.assign(f.settings,s.settings||{});s.people=s.people||[];s.audit=s.audit||[];if(!Array.isArray(s.employees))s.employees=clone(DEFAULT_EMPLOYEES);
-    SHIFTS.forEach(x=>{if(!s.templates[x.id])s.templates[x.id]=f.templates[x.id];});return s;}}catch(e){console.error(e);}
+    SHIFTS.forEach(x=>{if(!s.templates[x.id])s.templates[x.id]=f.templates[x.id];});
+    s.records.forEach(r=>{const d='rec_'+r.date+'_'+r.shift;if(r.id!==d&&!s.records.some(x=>x.id===d))r.id=d;}); // id cố định theo ngày+ca để các máy ghi chung 1 phiếu
+    return s;}}catch(e){console.error(e);}
   return freshState();
 }
 let STATE=load();
-function save(){try{localStorage.setItem(KEY,JSON.stringify(STATE));}catch(e){toast('⚠ Không lưu được: '+e.message);}}
+function save(noSync){try{localStorage.setItem(KEY,JSON.stringify(STATE));}catch(e){toast('⚠ Không lưu được: '+e.message);}if(!noSync)try{cloudSchedule();}catch(e){}}
 function logAudit(action){STATE.audit.unshift({t:new Date().toISOString(),who:SESSION?SESSION.name:'—',action});STATE.audit=STATE.audit.slice(0,500);}
 
 /* ===================== [UTIL] ===================== */
@@ -631,7 +658,7 @@ const findRec=(shift,date)=>STATE.records.find(r=>r.shift===shift&&r.date===date
 const curRec=()=>findRec(UI.shift,UI.date);
 const curItems=()=>{const r=curRec();return r?r.items:STATE.templates[UI.shift].items;};
 function ensureRec(){let r=curRec();if(r)return r;
-  r={id:uid('rec'),shift:UI.shift,date:UI.date,status:'draft',checker:SESSION?SESSION.name:'',checkerCode:SESSION?SESSION.code:'',items:clone(STATE.templates[UI.shift].items),results:{},createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};
+  r={id:recDocId(UI.date,UI.shift),shift:UI.shift,date:UI.date,status:'draft',checker:SESSION?SESSION.name:'',checkerCode:SESSION?SESSION.code:'',items:clone(STATE.templates[UI.shift].items),results:{},createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};
   STATE.records.push(r);logAudit(`Tạo phiếu ${shiftName(r.shift)} ${fmtDate(r.date)}`);return r;}
 function itemState(it,res,reqOk){const x=res[it.id]||{};
   if(!x.run)return 'open';
@@ -813,7 +840,7 @@ async function verifyRecord(id){const r=recById(id);if(!r)return;const n=await a
 async function unverifyRecord(id){const r=recById(id);if(!r||!await confirmBox('Huỷ xác nhận',`Huỷ xác nhận phiếu ${shiftName(r.shift)} ${fmtDate(r.date)} (đang ký bởi ${esc(r.verifiedBy)})?`,'Huỷ xác nhận',true))return;
   r.status='done';delete r.verifiedBy;delete r.verifiedAt;logAudit(`Huỷ xác nhận phiếu ${shiftName(r.shift)} ${fmtDate(r.date)}`);save();renderHistory();}
 async function deleteRecord(id){const r=recById(id);if(!r||!await confirmBox('Xoá phiếu',`Xoá vĩnh viễn phiếu ${shiftName(r.shift)} ngày ${fmtDate(r.date)}? Không thể hoàn tác.`,'Xoá',true))return;
-  STATE.records=STATE.records.filter(x=>x!==r);logAudit(`Xoá phiếu ${shiftName(r.shift)} ${fmtDate(r.date)}`);save();renderHistory();toast('Đã xoá phiếu');}
+  STATE.records=STATE.records.filter(x=>x!==r);cloudMarkDeleted(r.id);logAudit(`Xoá phiếu ${shiftName(r.shift)} ${fmtDate(r.date)}`);save();renderHistory();toast('Đã xoá phiếu');}
 
 /* ===================== [PAPER FORM / VIEW / PRINT] ===================== */
 function paperHTML(r){
@@ -1082,11 +1109,141 @@ function stSave(){const S=STATE.settings;S.code=$('stCode').value.trim()||'ENG.M
 function backupJson(){download(`MI_Checklist_Backup_${todayISO()}.json`,JSON.stringify(STATE,null,1),'application/json');}
 async function restoreJson(){const f=await pickFile('.json');if(!f)return;try{const s=JSON.parse(await f.text());if(!s||!s.templates||!Array.isArray(s.records))throw new Error('File không đúng định dạng sao lưu');
   if(!await confirmBox('Phục hồi dữ liệu',`File có <b>${s.records.length}</b> phiếu. Dữ liệu hiện tại trên máy này (${STATE.records.length} phiếu) sẽ bị <b>thay thế</b>.`,'Phục hồi',true))return;
-  localStorage.setItem(KEY,JSON.stringify(s));STATE=load();logAudit('Phục hồi dữ liệu từ '+f.name);save();renderPeople();switchTab('settings');toast('✔ Đã phục hồi');}catch(e){modal({title:'Lỗi',body:`<p>${esc(e.message)}</p>`,cancel:''});}}
+  localStorage.setItem(KEY,JSON.stringify(s));STATE=load();logAudit('Phục hồi dữ liệu từ '+f.name);save(true);cloudResync('Đang đồng bộ dữ liệu vừa phục hồi…');renderPeople();switchTab('settings');toast('✔ Đã phục hồi');}catch(e){modal({title:'Lỗi',body:`<p>${esc(e.message)}</p>`,cancel:''});}}
 async function resetTemplates(){if(!await confirmBox('Nạp lại checklist gốc','Thay checklist cả 3 ca bằng nội dung gốc của biểu mẫu ENG.M&I.F.001 v2? Phiếu đã có không bị ảnh hưởng.','Nạp lại',true))return;
   STATE.templates=freshTemplates();logAudit('Nạp lại checklist gốc');save();toast('Đã nạp lại checklist gốc');}
-async function resetAll(){if(!await confirmBox('Xoá toàn bộ dữ liệu',`Xoá <b>${STATE.records.length}</b> phiếu, checklist đã sửa và cài đặt trên máy này? Nên <b>Sao lưu JSON</b> trước. Không thể hoàn tác.`,'Xoá tất cả',true))return;
-  STATE=freshState();save();SESSION=null;STARTING=false;try{sessionStorage.removeItem('ild_mi_session');}catch(e){}renderPeople();switchTab('check');toast('Đã xoá dữ liệu');}
+async function resetAll(){if(!await confirmBox('Xoá toàn bộ dữ liệu',`Xoá <b>${STATE.records.length}</b> phiếu, checklist đã sửa và cài đặt trên máy này? (Nếu đã đăng nhập Firebase, dữ liệu trên cloud <b>không</b> bị xoá và sẽ được tải lại.) Nên <b>Sao lưu JSON</b> trước. Không thể hoàn tác.`,'Xoá tất cả',true))return;
+  STATE=freshState();save(true);cloudResync('Đang tải lại dữ liệu từ Firebase…');SESSION=null;STARTING=false;try{sessionStorage.removeItem('ild_mi_session');}catch(e){}renderPeople();switchTab('check');toast('Đã xoá dữ liệu');}
+
+/* ===================== [CLOUD · Firebase] =====================
+   Ưu tiên dữ liệu trên máy (localStorage) — Firestore là nơi đồng bộ giữa các máy.
+   • mi_records/{rec_<ngày>_<ca>}: 1 phiếu = 1 document. Ghi set(merge) theo TỪNG hạng mục → 2 máy cùng
+     kiểm 1 ca không ghi đè nhau. • mi/config: checklist 3 ca, nhân viên, cài đặt (ghi cả khối).
+   • "shadow" = bản cuối cùng đã biết trên cloud; so local với shadow để biết phần nào cần gửi
+     (thay đổi lúc offline vẫn được gửi sau khi tải lại trang). Mục local khác shadow = local đang sửa → giữ local.
+   • Xoá phiếu: ghi deleted:true (không xoá document) để máy khác cũng xoá.
+   • Lỗi tải SDK / mất mạng → app vẫn chạy bình thường trên máy. */
+const FIREBASE_CONFIG={apiKey:"AIzaSyAALnaCZtqM8Cx2g4Sc7YkZ09CnGMJzr9k",authDomain:"ild-mi-checklist.firebaseapp.com",projectId:"ild-mi-checklist",
+  storageBucket:"ild-mi-checklist.firebasestorage.app",messagingSenderId:"18100427073",appId:"1:18100427073:web:fd515d48c5b3c042f2e9c0"};
+const FB_SDK='https://www.gstatic.com/firebasejs/10.14.1/';
+const CLOUD_KEY='ild_mi_cloud_v1',CLOUD_DAYS=400;
+const META_KEYS=['shift','date','items','status','checker','checkerCode','doneAt','verifiedBy','verifiedAt','createdAt'];
+const ITEM_KEYS=['run','ok','reason','note','fixedAt','fixBy','fixNote'];
+const CLOUD={ready:false,user:null,db:null,auth:null,unsub:[],timer:null,busy:false,again:false,state:'off',err:'',skip:false,first:{recs:false,cfg:false},
+  st:(()=>{try{const s=JSON.parse(localStorage.getItem(CLOUD_KEY)||'null');if(s&&s.shadow)return s;}catch(e){}return {shadow:{recs:{},cfg:null},del:[]};})()};
+const J=v=>JSON.stringify(v===undefined?null:v);
+const cloudSaveSt=()=>{try{localStorage.setItem(CLOUD_KEY,JSON.stringify(CLOUD.st));}catch(e){}};
+function normItem(x){const o={};if(x)ITEM_KEYS.forEach(k=>{if(x[k]!=null&&x[k]!=='')o[k]=x[k];});return o;}
+function normRec(r){const o={};META_KEYS.forEach(k=>{if(r[k]!=null&&r[k]!=='')o[k]=r[k];});o.results={};Object.keys(r.results||{}).forEach(k=>{const n=normItem(r.results[k]);if(Object.keys(n).length)o.results[k]=n;});return o;}
+const normCfg=()=>({templates:STATE.templates,employees:STATE.employees,settings:STATE.settings});
+const recDocId=(date,shift)=>`rec_${date}_${shift}`;
+
+/* ---- tải SDK (compat) theo yêu cầu; offline thì bỏ qua ---- */
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('Không tải được '+src));document.head.appendChild(s);});}
+async function cloudInit(){
+  if(!/^https?:$/.test(location.protocol)){cloudSet('off','Mở bằng file trên máy — không đồng bộ');return;}
+  try{for(const f of ['firebase-app-compat.js','firebase-auth-compat.js','firebase-firestore-compat.js'])if(!window.firebase||!(f.includes('auth')?firebase.auth:f.includes('firestore')?firebase.firestore:1))await loadScript(FB_SDK+f);}
+  catch(e){cloudSet('off','Chưa tải được Firebase (mất mạng?) — đang dùng dữ liệu trên máy');window.addEventListener('online',()=>{if(!CLOUD.ready)cloudInit();},{once:true});return;}
+  const app=firebase.apps.length?firebase.app():firebase.initializeApp(FIREBASE_CONFIG);
+  CLOUD.auth=firebase.auth(app);CLOUD.db=firebase.firestore(app);
+  try{CLOUD.db.settings({ignoreUndefinedProperties:true,merge:true});}catch(e){}
+  try{await CLOUD.db.enablePersistence({synchronizeTabs:true});}catch(e){console.warn('persistence',e.code||e);}
+  CLOUD.ready=true;
+  CLOUD.auth.onAuthStateChanged(u=>{CLOUD.user=u;renderLoginGate();
+    if(u){cloudSet('sync','Đang tải dữ liệu…');cloudListen();}else{cloudStop();cloudSet('nouser','Chưa đăng nhập');}});
+}
+function cloudSet(state,msg){CLOUD.state=state;CLOUD.err=state==='err'?msg:'';const b=$('cloudBtn');if(!b)return;
+  const L={off:['☁︎','Không đồng bộ'],nouser:['🔒','Chưa đăng nhập'],sync:['↻','Đang đồng bộ'],ok:['☁','Đã đồng bộ'],pending:['↻','Chờ gửi'],err:['⚠','Lỗi đồng bộ']}[state]||['☁',''];
+  b.innerHTML=`${L[0]}<span class="hide-sm"> ${L[1]}</span>`;b.title=msg||L[1];b.dataset.state=state;
+  const s=$('cloudInfo');if(s)s.textContent=(msg||L[1])+(CLOUD.user?` · Tài khoản: ${CLOUD.user.email}`:'');}
+
+/* ---- đăng nhập ---- */
+function renderLoginGate(){const show=CLOUD.ready&&!CLOUD.user&&!CLOUD.skip;$('loginGate').classList.toggle('hidden',!show);if(show)setTimeout(()=>$('lgEmail').focus(),50);}
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();const em=$('lgEmail').value.trim(),pw=$('lgPass').value,btn=$('lgBtn');if(!em||!pw)return;
+  btn.disabled=true;btn.textContent='Đang đăng nhập…';$('lgErr').textContent='';
+  try{await CLOUD.auth.signInWithEmailAndPassword(em,pw);$('lgPass').value='';toast('✔ Đã đăng nhập — đang đồng bộ');}
+  catch(err){$('lgErr').textContent=({'auth/invalid-credential':'Sai email hoặc mật khẩu','auth/wrong-password':'Sai email hoặc mật khẩu','auth/user-not-found':'Sai email hoặc mật khẩu','auth/too-many-requests':'Thử sai quá nhiều lần — đợi vài phút','auth/network-request-failed':'Không có mạng'})[err.code]||('Lỗi: '+(err.code||err.message));$('lgPass').value='';$('lgPass').focus();}
+  finally{btn.disabled=false;btn.textContent='Đăng nhập';}});
+function cloudSkipLogin(){CLOUD.skip=true;renderLoginGate();cloudSet('nouser','Chưa đăng nhập — dữ liệu chỉ lưu trên máy này');}
+async function cloudMenu(){
+  const pend=CLOUD.state==='pending'||CLOUD.state==='sync';
+  const body=`<p class="small">${CLOUD.user?`Tài khoản: <b>${esc(CLOUD.user.email)}</b><br>`:''}Trạng thái: <b>${esc($('cloudBtn').title)}</b></p>
+    <p class="small muted">Dữ liệu luôn lưu trên máy trước, rồi tự gửi lên Firebase (project <b>ild-mi-checklist</b>) khi có mạng. Mọi máy đăng nhập cùng tài khoản sẽ thấy cùng phiếu.</p>
+    <div class="row">${CLOUD.user?`<button class="btn" data-c="sync">↻ Đồng bộ ngay</button><button class="btn" data-c="reload">⤓ Tải lại toàn bộ từ Firebase</button><button class="btn danger" data-c="out">Đăng xuất</button>`:
+      CLOUD.ready?`<button class="btn primary" data-c="in">Đăng nhập</button>`:`<button class="btn" data-c="retry">Thử kết nối lại</button>`}</div>`;
+  modal({title:'Đồng bộ Firebase',body,ok:'',cancel:'Đóng',onOpen:ov=>ov.addEventListener('click',async e=>{const c=e.target.closest('[data-c]');if(!c)return;ov.querySelector('[data-a="0"]').click();
+    if(c.dataset.c==='sync')cloudFlush();
+    if(c.dataset.c==='reload')cloudResync('Đang tải lại toàn bộ…');
+    if(c.dataset.c==='in'){CLOUD.skip=false;renderLoginGate();}
+    if(c.dataset.c==='retry')cloudInit();
+    if(c.dataset.c==='out'){if(pend&&!await confirmBox('Đăng xuất','Còn thay đổi chưa gửi lên Firebase. Vẫn đăng xuất? (dữ liệu vẫn còn trên máy này)','Đăng xuất',true))return;await CLOUD.auth.signOut();toast('Đã đăng xuất');}})});}
+
+/* ---- nhận dữ liệu ---- */
+function cloudStop(){CLOUD.unsub.forEach(f=>{try{f();}catch(e){}});CLOUD.unsub=[];}
+function cloudListen(){cloudStop();CLOUD.first={recs:false,cfg:false};
+  const since=addDays(todayISO(),-CLOUD_DAYS),db=CLOUD.db,onErr=e=>{console.error('listen',e);cloudSet('err',e.code==='permission-denied'?'Không có quyền đọc dữ liệu (kiểm tra tài khoản / Rules)':'Lỗi kết nối: '+(e.code||e.message));};
+  CLOUD.unsub.push(db.collection('mi').doc('config').onSnapshot(snap=>{if(snap.metadata.hasPendingWrites)return;cloudApplyCfg(snap.exists?snap.data():null);CLOUD.first.cfg=true;cloudAfterFirst();},onErr));
+  CLOUD.unsub.push(db.collection('mi_records').where('date','>=',since).onSnapshot(snap=>{const changed=new Set();
+    snap.docChanges().forEach(ch=>{if(ch.doc.metadata.hasPendingWrites||ch.type==='removed')return;if(cloudApplyRec(ch.doc.id,ch.doc.data()))changed.add(ch.doc.id);});
+    if(changed.size){save(true);cloudRefreshUI(changed);}CLOUD.first.recs=true;cloudAfterFirst();},onErr));}
+function cloudAfterFirst(){if(CLOUD.first.recs&&CLOUD.first.cfg){if(CLOUD.state==='sync')cloudSet('ok','Đã đồng bộ');cloudSchedule(50);}}
+function cloudApplyCfg(d){
+  if(!d){return;} // chưa có trên cloud → lần gửi tới sẽ tạo
+  const remote={templates:d.templates,employees:d.employees,settings:d.settings},sh=CLOUD.st.shadow.cfg;
+  const dirty=sh&&J(normCfg())!==J(sh);
+  if(!dirty&&J(normCfg())!==J(remote)){if(remote.templates)STATE.templates=remote.templates;if(remote.employees)STATE.employees=remote.employees;if(remote.settings)STATE.settings=Object.assign({},STATE.settings,remote.settings);
+    save(true);renderPeople();if(curTab!=='editor'||!ED.dirty)cloudRefreshUI(new Set(['*cfg']));}
+  CLOUD.st.shadow.cfg=JSON.parse(J(remote));cloudSaveSt();}
+function cloudApplyRec(id,d){
+  const sh=CLOUD.st.shadow.recs[id];
+  if(d.deleted){delete CLOUD.st.shadow.recs[id];cloudSaveSt();const i=STATE.records.findIndex(r=>r.id===id);if(i>=0){STATE.records.splice(i,1);return true;}return false;}
+  const remote={};META_KEYS.forEach(k=>{if(d[k]!=null&&d[k]!=='')remote[k]=d[k];});remote.results={};Object.keys(d.results||{}).forEach(k=>{const n=normItem(d.results[k]);if(Object.keys(n).length)remote.results[k]=n;});
+  let r=STATE.records.find(x=>x.id===id)||STATE.records.find(x=>x.shift===remote.shift&&x.date===remote.date);let changed=false;
+  if(!r){r={id,results:{}};META_KEYS.forEach(k=>{if(remote[k]!=null)r[k]=clone(remote[k]);});r.status=r.status||'draft';r.items=r.items||[];r.updatedAt=new Date().toISOString();STATE.records.push(r);changed=true;}
+  else{if(r.id!==id)r.id=id;const loc=normRec(r);
+    const metaDirty=sh?META_KEYS.some(k=>J(loc[k])!==J(sh[k])):false;
+    if(!metaDirty&&META_KEYS.some(k=>J(loc[k])!==J(remote[k]))){META_KEYS.forEach(k=>{if(remote[k]!=null)r[k]=clone(remote[k]);else delete r[k];});changed=true;}}
+  const loc=normRec(r);
+  Object.keys(remote.results).concat(Object.keys(sh?.results||{})).forEach(k=>{
+    const li=loc.results[k]||{},ri=remote.results[k]||{},si=sh?.results?.[k];
+    const dirty=sh?J(li)!==J(si||{}):Object.keys(li).length>0;
+    if(!dirty&&J(li)!==J(ri)){if(Object.keys(ri).length)r.results[k]=clone(ri);else delete r.results[k];changed=true;}});
+  CLOUD.st.shadow.recs[id]=JSON.parse(J(remote));cloudSaveSt();return changed;}
+
+/* ---- gửi dữ liệu ---- */
+function cloudSchedule(ms){if(!CLOUD.user)return;clearTimeout(CLOUD.timer);CLOUD.timer=setTimeout(cloudFlush,ms??1200);if(CLOUD.state==='ok')cloudSet('pending','Có thay đổi chờ gửi');}
+async function cloudFlush(){
+  if(!CLOUD.user||!CLOUD.first.recs||!CLOUD.first.cfg)return;
+  if(CLOUD.busy){CLOUD.again=true;return;}CLOUD.busy=true;
+  const now=Date.now(),db=CLOUD.db,ops=[],newSh={},ts=firebase.firestore.FieldValue.serverTimestamp(),dev=CLOUD.user.email;
+  STATE.records.forEach(r=>{const cur=normRec(r),sh=CLOUD.st.shadow.recs[r.id],p={};
+    if(!sh||META_KEYS.some(k=>J(cur[k])!==J(sh[k]))){META_KEYS.forEach(k=>p[k]=cur[k]??null);p.metaAt=now;p.deleted=false;}
+    const ks=new Set([...Object.keys(cur.results),...Object.keys(sh?.results||{})]);const res={};
+    ks.forEach(k=>{if(J(cur.results[k]||{})!==J(sh?.results?.[k]||{})){const o={t:now,by:dev};ITEM_KEYS.forEach(f=>o[f]=cur.results[k]?.[f]??null);res[k]=o;}});
+    if(Object.keys(res).length)p.results=res;
+    if(Object.keys(p).length){p.updatedAt=ts;ops.push([db.collection('mi_records').doc(r.id),p]);newSh[r.id]=cur;}});
+  const dels=[...CLOUD.st.del];dels.forEach(id=>ops.push([db.collection('mi_records').doc(id),{deleted:true,metaAt:now,updatedAt:ts}]));
+  const cfg=normCfg(),cfgDirty=J(cfg)!==J(CLOUD.st.shadow.cfg);if(cfgDirty)ops.push([db.collection('mi').doc('config'),{...JSON.parse(J(cfg)),updatedAt:ts,updatedBy:dev}]);
+  if(!ops.length){CLOUD.busy=false;cloudSet('ok','Đã đồng bộ');return;}
+  cloudSet('pending',navigator.onLine?`Đang gửi ${ops.length} thay đổi…`:`${ops.length} thay đổi chờ có mạng`);
+  try{for(let i=0;i<ops.length;i+=400){const b=db.batch();ops.slice(i,i+400).forEach(([ref,data])=>b.set(ref,data,{merge:ref.parent.id==='mi_records'}));await b.commit();}
+    Object.assign(CLOUD.st.shadow.recs,JSON.parse(J(newSh)));dels.forEach(id=>{delete CLOUD.st.shadow.recs[id];});CLOUD.st.del=CLOUD.st.del.filter(id=>!dels.includes(id));
+    if(cfgDirty)CLOUD.st.shadow.cfg=JSON.parse(J(cfg));cloudSaveSt();cloudSet('ok','Đã đồng bộ');}
+  catch(e){console.error('push',e);cloudSet('err',e.code==='permission-denied'?'Bị từ chối ghi (kiểm tra tài khoản / Rules)':'Gửi lỗi: '+(e.code||e.message));}
+  finally{CLOUD.busy=false;if(CLOUD.again){CLOUD.again=false;cloudSchedule(300);}}}
+function cloudMarkDeleted(id){if(!CLOUD.st.del.includes(id))CLOUD.st.del.push(id);cloudSaveSt();}
+function cloudResync(msg){CLOUD.st.shadow={recs:{},cfg:null};cloudSaveSt();if(CLOUD.user){cloudSet('sync',msg||'Đang đồng bộ lại…');cloudListen();}}
+
+/* ---- vẽ lại giao diện khi có dữ liệu mới từ máy khác (không phá ô đang gõ) ---- */
+function cloudRefreshUI(changed){
+  const ae=document.activeElement,typing=ae&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName);
+  if(curTab==='check'){
+    if(!SESSION||STARTING){if(!typing)renderCheck();return;}
+    const r=curRec();
+    if(typing&&$('ckList').contains(ae)&&r){r.items.forEach((_,i)=>{const el=$('it-'+i);if(el&&!el.contains(ae))redrawRow(i);});refreshEqMeta();updateBar();renderSession();}
+    else if(!typing)renderCheck();else{updateBar();renderSession();}
+    return;}
+  if(typing)return;if(curTab==='editor'&&ED.dirty)return;switchTab(curTab);}
 
 /* ===================== [BOOT] ===================== */
 (function boot(){
@@ -1106,6 +1263,7 @@ if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(e=>console.warn('SW',e)));
   if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
 }
+cloudInit();
 </script>
 </body>
 </html>

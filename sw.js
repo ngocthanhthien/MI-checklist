@@ -1,7 +1,7 @@
 /* Service worker — M&I Daily Checklist
    Trang chính: ưu tiên mạng (luôn lấy bản mới khi online), mất mạng thì dùng bản đã lưu.
    Icon/manifest: ưu tiên bộ nhớ đệm. Đổi CACHE khi thêm/bớt file trong SHELL. */
-const CACHE = 'mi-checklist-v1';
+const CACHE = 'mi-checklist-v2';
 const SHELL = ['./', './index.html', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/maskable-512.png', './icons/apple-touch-icon.png', './icons/favicon-32.png'];
 
@@ -19,7 +19,15 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  if (url.origin !== location.origin) return;              // không can thiệp request ra ngoài (Firebase…)
+  // Thư viện Firebase (gstatic, có số phiên bản cố định) → lưu cache để mở app khi mất mạng vẫn khởi động được.
+  if (url.origin === 'https://www.gstatic.com' && url.pathname.startsWith('/firebasejs/')) {
+    e.respondWith(caches.match(req).then(hit => hit || fetch(req).then(res => {
+      if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }
+      return res;
+    })));
+    return;
+  }
+  if (url.origin !== location.origin) return;              // không can thiệp request khác ra ngoài (Firestore, Auth…)
 
   if (req.mode === 'navigate' || url.pathname.endsWith('/index.html')) {
     e.respondWith(
