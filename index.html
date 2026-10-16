@@ -105,6 +105,10 @@ textarea{resize:vertical}
 /* start screen: chọn người & ca */
 .start h2{margin-bottom:2px}
 .step{margin-top:18px}
+.start-grid{display:grid;grid-template-columns:minmax(150px,200px) minmax(0,1fr) minmax(0,1fr);gap:4px 16px;align-items:start}
+.start-grid .big-inp{width:100%}
+.start-grid .step .small{margin-top:6px;min-height:1.3em}
+@media (max-width:760px){.start-grid{grid-template-columns:1fr}.start-grid .step{margin-top:14px}}
 .step-h{display:flex;gap:8px;align-items:center;font-weight:700;margin-bottom:10px;flex-wrap:wrap}
 .step-h .n{width:26px;height:26px;border-radius:50%;background:var(--red);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex:none}
 .step-h .sel{font-weight:600;color:var(--ok);font-size:14px}
@@ -339,18 +343,22 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
     <!-- Bước bắt buộc: chọn người kiểm tra & ca trước khi vào biểu mẫu -->
     <div class="card start" id="ckStart">
       <h2>Bắt đầu phiếu kiểm tra</h2>
-      <p class="small muted" style="margin:0">Chọn lần lượt <b>Ngày</b> → <b>Ca</b> → <b>Người kiểm tra</b> trước khi mở biểu mẫu. Tên người kiểm tra được ký ở ô <i>Checked by</i>.</p>
-      <div class="step">
-        <div class="step-h"><span class="n">1</span>Ngày kiểm tra <span class="sel" id="stPickedDate"></span></div>
-        <input type="date" id="ckDate" class="big-inp" aria-label="Ngày kiểm tra">
-      </div>
-      <div class="step">
-        <div class="step-h"><span class="n">2</span>Ca làm việc <span class="sel" id="stPickedShift"></span></div>
-        <div class="shift-pick" id="shiftPick"></div>
-      </div>
-      <div class="step">
-        <div class="step-h"><span class="n">3</span>Người kiểm tra <span class="sel" id="stPickedWho"></span></div>
-        <select id="empSel" class="big-inp" aria-label="Người kiểm tra"></select>
+      <p class="small muted" style="margin:0">Chọn <b>Ngày</b> → <b>Ca</b> → <b>Người kiểm tra</b>. Tên người kiểm tra được ký ở ô <i>Checked by</i>.</p>
+      <div class="start-grid">
+        <div class="step">
+          <div class="step-h"><span class="n">1</span>Ngày kiểm tra</div>
+          <input type="date" id="ckDate" class="big-inp" aria-label="Ngày kiểm tra">
+        </div>
+        <div class="step">
+          <div class="step-h"><span class="n">2</span>Ca làm việc</div>
+          <select id="shiftSel" class="big-inp" aria-label="Ca làm việc"></select>
+          <div class="small muted" id="stShiftInfo"></div>
+        </div>
+        <div class="step">
+          <div class="step-h"><span class="n">3</span>Người kiểm tra</div>
+          <select id="empSel" class="big-inp" aria-label="Người kiểm tra"></select>
+          <div class="small muted" id="stWhoInfo"></div>
+        </div>
       </div>
       <div class="start-foot">
         <button class="btn primary lg" id="btnStart" onclick="startSession()">Bắt đầu kiểm tra ▶</button>
@@ -680,11 +688,11 @@ const locked=r=>!!r&&r.status!=='draft';
 
 /* ===================== [CHECK UI] ===================== */
 function renderShiftPick(){
-  $('shiftPick').innerHTML=SHIFTS.map(s=>{const r=findRec(s.id,UI.date),st=r?r.status:'none',t=STATE.templates[s.id];
-    const lab=r?(STATUS[st]+(r.status==='draft'?` ${pctOf(recStats(r).done,r.items.length)}%`:'')):'Chưa kiểm';
-    return `<button class="shift-btn${s.id===PICK.shift?' active':''}" data-s="${s.id}" aria-pressed="${s.id===PICK.shift}"><span class="st st-${st}">${esc(lab)}</span><b>${s.name}</b><span>${esc(t.areas||'')} · ${t.items.length} mục</span></button>`;}).join('');
-}
-$('shiftPick').addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(!b)return;PICK.shift=b.dataset.s;renderStart();});
+  $('shiftSel').innerHTML='<option value="">— Chọn ca —</option>'+SHIFTS.map(sh=>{const r=findRec(sh.id,UI.date),t=STATE.templates[sh.id];
+    const lab=r?(r.status==='draft'?`Nháp ${pctOf(recStats(r).done,r.items.length)}%`:STATUS[r.status]):'Chưa kiểm';
+    return `<option value="${sh.id}"${sh.id===PICK.shift?' selected':''}>${sh.name} · ${esc(t.areas||'')} — ${lab}</option>`;}).join('');
+  const t=PICK.shift&&STATE.templates[PICK.shift];$('stShiftInfo').textContent=t?`${t.items.length} hạng mục · ${groups(t.items).length} thiết bị`:'';}
+$('shiftSel').addEventListener('change',e=>{PICK.shift=e.target.value;renderStart();});
 $('ckDate').addEventListener('change',e=>{UI.date=e.target.value||todayISO();renderStart();});
 $('empSel').addEventListener('change',e=>{PICK.code=e.target.value;renderStart();});
 $('ckDash').addEventListener('click',e=>{const b=e.target.closest('[data-area]');if(!b)return;UI.area=UI.area===b.dataset.area?'':b.dataset.area;renderCheck();});
@@ -695,11 +703,9 @@ function renderEmpSel(){
 function renderStart(){
   if(!PICK.code&&AUTH.profile&&AUTH.profile.employeeCode&&empByCode(AUTH.profile.employeeCode))PICK.code=AUTH.profile.employeeCode;
   $('ckDate').value=UI.date;renderEmpSel();renderShiftPick();
-  $('stPickedDate').textContent='✓ '+fmtDate(UI.date);
   const emp=empByCode(PICK.code);
-  $('stPickedWho').textContent=emp?'✓ '+emp.name:'';
-  $('stPickedShift').textContent=PICK.shift?'✓ '+shiftName(PICK.shift):'';
-  $('btnStart').disabled=!(emp&&PICK.shift);
+  $('stWhoInfo').textContent=emp?`${emp.code} · ${emp.func} · ${emp.dept}`:'';
+    $('btnStart').disabled=!(emp&&PICK.shift);
   $('stHint').textContent=!PICK.shift?'Chọn ca làm việc':!emp?'Chọn người kiểm tra':'';
   $('btnStartBack').classList.toggle('hidden',!SESSION);}
 function showStart(){STARTING=true;PICK.code=SESSION?SESSION.code:'';PICK.shift=SESSION?UI.shift:'';renderCheck();window.scrollTo(0,0);}
