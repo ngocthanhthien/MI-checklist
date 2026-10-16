@@ -1,16 +1,43 @@
 rules_version = '2';
 
-// M&I Daily Checklist — chỉ tài khoản đã đăng nhập (Firebase Auth) mới đọc/ghi được.
-// Đã Publish trên Firebase Console (project ild-mi-checklist) ngày 16/10/2026.
+// M&I Daily Checklist — phân quyền theo hồ sơ mi_users/{uid} (role: user | supervisor | admin, active).
+// Chủ dự án binh.dang@ild-coffee.com luôn là Admin. Ma trận quyền: mi/permissions.matrix[role][perm].
+// Publish trên Firebase Console (project ild-mi-checklist) → Firestore → Rules.
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Cấu hình chung: checklist 3 ca, nhân viên, cài đặt
-    match /mi/{doc} {
-      allow read, write: if request.auth != null;
+    function signedIn() { return request.auth != null; }
+    function isOwner() { return signedIn() && request.auth.token.email == 'binh.dang@ild-coffee.com'; }
+    function profPath() { return /databases/$(database)/documents/mi_users/$(request.auth.uid); }
+    function prof() { return get(profPath()).data; }
+    function active() { return isOwner() || (signedIn() && exists(profPath()) && prof().active == true); }
+    function isAdmin() { return isOwner() || (active() && prof().role == 'admin'); }
+    function can(p) {
+      return isAdmin() || (active() && get(/databases/$(database)/documents/mi/permissions).data.matrix[prof().role][p] == true);
     }
-    // Phiếu kiểm tra (mỗi phiếu = 1 document: rec_<yyyy-mm-dd>_<S1|S2|S3>)
+    function st(d) { return d.get('status', 'draft'); }
+    function isDel(d) { return d.get('deleted', false) == true; }
+
+    // Cấu hình chung (checklist 3 ca, nhân viên, cài đặt) + ma trận phân quyền: ai có quyền đều đọc, chỉ Admin ghi
+    match /mi/{doc} {
+      allow read: if active();
+      allow write: if isAdmin();
+    }
+
+    // Phiếu kiểm tra: rec_<yyyy-mm-dd>_<S1|S2|S3>
+    //  • Phiếu đã xác nhận (verified) chỉ người có quyền 'verify' mới ghi được (khoá phiếu)
+    //  • Đặt cờ xoá (deleted) cần quyền 'deleteRec'
     match /mi_records/{recordId} {
-      allow read, write: if request.auth != null;
+      allow read: if active();
+      allow create: if active() && (st(request.resource.data) != 'verified' || can('verify'));
+      allow update: if active()
+        && ((st(request.resource.data) != 'verified' && st(resource.data) != 'verified') || can('verify'))
+        && (!(isDel(request.resource.data) && !isDel(resource.data)) || can('deleteRec'));
+    }
+
+    // Hồ sơ quyền: mỗi người đọc hồ sơ của mình; Admin quản lý tất cả
+    match /mi_users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow write: if isAdmin();
     }
   }
 }

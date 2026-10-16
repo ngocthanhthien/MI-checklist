@@ -66,6 +66,8 @@ nav.tabs{display:flex;gap:4px;padding:8px 18px 0;background:var(--surface);borde
 #cloudBtn[data-state="err"]{color:var(--fail);border-color:var(--fail)}
 #cloudBtn[data-state="pending"],#cloudBtn[data-state="sync"]{color:var(--info)}
 #cloudBtn[data-state="nouser"],#cloudBtn[data-state="off"]{color:var(--muted)}
+.no-admin .need-admin,.no-verify .need-verify,.no-reopen .need-reopen,.no-fixNg .need-fixNg,.no-deleteRec .need-deleteRec{display:none!important}
+.tab .cnt.info{background:var(--info-bg);color:var(--info)}
 .tab .cnt[hidden]{display:none}
 .tab .cnt{display:inline-block;min-width:20px;padding:0 6px;border-radius:999px;background:var(--fail-bg);color:var(--fail);font-size:12px;margin-left:4px}
 
@@ -323,10 +325,11 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
 </header>
 <nav class="tabs" id="tabs" aria-label="Chức năng">
   <button class="tab active" data-tab="check">✅ Kiểm tra</button>
-  <button class="tab" data-tab="history">📋 Lịch sử phiếu</button>
+  <button class="tab" data-tab="history">📋 Lịch sử phiếu<span class="cnt info" id="hsCnt" hidden title="Phiếu chờ xác nhận"></span></button>
   <button class="tab" data-tab="ng">⚠️ Không đạt<span class="cnt" id="ngCnt" hidden></span></button>
-  <button class="tab" data-tab="editor">🛠️ Checklist</button>
-  <button class="tab" data-tab="settings">⚙️ Cài đặt</button>
+  <button class="tab need-admin" data-tab="editor">🛠️ Checklist</button>
+  <button class="tab need-admin" data-tab="users">🛡️ Người dùng</button>
+  <button class="tab need-admin" data-tab="settings">⚙️ Cài đặt</button>
   <button class="tab" data-tab="guide">📖 Hướng dẫn</button>
 </nav>
 
@@ -489,6 +492,9 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
     </div>
   </section>
 
+  <!-- ===================== NGƯỜI DÙNG ===================== -->
+  <section class="panel" id="tab-users"><div id="usersBody"></div></section>
+
   <!-- ===================== HƯỚNG DẪN ===================== -->
   <section class="panel" id="tab-guide">
     <div class="card">
@@ -505,6 +511,7 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
         <li>Tab <b>Không đạt</b> gom mọi mục lỗi của các phiếu; đánh dấu <b>Đã khắc phục</b> khi xử lý xong.</li>
         <li><b>In / PDF</b>: mở phiếu ở Lịch sử → 🖨 In (A4 ngang, đúng bố cục biểu mẫu giấy). <b>Xuất Excel</b> có ở từng phiếu, lịch sử và danh sách lỗi.</li>
         <li><b>Đồng bộ:</b> mỗi máy đăng nhập 1 lần bằng tài khoản chung của tổ. Nút ☁ ở góc trên cho biết trạng thái (Đã đồng bộ / Chờ gửi / Lỗi). Mất mạng vẫn kiểm bình thường; có mạng lại app tự gửi.</li>
+        <li><b>Vai trò:</b> 👤 Kỹ thuật viên — kiểm & hoàn tất phiếu · ✅ Giám sát (duyệt) — thêm <b>Xác nhận</b> (ký Verified by bằng tên tài khoản, phiếu bị khoá) và Mở lại phiếu · 🛡 Admin — toàn quyền: Checklist, Cài đặt, <b>Người dùng</b> (tạo tài khoản, tài khoản chung cho tablet, ma trận phân quyền). Số xanh trên tab Lịch sử = phiếu chờ duyệt.</li>
         <li>Danh sách nhân viên quản lý ở tab <b>Cài đặt</b> (thêm, sửa, xoá, nhập Excel).</li>
         <li>Tab <b>Checklist</b>: sửa / thêm / bớt hạng mục từng ca, hoặc <b>Nhập Excel</b> lại từ file biểu mẫu (mỗi sheet “Shift N check list” là một ca).</li>
       </ol>
@@ -540,9 +547,9 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
   <div class="dlg" style="width:min(400px,100%)">
     <div style="text-align:center"><div class="logo-wrap" style="display:inline-flex"><img id="logo2" alt="iLD"></div>
       <h2 style="margin-top:10px">M&amp;I Daily Checklist</h2>
-      <p class="small muted">Đăng nhập tài khoản chung của tổ M&amp;I để đồng bộ phiếu giữa các máy. Mỗi máy chỉ cần đăng nhập <b>1 lần</b>.</p></div>
+      <p class="small muted">Đăng nhập bằng tài khoản Admin cấp (tài khoản riêng hoặc tài khoản chung của tổ). Mỗi máy chỉ cần đăng nhập <b>1 lần</b>.</p></div>
     <form id="loginForm" autocomplete="on">
-      <label class="fld">Email<input type="email" id="lgEmail" autocomplete="username" required style="width:100%"></label>
+      <label class="fld">Tên đăng nhập hoặc email<input type="text" id="lgEmail" autocomplete="username" autocapitalize="off" spellcheck="false" required style="width:100%" placeholder="vd: to-mi hoặc ten@ild-coffee.com"></label>
       <label class="fld" style="margin-top:10px">Mật khẩu<input type="password" id="lgPass" autocomplete="current-password" required style="width:100%"></label>
       <p id="lgErr" class="small" style="color:var(--fail);min-height:1.2em;margin:8px 0" role="alert"></p>
       <button class="btn primary lg" id="lgBtn" style="width:100%;justify-content:center">Đăng nhập</button>
@@ -626,10 +633,10 @@ function renderPeople(){$('peopleList').innerHTML=[...new Set([...STATE.employee
 
 /* ===================== [NAV] ===================== */
 let curTab='check';
-function switchTab(t){curTab=t;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));
+function switchTab(t){if({editor:1,settings:1,users:1}[t]&&!can('admin'))t='check';curTab=t;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));
   document.querySelectorAll('section.panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+t));
   $('ckBar').classList.toggle('hidden',t!=='check'||!SESSION||STARTING);
-  ({check:renderCheck,history:renderHistory,ng:renderNg,editor:edLoad,settings:renderSettings,guide:()=>{}})[t]();
+  ({check:renderCheck,history:renderHistory,ng:renderNg,editor:edLoad,settings:renderSettings,users:renderUsers,guide:()=>{}})[t]();
   try{sessionStorage.setItem('ild_mi_tab',t);}catch(e){}}
 $('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(!b)return;if(curTab==='editor'&&ED.dirty&&b.dataset.tab!=='editor'&&!window.confirm('Checklist đang sửa chưa lưu. Rời tab và bỏ thay đổi?'))return;if(b.dataset.tab!=='editor')ED.dirty=false;switchTab(b.dataset.tab);});
 
@@ -686,6 +693,7 @@ function renderEmpSel(){
   $('empSel').innerHTML=`<option value="">${STATE.employees.length?'— Chọn người kiểm tra —':'Chưa có nhân viên — thêm ở tab ⚙️ Cài đặt'}</option>`+
     STATE.employees.map(e=>`<option value="${esc(e.code)}"${e.code===PICK.code?' selected':''}>${esc(e.name)} · ${esc(e.code)}</option>`).join('');}
 function renderStart(){
+  if(!PICK.code&&AUTH.profile&&AUTH.profile.employeeCode&&empByCode(AUTH.profile.employeeCode))PICK.code=AUTH.profile.employeeCode;
   $('ckDate').value=UI.date;renderEmpSel();renderShiftPick();
   $('stPickedDate').textContent='✓ '+fmtDate(UI.date);
   const emp=empByCode(PICK.code);
@@ -735,7 +743,7 @@ function renderCheck(){
   $('ckCollapse').onchange=e=>{UI.collapse=e.target.checked;UI.expanded={};try{localStorage.setItem('ild_mi_collapse',UI.collapse?'1':'0');}catch(_){}renderCheck();};
   // lock banner
   if(lk){const vb=r.status==='verified'?` · Xác nhận: <b>${esc(r.verifiedBy)}</b> ${fmtDT(r.verifiedAt)}`:'';
-    $('ckLock').innerHTML=`<div class="lock-banner">🔒 Phiếu ${STATUS[r.status].toLowerCase()} — Checked by <b>${esc(r.checker)}</b> ${fmtDT(r.doneAt)}${vb}<span class="spacer"></span>${r.status==='done'?'<button class="btn sm" onclick="reopenRecord()">✎ Mở lại để sửa</button>':''}</div>`;}
+    $('ckLock').innerHTML=`<div class="lock-banner">🔒 Phiếu ${STATUS[r.status].toLowerCase()} — Checked by <b>${esc(r.checker)}</b> ${fmtDT(r.doneAt)}${vb}<span class="spacer"></span>${r.status==='done'?'<button class="btn sm need-reopen" onclick="reopenRecord()">✎ Mở lại để sửa</button>':''}</div>`;}
   else if(r&&r.checker&&r.checker!==SESSION.name)$('ckLock').innerHTML=`<div class="lock-banner">✎ Phiếu nháp do <b>${esc(r.checker)}</b> bắt đầu — khi hoàn tất sẽ ký tên <b>${esc(SESSION.name)}</b>.</div>`;
   else $('ckLock').innerHTML=r?'':`<div class="lock-banner">📝 Chưa có phiếu ${shiftName(UI.shift)} ngày ${fmtDate(UI.date)} — phiếu sẽ được tạo khi bạn chọn mục đầu tiên.</div>`;
   $('btnAllOk').disabled=lk;
@@ -804,7 +812,7 @@ async function completeRecord(){
   const s=recStats(r);
   if(!await confirmBox('Hoàn tất phiếu',`${shiftName(r.shift)} · ${fmtDate(r.date)}<br>Đạt <b>${s.ok}</b> · Không đạt <b style="color:var(--fail)">${s.ng}</b> · Not run <b>${s.nr}</b><br><br>Ký <b>Checked by: ${esc(who)}</b>? Sau khi hoàn tất phiếu sẽ khoá.`,'Hoàn tất'))return;
   r.checker=who;r.checkerCode=SESSION.code;r.status='done';r.doneAt=new Date().toISOString();rememberPerson(who);logAudit(`Hoàn tất phiếu ${shiftName(r.shift)} ${fmtDate(r.date)} (${s.ng} không đạt)`);touch(r);renderCheck();toast('✔ Đã hoàn tất phiếu');}
-async function reopenRecord(){const r=curRec();if(!r||r.status!=='done')return;if(!await confirmBox('Mở lại phiếu','Mở lại phiếu để sửa? Chữ ký Checked by sẽ bị gỡ cho đến khi hoàn tất lại.','Mở lại'))return;
+async function reopenRecord(){const r=curRec();if(!r||r.status!=='done')return;if(!can('reopen'))return toast('Bạn không có quyền mở lại phiếu');if(!await confirmBox('Mở lại phiếu','Mở lại phiếu để sửa? Chữ ký Checked by sẽ bị gỡ cho đến khi hoàn tất lại.','Mở lại'))return;
   r.status='draft';delete r.doneAt;logAudit(`Mở lại phiếu ${shiftName(r.shift)} ${fmtDate(r.date)}`);touch(r);renderCheck();}
 
 /* ===================== [HISTORY] ===================== */
@@ -828,18 +836,21 @@ function renderHistory(){
     (list.map(r=>{const s=recStats(r);return `<tr><td>${fmtDate(r.date)}</td><td>${shiftName(r.shift)}</td><td>${esc(r.checker||'')}</td><td class="num">${pctBadge(pctOf(s.done,s.total))}<div class="small muted">${s.done}/${s.total}</div></td><td class="num">${s.ok}</td><td class="num" style="${s.ng?'color:var(--fail);font-weight:700':''}">${s.ng}</td><td class="num">${s.nr}</td>
       <td><span class="pill st-${r.status}">${STATUS[r.status]}</span></td><td>${r.verifiedBy?esc(r.verifiedBy)+'<div class="small muted">'+fmtDT(r.verifiedAt)+'</div>':''}</td>
       <td><div class="acts"><button class="btn sm" onclick="viewRecord('${r.id}')">👁 Xem</button><button class="btn sm" onclick="openRec('${r.shift}','${r.date}')">✎ Mở</button>
-      ${r.status==='done'?`<button class="btn sm primary" onclick="verifyRecord('${r.id}')">✔ Xác nhận</button>`:''}${r.status==='verified'?`<button class="btn sm" onclick="unverifyRecord('${r.id}')">Huỷ xác nhận</button>`:''}
-      ${r.status!=='verified'?`<button class="btn sm danger" onclick="deleteRecord('${r.id}')" title="Xoá phiếu">🗑</button>`:''}</div></td></tr>`;}).join('')||`<tr><td colspan="10" class="muted">Không có phiếu trong khoảng đã chọn.</td></tr>`)+'</tbody>';
+      ${r.status==='done'?`<button class="btn sm primary need-verify" onclick="verifyRecord('${r.id}')">✔ Xác nhận</button>`:''}${r.status==='verified'?`<button class="btn sm need-verify" onclick="unverifyRecord('${r.id}')">Huỷ xác nhận</button>`:''}
+      ${r.status!=='verified'?`<button class="btn sm danger need-deleteRec" onclick="deleteRecord('${r.id}')" title="Xoá phiếu">🗑</button>`:''}</div></td></tr>`;}).join('')||`<tr><td colspan="10" class="muted">Không có phiếu trong khoảng đã chọn.</td></tr>`)+'</tbody>';
 }
 function histFiltered(){const f=$('hsFrom').value,t=$('hsTo').value,s=$('hsShift').value,st=$('hsStatus').value;
   return STATE.records.filter(r=>(!f||r.date>=f)&&(!t||r.date<=t)&&(!s||r.shift===s)&&(!st||r.status===st)).sort((a,b)=>b.date.localeCompare(a.date)||a.shift.localeCompare(b.shift));}
 ['hsFrom','hsTo','hsShift','hsStatus'].forEach(id=>$(id).addEventListener('change',renderHistory));
 const recById=id=>STATE.records.find(r=>r.id===id);
-async function verifyRecord(id){const r=recById(id);if(!r)return;const n=await askName('Xác nhận phiếu (Verified by)',`${shiftName(r.shift)} · ${fmtDate(r.date)} · Checked by ${esc(r.checker)} · Không đạt: ${recStats(r).ng}`,'');if(!n)return;
-  r.status='verified';r.verifiedBy=n;r.verifiedAt=new Date().toISOString();rememberPerson(n);logAudit(`Xác nhận phiếu ${shiftName(r.shift)} ${fmtDate(r.date)} — ${n}`);save();renderHistory();toast('✔ Đã xác nhận');closeView();}
-async function unverifyRecord(id){const r=recById(id);if(!r||!await confirmBox('Huỷ xác nhận',`Huỷ xác nhận phiếu ${shiftName(r.shift)} ${fmtDate(r.date)} (đang ký bởi ${esc(r.verifiedBy)})?`,'Huỷ xác nhận',true))return;
-  r.status='done';delete r.verifiedBy;delete r.verifiedAt;logAudit(`Huỷ xác nhận phiếu ${shiftName(r.shift)} ${fmtDate(r.date)}`);save();renderHistory();}
-async function deleteRecord(id){const r=recById(id);if(!r||!await confirmBox('Xoá phiếu',`Xoá vĩnh viễn phiếu ${shiftName(r.shift)} ngày ${fmtDate(r.date)}? Không thể hoàn tác.`,'Xoá',true))return;
+async function verifyRecord(id){const r=recById(id);if(!r)return;if(!can('verify'))return toast('Bạn không có quyền xác nhận phiếu');if(r.status!=='done')return toast('Chỉ xác nhận được phiếu đã hoàn tất');
+  const s0=recStats(r),info=`${shiftName(r.shift)} · ${fmtDate(r.date)} · Checked by <b>${esc(r.checker)}</b><br>Đạt ${s0.ok} · <span style="color:var(--fail)">Không đạt ${s0.ng}</span> · Not run ${s0.nr}`;let n;
+  if(AUTH.profile&&!AUTH.profile.shared){if(!await confirmBox('Xác nhận kết quả (Verified by)',`${info}<br><br>Ký xác nhận bằng tài khoản <b>${esc(AUTH.profile.displayName)}</b>? Phiếu sẽ bị khoá.`,'✔ Xác nhận'))return;n=AUTH.profile.displayName;}
+  else{n=await askName('Xác nhận phiếu (Verified by)',info,'');if(!n)return;}
+  r.status='verified';r.verifiedBy=n;r.verifiedAt=new Date().toISOString();r.verifiedByUid=AUTH.profile?AUTH.profile.uid:'';rememberPerson(n);logAudit(`Xác nhận phiếu ${shiftName(r.shift)} ${fmtDate(r.date)} — ${n}`);save();renderHistory();toast('✔ Đã xác nhận');closeView();}
+async function unverifyRecord(id){const r=recById(id);if(r&&!can('verify'))return toast('Bạn không có quyền huỷ xác nhận');if(!r||!await confirmBox('Huỷ xác nhận',`Huỷ xác nhận phiếu ${shiftName(r.shift)} ${fmtDate(r.date)} (đang ký bởi ${esc(r.verifiedBy)})?`,'Huỷ xác nhận',true))return;
+  r.status='done';delete r.verifiedBy;delete r.verifiedAt;delete r.verifiedByUid;logAudit(`Huỷ xác nhận phiếu ${shiftName(r.shift)} ${fmtDate(r.date)}`);save();renderHistory();}
+async function deleteRecord(id){const r=recById(id);if(r&&!can('deleteRec'))return toast('Bạn không có quyền xoá phiếu');if(r&&r.status==='verified')return toast('Phiếu đã xác nhận — huỷ xác nhận trước khi xoá');if(!r||!await confirmBox('Xoá phiếu',`Xoá vĩnh viễn phiếu ${shiftName(r.shift)} ngày ${fmtDate(r.date)}? Không thể hoàn tác.`,'Xoá',true))return;
   STATE.records=STATE.records.filter(x=>x!==r);cloudMarkDeleted(r.id);logAudit(`Xoá phiếu ${shiftName(r.shift)} ${fmtDate(r.date)}`);save();renderHistory();toast('Đã xoá phiếu');}
 
 /* ===================== [PAPER FORM / VIEW / PRINT] ===================== */
@@ -864,7 +875,7 @@ let viewOv=null;function closeView(){if(viewOv){viewOv.remove();viewOv=null;}}
 function viewRecord(id){const r=recById(id);if(!r)return;closeView();const s=recStats(r);
   viewOv=document.createElement('div');viewOv.className='ov';
   viewOv.innerHTML=`<div class="dlg wide"><div class="row" style="align-items:center;margin-bottom:10px"><h3 style="margin:0">${shiftName(r.shift)} · ${fmtDate(r.date)} <span class="pill st-${r.status}">${STATUS[r.status]}</span></h3><span class="small muted">Đạt ${s.ok} · Không đạt ${s.ng} · Not run ${s.nr} · ${s.done}/${s.total}</span><div class="spacer"></div>
-    ${r.status==='done'?`<button class="btn sm primary" onclick="verifyRecord('${r.id}')">✔ Xác nhận</button>`:''}<button class="btn sm" onclick="printRecord('${r.id}')">🖨 In / PDF</button><button class="btn sm" onclick="exportRecord('${r.id}')">⬇ Excel biểu mẫu</button><button class="btn sm" onclick="closeView()">✕ Đóng</button></div>${paperHTML(r)}</div>`;
+    ${r.status==='done'?`<button class="btn sm primary need-verify" onclick="verifyRecord('${r.id}')">✔ Xác nhận</button>`:''}${r.status==='verified'?`<button class="btn sm need-verify" onclick="unverifyRecord('${r.id}');closeView()">Huỷ xác nhận</button>`:''}<button class="btn sm" onclick="printRecord('${r.id}')">🖨 In / PDF</button><button class="btn sm" onclick="exportRecord('${r.id}')">⬇ Excel biểu mẫu</button><button class="btn sm" onclick="closeView()">✕ Đóng</button></div>${paperHTML(r)}</div>`;
   viewOv.addEventListener('click',e=>{if(e.target===viewOv)closeView();});document.body.appendChild(viewOv);}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&viewOv)closeView();});
 function printRecord(id){const r=recById(id);if(!r)return;$('printArea').innerHTML=paperHTML(r);document.title=`${STATE.settings.code} ${shiftName(r.shift)} ${fmtDate(r.date).replace(/\//g,'-')}`;window.print();setTimeout(()=>document.title='M&I Daily Checklist · ILD Coffee Vietnam',1000);}
@@ -979,7 +990,8 @@ function ngRows(){const out=[];STATE.records.forEach(r=>r.items.forEach(it=>{con
   return out.sort((a,b)=>b.r.date.localeCompare(a.r.date)||a.r.shift.localeCompare(b.r.shift));}
 function ngFiltered(){const f=$('ngFrom').value,t=$('ngTo').value,s=$('ngShift').value,fx=$('ngFix').value,q=fold($('ngQ').value.trim());
   return ngRows().filter(({r,it,x})=>(!f||r.date>=f)&&(!t||r.date<=t)&&(!s||r.shift===s)&&(!fx||(fx==='fixed')===!!x.fixedAt)&&(!q||fold([it.area,it.equip,it.task,it.std,x.reason,x.note,x.fixNote,r.checker].join(' ')).includes(q)));}
-function updateNgCount(){const n=ngRows().filter(o=>!o.x.fixedAt).length,el=$('ngCnt');el.hidden=!n;el.textContent=n;}
+function updateNgCount(){const n=ngRows().filter(o=>!o.x.fixedAt).length,el=$('ngCnt');el.hidden=!n;el.textContent=n;
+  const w=can('verify')?STATE.records.filter(r=>r.status==='done').length:0,h=$('hsCnt');h.hidden=!w;h.textContent=w;}
 function renderNg(){
   if($('ngShift').options.length<2)$('ngShift').innerHTML+=SHIFTS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
   if(!$('ngFrom').value)$('ngFrom').value=addDays(todayISO(),-30);if(!$('ngTo').value)$('ngTo').value=todayISO();
@@ -987,17 +999,17 @@ function renderNg(){
   $('ngTbl').innerHTML=`<thead><tr><th>Ngày</th><th>Ca</th><th>Khu vực</th><th>Thiết bị</th><th>Hạng mục</th><th>Tiêu chuẩn</th><th>Lý do không đạt</th><th>Ghi chú</th><th>Checked by</th><th>Khắc phục</th></tr></thead><tbody>`+
     (list.map(({r,it,x})=>{const e=splitEquip(it.equip);return `<tr><td>${fmtDate(r.date)}</td><td>${shiftName(r.shift)}</td><td>${esc(it.area)}</td><td><b>${esc(e.name)}</b><div class="small muted">${esc(e.code)}</div></td><td>${esc(it.task)}</td><td class="small">${esc(it.std)}</td>
       <td style="color:var(--fail);font-weight:600">${esc(x.reason||'')}</td><td class="small">${esc(x.note||'')}</td><td>${esc(r.checker||'')}</td>
-      <td>${x.fixedAt?`<span class="pill st-verified">✓ ${fmtDate(x.fixedAt.slice(0,10))}</span><div class="small">${esc(x.fixNote||'')}${x.fixBy?' — '+esc(x.fixBy):''}</div><button class="btn sm" style="margin-top:4px" onclick="ngUnfix('${r.id}','${it.id}')">Bỏ</button>`:`<button class="btn sm" onclick="ngFix('${r.id}','${it.id}')">✔ Đã khắc phục</button>`}</td></tr>`;}).join('')||`<tr><td colspan="10" class="muted">Không có mục không đạt trong bộ lọc 👍</td></tr>`)+'</tbody>';
+      <td>${x.fixedAt?`<span class="pill st-verified">✓ ${fmtDate(x.fixedAt.slice(0,10))}</span><div class="small">${esc(x.fixNote||'')}${x.fixBy?' — '+esc(x.fixBy):''}</div><button class="btn sm need-fixNg" style="margin-top:4px" onclick="ngUnfix('${r.id}','${it.id}')">Bỏ</button>`:`<button class="btn sm need-fixNg" onclick="ngFix('${r.id}','${it.id}')">✔ Đã khắc phục</button>`}</td></tr>`;}).join('')||`<tr><td colspan="10" class="muted">Không có mục không đạt trong bộ lọc 👍</td></tr>`)+'</tbody>';
   const cnt={};list.forEach(({it})=>{const k=it.area+' | '+it.equip;cnt[k]=(cnt[k]||0)+1;});
   const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,10),max=top.length?top[0][1]:1;
   $('ngTop').innerHTML=top.length?top.map(([k,n])=>{const [a,eq]=k.split(' | '),e=splitEquip(eq);return `<div style="display:grid;grid-template-columns:minmax(0,260px) 1fr 36px;gap:10px;align-items:center;margin:6px 0"><div class="small"><b>${esc(e.name)}</b> ${esc(e.code)} <span class="muted">· ${esc(a)}</span></div><div style="height:12px;background:var(--gray-bg);border-radius:99px;overflow:hidden"><i style="display:block;height:100%;width:${n/max*100}%;background:var(--fail)"></i></div><b class="num">${n}</b></div>`;}).join(''):'<p class="muted small">Chưa có dữ liệu.</p>';
 }
 ['ngFrom','ngTo','ngShift','ngFix'].forEach(id=>$(id).addEventListener('change',renderNg));$('ngQ').addEventListener('input',renderNg);
-async function ngFix(rid,iid){const r=recById(rid);if(!r)return;const x=r.results[iid];
+async function ngFix(rid,iid){const r=recById(rid);if(!r)return;if(!can('fixNg'))return toast('Bạn không có quyền đánh dấu khắc phục');const x=r.results[iid];
   const v=await modal({title:'Đánh dấu đã khắc phục',ok:'Lưu',body:`<label class="fld">Người xử lý<input type="text" id="fxBy" list="peopleList" value="${esc(SESSION?SESSION.name:'')}"></label><label class="fld" style="margin-top:8px">Nội dung khắc phục<textarea id="fxNote" rows="3" placeholder="VD: Đã thay seal, châm dầu…"></textarea></label>`,
     onOpen:ov=>{ov._value=()=>({by:ov.querySelector('#fxBy').value.trim(),note:ov.querySelector('#fxNote').value.trim()});}});
   if(!v)return;x.fixedAt=new Date().toISOString();x.fixBy=v.by;x.fixNote=v.note;rememberPerson(v.by);logAudit(`Khắc phục: ${splitEquip(r.items.find(i=>i.id===iid).equip).name} (${fmtDate(r.date)})`);save();renderNg();updateNgCount();}
-async function ngUnfix(rid,iid){const r=recById(rid);if(!r||!await confirmBox('Bỏ đánh dấu','Đánh dấu lại là chưa khắc phục?','Đồng ý'))return;const x=r.results[iid];delete x.fixedAt;delete x.fixBy;delete x.fixNote;save();renderNg();updateNgCount();}
+async function ngUnfix(rid,iid){const r=recById(rid);if(r&&!can('fixNg'))return toast('Bạn không có quyền');if(!r||!await confirmBox('Bỏ đánh dấu','Đánh dấu lại là chưa khắc phục?','Đồng ý'))return;const x=r.results[iid];delete x.fixedAt;delete x.fixBy;delete x.fixNote;save();renderNg();updateNgCount();}
 function exportNg(){const list=ngFiltered();if(!list.length){toast('Không có dữ liệu');return;}
   saveXls(`MI_KhongDat_${todayISO()}.xls`,[{name:'Không đạt',widths:[70,45,55,150,150,200,180,150,110,90,180],rows:[['Ngày','Ca','Khu vực','Thiết bị','Hạng mục','Tiêu chuẩn','Lý do không đạt','Ghi chú','Checked by','Ngày khắc phục','Nội dung khắc phục'].map(v=>({v,s:'h'})),
     ...list.map(({r,it,x})=>[fmtDate(r.date),shiftName(r.shift),it.area,it.equip,it.task,it.std,x.reason||'',x.note||'',r.checker||'',x.fixedAt?fmtDT(x.fixedAt):'',[x.fixNote,x.fixBy].filter(Boolean).join(' — ')])]}]);}
@@ -1018,7 +1030,7 @@ function edAdd(after){const i=after==null?ED.items.length-1:after,p=ED.items[i]|
   const t=document.querySelector(`#edTbl textarea[data-i="${i+1}"][data-k="task"]`);t&&t.focus();}
 function edMove(i,d){const j=i+d;if(j<0||j>=ED.items.length)return;[ED.items[i],ED.items[j]]=[ED.items[j],ED.items[i]];edMark();edRender();}
 function edDel(i){ED.items.splice(i,1);edMark();edRender();}
-function edSave(){const items=ED.items.map(it=>({id:it.id||uid('it'),area:it.area.trim(),equip:it.equip.trim(),task:it.task.trim(),std:it.std.trim(),method:it.method.trim()})).filter(it=>it.task||it.equip);
+function edSave(){if(!can('admin'))return toast('Chỉ Admin');const items=ED.items.map(it=>({id:it.id||uid('it'),area:it.area.trim(),equip:it.equip.trim(),task:it.task.trim(),std:it.std.trim(),method:it.method.trim()})).filter(it=>it.task||it.equip);
   if(!items.length){toast('Checklist không được trống');return;}
   if(items.some(it=>!it.equip||!it.task)){toast('Mỗi dòng cần có Thiết bị và Công việc');return;}
   STATE.templates[ED.shift]={areas:$('edAreas').value.trim()||areasOf(items),items};logAudit(`Lưu checklist ${shiftName(ED.shift)} (${items.length} mục)`);save();ED.dirty=false;edLoad();toast('💾 Đã lưu checklist '+shiftName(ED.shift));}
@@ -1058,7 +1070,7 @@ function parseChecklistSheet(rows){
     if(c.area>=0&&r[c.area])area=r[c.area];if(r[c.eq])equip=r[c.eq].replace(/[ \t]+\n/g,'\n');
     if(!task)return;items.push({id:uid('it'),area,equip,task:task.replace(/[ \t]+/g,' '),std:(c.std>=0?r[c.std]:'')||'',method:(c.m>=0?r[c.m]:'')||''});});
   return items.length?items:null;}
-async function edImport(){
+async function edImport(){if(!can('admin'))return toast('Chỉ Admin');
   const f=await pickFile('.xlsx,.xls,.xml');if(!f)return;
   try{const buf=await f.arrayBuffer(),head=new TextDecoder().decode(new Uint8Array(buf.slice(0,200)));
     const sheets=/^\s*(﻿)?\s*</.test(head)?xmlSheets(new TextDecoder().decode(buf)):await xlsxSheets(buf);
@@ -1079,18 +1091,18 @@ function renderEmployees(){
   $('empTbl').innerHTML='<thead><tr><th>Employee code</th><th>Full name</th><th>Function</th><th>Dept.</th><th class="num">Số phiếu</th><th></th></tr></thead><tbody>'+
     (STATE.employees.map((e,i)=>{const n=STATE.records.filter(r=>r.checkerCode===e.code||(!r.checkerCode&&r.checker===e.name)).length;
       return `<tr><td>${esc(e.code)}</td><td><b>${esc(e.name)}</b></td><td>${esc(e.func)}</td><td>${esc(e.dept)}</td><td class="num">${n}</td><td><div class="acts"><button class="btn sm" onclick="empEdit(${i})" title="Sửa">✎</button><button class="btn sm danger" onclick="empDel(${i})" title="Xoá">✕</button></div></td></tr>`;}).join('')||'<tr><td colspan="6" class="muted">Chưa có nhân viên</td></tr>')+'</tbody>';}
-function empAdd(){const code=$('enCode').value.trim().toUpperCase(),name=$('enName').value.trim().replace(/\s+/g,' ');
+function empAdd(){if(!can('admin'))return toast('Chỉ Admin');const code=$('enCode').value.trim().toUpperCase(),name=$('enName').value.trim().replace(/\s+/g,' ');
   if(!code||!name){toast('Nhập Employee code và Full name');return;}
   if(empByCode(code)){toast('Mã '+code+' đã có');return;}
   STATE.employees.push({code,name,func:$('enFunc').value.trim(),dept:$('enDept').value.trim()});
   logAudit('Thêm nhân viên '+code+' '+name);save();$('enCode').value='';$('enName').value='';renderEmployees();renderPeople();toast('Đã thêm '+name);}
-async function empEdit(i){const e=STATE.employees[i];if(!e)return;
+async function empEdit(i){if(!can('admin'))return toast('Chỉ Admin');const e=STATE.employees[i];if(!e)return;
   const v=await modal({title:'Sửa nhân viên '+e.code,ok:'Lưu',body:`<label class="fld">Full name<input type="text" id="eeName" value="${esc(e.name)}"></label><div class="row" style="margin-top:8px"><label class="fld">Function<input type="text" id="eeFunc" value="${esc(e.func)}"></label><label class="fld">Dept.<input type="text" id="eeDept" value="${esc(e.dept)}"></label></div>`,
     onOpen:ov=>{ov._value=()=>({name:ov.querySelector('#eeName').value.trim(),func:ov.querySelector('#eeFunc').value.trim(),dept:ov.querySelector('#eeDept').value.trim()});ov._validate=()=>!!ov.querySelector('#eeName').value.trim();}});
   if(!v)return;Object.assign(e,v);if(SESSION&&SESSION.code===e.code){Object.assign(SESSION,v);saveUI();}logAudit('Sửa nhân viên '+e.code);save();renderEmployees();renderPeople();}
-async function empDel(i){const e=STATE.employees[i];if(!e||!await confirmBox('Xoá nhân viên',`Xoá <b>${esc(e.name)}</b> (${esc(e.code)}) khỏi danh sách chọn? Phiếu cũ vẫn giữ tên người kiểm.`,'Xoá',true))return;
+async function empDel(i){if(!can('admin'))return toast('Chỉ Admin');const e=STATE.employees[i];if(!e||!await confirmBox('Xoá nhân viên',`Xoá <b>${esc(e.name)}</b> (${esc(e.code)}) khỏi danh sách chọn? Phiếu cũ vẫn giữ tên người kiểm.`,'Xoá',true))return;
   STATE.employees.splice(i,1);logAudit('Xoá nhân viên '+e.code);save();renderEmployees();renderPeople();}
-async function empImport(){const f=await pickFile('.xlsx,.xls,.xml,.csv');if(!f)return;
+async function empImport(){if(!can('admin'))return toast('Chỉ Admin');const f=await pickFile('.xlsx,.xls,.xml,.csv');if(!f)return;
   try{const buf=await f.arrayBuffer(),txt=new TextDecoder().decode(buf);let rows;
     if(/\.csv$/i.test(f.name))rows=txt.replace(/^\ufeff/,'').split(/\r?\n/).map(l=>l.split(/[,;\t]/));
     else rows=(/^\s*(\ufeff)?\s*</.test(txt.slice(0,200))?xmlSheets(txt):await xlsxSheets(buf)).flatMap(x=>x.rows);
@@ -1105,12 +1117,12 @@ async function empImport(){const f=await pickFile('.xlsx,.xls,.xml,.csv');if(!f)
     logAudit(`Nhập nhân viên từ ${f.name}: +${add}, cập nhật ${upd}`);save();renderEmployees();renderPeople();toast(`✔ Thêm ${add}, cập nhật ${upd} nhân viên`);
   }catch(e){modal({title:'Không nhập được',body:`<p>${esc(e.message)}</p>`,cancel:''});}}
 function empExport(){saveXls(`MI_NhanVien_${todayISO()}.xls`,[{name:'Employees',widths:[90,180,80,60],rows:[['Employee code','Full name','Function','Dept.'].map(v=>({v,s:'h'})),...STATE.employees.map(e=>[e.code,e.name,e.func,e.dept])]}]);}
-function stSave(){const S=STATE.settings;S.code=$('stCode').value.trim()||'ENG.M&I.F.001';S.system=$('stSystem').value.trim();S.dept=$('stDept').value.trim();S.reqOkNotRun=$('stReqOk').checked;logAudit('Lưu cài đặt');save();renderSettings();toast('💾 Đã lưu cài đặt');}
+function stSave(){if(!can('admin'))return toast('Chỉ Admin');const S=STATE.settings;S.code=$('stCode').value.trim()||'ENG.M&I.F.001';S.system=$('stSystem').value.trim();S.dept=$('stDept').value.trim();S.reqOkNotRun=$('stReqOk').checked;logAudit('Lưu cài đặt');save();renderSettings();toast('💾 Đã lưu cài đặt');}
 function backupJson(){download(`MI_Checklist_Backup_${todayISO()}.json`,JSON.stringify(STATE,null,1),'application/json');}
 async function restoreJson(){const f=await pickFile('.json');if(!f)return;try{const s=JSON.parse(await f.text());if(!s||!s.templates||!Array.isArray(s.records))throw new Error('File không đúng định dạng sao lưu');
   if(!await confirmBox('Phục hồi dữ liệu',`File có <b>${s.records.length}</b> phiếu. Dữ liệu hiện tại trên máy này (${STATE.records.length} phiếu) sẽ bị <b>thay thế</b>.`,'Phục hồi',true))return;
   localStorage.setItem(KEY,JSON.stringify(s));STATE=load();logAudit('Phục hồi dữ liệu từ '+f.name);save(true);cloudResync('Đang đồng bộ dữ liệu vừa phục hồi…');renderPeople();switchTab('settings');toast('✔ Đã phục hồi');}catch(e){modal({title:'Lỗi',body:`<p>${esc(e.message)}</p>`,cancel:''});}}
-async function resetTemplates(){if(!await confirmBox('Nạp lại checklist gốc','Thay checklist cả 3 ca bằng nội dung gốc của biểu mẫu ENG.M&I.F.001 v2? Phiếu đã có không bị ảnh hưởng.','Nạp lại',true))return;
+async function resetTemplates(){if(!can('admin'))return toast('Chỉ Admin');if(!await confirmBox('Nạp lại checklist gốc','Thay checklist cả 3 ca bằng nội dung gốc của biểu mẫu ENG.M&I.F.001 v2? Phiếu đã có không bị ảnh hưởng.','Nạp lại',true))return;
   STATE.templates=freshTemplates();logAudit('Nạp lại checklist gốc');save();toast('Đã nạp lại checklist gốc');}
 async function resetAll(){if(!await confirmBox('Xoá toàn bộ dữ liệu',`Xoá <b>${STATE.records.length}</b> phiếu, checklist đã sửa và cài đặt trên máy này? (Nếu đã đăng nhập Firebase, dữ liệu trên cloud <b>không</b> bị xoá và sẽ được tải lại.) Nên <b>Sao lưu JSON</b> trước. Không thể hoàn tác.`,'Xoá tất cả',true))return;
   STATE=freshState();save(true);cloudResync('Đang tải lại dữ liệu từ Firebase…');SESSION=null;STARTING=false;try{sessionStorage.removeItem('ild_mi_session');}catch(e){}renderPeople();switchTab('check');toast('Đã xoá dữ liệu');}
@@ -1150,7 +1162,7 @@ async function cloudInit(){
   try{await CLOUD.db.enablePersistence({synchronizeTabs:true});}catch(e){console.warn('persistence',e.code||e);}
   CLOUD.ready=true;
   CLOUD.auth.onAuthStateChanged(u=>{CLOUD.user=u;renderLoginGate();
-    if(u){cloudSet('sync','Đang tải dữ liệu…');cloudListen();}else{cloudStop();cloudSet('nouser','Chưa đăng nhập');}});
+    if(u){cloudSet('sync','Đang kiểm tra quyền…');authStart(u);}else{authStop();cloudStop();cloudSet('nouser','Chưa đăng nhập');applyRoleUI();}});
 }
 function cloudSet(state,msg){CLOUD.state=state;CLOUD.err=state==='err'?msg:'';const b=$('cloudBtn');if(!b)return;
   const L={off:['☁︎','Không đồng bộ'],nouser:['🔒','Chưa đăng nhập'],sync:['↻','Đang đồng bộ'],ok:['☁','Đã đồng bộ'],pending:['↻','Chờ gửi'],err:['⚠','Lỗi đồng bộ']}[state]||['☁',''];
@@ -1161,18 +1173,19 @@ function cloudSet(state,msg){CLOUD.state=state;CLOUD.err=state==='err'?msg:'';co
 function renderLoginGate(){const show=CLOUD.ready&&!CLOUD.user&&!CLOUD.skip;$('loginGate').classList.toggle('hidden',!show);if(show)setTimeout(()=>$('lgEmail').focus(),50);}
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();const em=$('lgEmail').value.trim(),pw=$('lgPass').value,btn=$('lgBtn');if(!em||!pw)return;
   btn.disabled=true;btn.textContent='Đang đăng nhập…';$('lgErr').textContent='';
-  try{await CLOUD.auth.signInWithEmailAndPassword(em,pw);$('lgPass').value='';toast('✔ Đã đăng nhập — đang đồng bộ');}
-  catch(err){$('lgErr').textContent=({'auth/invalid-credential':'Sai email hoặc mật khẩu','auth/wrong-password':'Sai email hoặc mật khẩu','auth/user-not-found':'Sai email hoặc mật khẩu','auth/too-many-requests':'Thử sai quá nhiều lần — đợi vài phút','auth/network-request-failed':'Không có mạng'})[err.code]||('Lỗi: '+(err.code||err.message));$('lgPass').value='';$('lgPass').focus();}
+  try{await CLOUD.auth.signInWithEmailAndPassword(authEmail(em),pw);$('lgPass').value='';toast('✔ Đã đăng nhập — đang đồng bộ');}
+  catch(err){$('lgErr').textContent=({'auth/invalid-credential':'Sai tên đăng nhập hoặc mật khẩu','auth/wrong-password':'Sai tên đăng nhập hoặc mật khẩu','auth/user-not-found':'Sai tên đăng nhập hoặc mật khẩu','auth/invalid-email':'Tên đăng nhập không hợp lệ','auth/too-many-requests':'Thử sai quá nhiều lần — đợi vài phút','auth/network-request-failed':'Không có mạng'})[err.code]||('Lỗi: '+(err.code||err.message));$('lgPass').value='';$('lgPass').focus();}
   finally{btn.disabled=false;btn.textContent='Đăng nhập';}});
 function cloudSkipLogin(){CLOUD.skip=true;renderLoginGate();cloudSet('nouser','Chưa đăng nhập — dữ liệu chỉ lưu trên máy này');}
 async function cloudMenu(){
   const pend=CLOUD.state==='pending'||CLOUD.state==='sync';
-  const body=`<p class="small">${CLOUD.user?`Tài khoản: <b>${esc(CLOUD.user.email)}</b><br>`:''}Trạng thái: <b>${esc($('cloudBtn').title)}</b></p>
-    <p class="small muted">Dữ liệu luôn lưu trên máy trước, rồi tự gửi lên Firebase (project <b>ild-mi-checklist</b>) khi có mạng. Mọi máy đăng nhập cùng tài khoản sẽ thấy cùng phiếu.</p>
-    <div class="row">${CLOUD.user?`<button class="btn" data-c="sync">↻ Đồng bộ ngay</button><button class="btn" data-c="reload">⤓ Tải lại toàn bộ từ Firebase</button><button class="btn danger" data-c="out">Đăng xuất</button>`:
+  const pf=AUTH.profile;const body=`<p class="small">${CLOUD.user?`Tài khoản: <b>${esc(pf?pf.displayName:CLOUD.user.email)}</b> (${esc(authName(CLOUD.user.email))})${pf?` · ${ROLE_ICON[pf.role]||''} ${esc(ROLE_LABEL[pf.role]||'')}`:''}<br>`:''}Trạng thái: <b>${esc($('cloudBtn').title)}</b></p>
+    <p class="small muted">Dữ liệu luôn lưu trên máy trước, rồi tự gửi lên Firebase (project <b>ild-mi-checklist</b>) khi có mạng. Mọi tài khoản của tổ đều thấy cùng dữ liệu; quyền thao tác theo vai trò do Admin cấp.</p>
+    <div class="row">${CLOUD.user?`<button class="btn" data-c="sync">↻ Đồng bộ ngay</button><button class="btn" data-c="reload">⤓ Tải lại toàn bộ từ Firebase</button>${pf&&!pf.shared?'<button class="btn" data-c="pw">🔑 Đổi mật khẩu của tôi</button>':''}<button class="btn danger" data-c="out">Đăng xuất</button>`:
       CLOUD.ready?`<button class="btn primary" data-c="in">Đăng nhập</button>`:`<button class="btn" data-c="retry">Thử kết nối lại</button>`}</div>`;
   modal({title:'Đồng bộ Firebase',body,ok:'',cancel:'Đóng',onOpen:ov=>ov.addEventListener('click',async e=>{const c=e.target.closest('[data-c]');if(!c)return;ov.querySelector('[data-a="0"]').click();
     if(c.dataset.c==='sync')cloudFlush();
+    if(c.dataset.c==='pw'&&AUTH.profile)userPassword(AUTH.profile.uid);
     if(c.dataset.c==='reload')cloudResync('Đang tải lại toàn bộ…');
     if(c.dataset.c==='in'){CLOUD.skip=false;renderLoginGate();}
     if(c.dataset.c==='retry')cloudInit();
@@ -1190,7 +1203,7 @@ function cloudAfterFirst(){if(CLOUD.first.recs&&CLOUD.first.cfg){if(CLOUD.state=
 function cloudApplyCfg(d){
   if(!d){return;} // chưa có trên cloud → lần gửi tới sẽ tạo
   const remote={templates:d.templates,employees:d.employees,settings:d.settings},sh=CLOUD.st.shadow.cfg;
-  const dirty=sh&&J(normCfg())!==J(sh);
+  const dirty=can('admin')&&sh&&J(normCfg())!==J(sh);
   if(!dirty&&J(normCfg())!==J(remote)){if(remote.templates)STATE.templates=remote.templates;if(remote.employees)STATE.employees=remote.employees;if(remote.settings)STATE.settings=Object.assign({},STATE.settings,remote.settings);
     save(true);renderPeople();if(curTab!=='editor'||!ED.dirty)cloudRefreshUI(new Set(['*cfg']));}
   CLOUD.st.shadow.cfg=JSON.parse(J(remote));cloudSaveSt();}
@@ -1221,16 +1234,25 @@ async function cloudFlush(){
     const ks=new Set([...Object.keys(cur.results),...Object.keys(sh?.results||{})]);const res={};
     ks.forEach(k=>{if(J(cur.results[k]||{})!==J(sh?.results?.[k]||{})){const o={t:now,by:dev};ITEM_KEYS.forEach(f=>o[f]=cur.results[k]?.[f]??null);res[k]=o;}});
     if(Object.keys(res).length)p.results=res;
-    if(Object.keys(p).length){p.updatedAt=ts;ops.push([db.collection('mi_records').doc(r.id),p]);newSh[r.id]=cur;}});
-  const dels=[...CLOUD.st.del];dels.forEach(id=>ops.push([db.collection('mi_records').doc(id),{deleted:true,metaAt:now,updatedAt:ts}]));
-  const cfg=normCfg(),cfgDirty=J(cfg)!==J(CLOUD.st.shadow.cfg);if(cfgDirty)ops.push([db.collection('mi').doc('config'),{...JSON.parse(J(cfg)),updatedAt:ts,updatedBy:dev}]);
+    if(Object.keys(p).length){p.updatedAt=ts;ops.push([db.collection('mi_records').doc(r.id),p,'rec',r.id]);newSh[r.id]=cur;}});
+  const dels=[...CLOUD.st.del];dels.forEach(id=>ops.push([db.collection('mi_records').doc(id),{deleted:true,metaAt:now,updatedAt:ts},'del',id]));
+  const cfg=normCfg(),cfgDirty=can('admin')&&J(cfg)!==J(CLOUD.st.shadow.cfg);if(cfgDirty)ops.push([db.collection('mi').doc('config'),{...JSON.parse(J(cfg)),updatedAt:ts,updatedBy:dev},'cfg','config']);
   if(!ops.length){CLOUD.busy=false;cloudSet('ok','Đã đồng bộ');return;}
   cloudSet('pending',navigator.onLine?`Đang gửi ${ops.length} thay đổi…`:`${ops.length} thay đổi chờ có mạng`);
-  try{for(let i=0;i<ops.length;i+=400){const b=db.batch();ops.slice(i,i+400).forEach(([ref,data])=>b.set(ref,data,{merge:ref.parent.id==='mi_records'}));await b.commit();}
-    Object.assign(CLOUD.st.shadow.recs,JSON.parse(J(newSh)));dels.forEach(id=>{delete CLOUD.st.shadow.recs[id];});CLOUD.st.del=CLOUD.st.del.filter(id=>!dels.includes(id));
-    if(cfgDirty)CLOUD.st.shadow.cfg=JSON.parse(J(cfg));cloudSaveSt();cloudSet('ok','Đã đồng bộ');}
-  catch(e){console.error('push',e);cloudSet('err',e.code==='permission-denied'?'Bị từ chối ghi (kiểm tra tài khoản / Rules)':'Gửi lỗi: '+(e.code||e.message));}
+  try{const res=await Promise.allSettled(ops.map(([ref,data])=>ref.set(data,{merge:ref.parent.id==='mi_records'})));let denied=0,failed=0,lastErr='';
+    res.forEach((x,i)=>{const [,,kind,key]=ops[i];
+      if(x.status==='fulfilled'){if(kind==='rec')CLOUD.st.shadow.recs[key]=JSON.parse(J(newSh[key]));if(kind==='del'){delete CLOUD.st.shadow.recs[key];CLOUD.st.del=CLOUD.st.del.filter(z=>z!==key);}if(kind==='cfg')CLOUD.st.shadow.cfg=JSON.parse(J(cfg));}
+      else if(x.reason&&x.reason.code==='permission-denied'){denied++;if(kind==='del')CLOUD.st.del=CLOUD.st.del.filter(z=>z!==key);if(kind==='rec'||kind==='del')cloudRevertRec(key);if(kind==='cfg')cloudRevertCfg();}
+      else{failed++;lastErr=x.reason&&(x.reason.code||x.reason.message);}});
+    cloudSaveSt();
+    if(denied){save(true);cloudRefreshUI(new Set(['*']));toast('⚠ Một số thay đổi bị từ chối (không có quyền, hoặc phiếu đã được xác nhận) — đã trả về bản trên Firebase');}
+    failed?cloudSet('err','Gửi lỗi: '+lastErr):cloudSet('ok','Đã đồng bộ');}
+  catch(e){console.error('push',e);cloudSet('err','Gửi lỗi: '+(e.code||e.message));}
   finally{CLOUD.busy=false;if(CLOUD.again){CLOUD.again=false;cloudSchedule(300);}}}
+function cloudRevertRec(id){const sh=CLOUD.st.shadow.recs[id],i=STATE.records.findIndex(r=>r.id===id);
+  if(!sh){if(i>=0)STATE.records.splice(i,1);return;}
+  const r=i>=0?STATE.records[i]:(STATE.records[STATE.records.push({id,results:{}})-1]);META_KEYS.forEach(k=>{if(sh[k]!=null)r[k]=clone(sh[k]);else delete r[k];});r.results=clone(sh.results||{});r.status=r.status||'draft';r.items=r.items||[];}
+function cloudRevertCfg(){const c=CLOUD.st.shadow.cfg;if(!c)return;if(c.templates)STATE.templates=clone(c.templates);if(c.employees)STATE.employees=clone(c.employees);if(c.settings)STATE.settings=Object.assign({},STATE.settings,c.settings);renderPeople();}
 function cloudMarkDeleted(id){if(!CLOUD.st.del.includes(id))CLOUD.st.del.push(id);cloudSaveSt();}
 function cloudResync(msg){CLOUD.st.shadow={recs:{},cfg:null};cloudSaveSt();if(CLOUD.user){cloudSet('sync',msg||'Đang đồng bộ lại…');cloudListen();}}
 
@@ -1245,9 +1267,163 @@ function cloudRefreshUI(changed){
     return;}
   if(typing)return;if(curTab==='editor'&&ED.dirty)return;switchTab(curTab);}
 
+/* ===================== [AUTH · vai trò & phân quyền] =====================
+   Hồ sơ quyền: mi_users/{uid} {username,email,displayName,role,active,shared,employeeCode,createdAt,createdBy}
+   Ma trận quyền: mi/permissions {matrix:{user:{…},supervisor:{…}}} — Admin luôn toàn quyền.
+   Chủ dự án (OWNER_EMAIL) luôn là Admin. Quyền thật do Firestore Rules kiểm tra; UI chỉ ẩn/hiện. */
+const USERS_COL='mi_users',AUTH_DOMAIN='ild-mi.local',OWNER_EMAIL='binh.dang@ild-coffee.com',SHARED_USERNAME='to-mi';
+const PROFILE_KEY='ild_mi_profile_v1',PERM_KEY='ild_mi_perms_v1';
+const ROLES=['user','supervisor','admin'];
+const ROLE_LABEL={user:'Kỹ thuật viên',supervisor:'Giám sát (duyệt)',admin:'Admin'};
+const ROLE_ICON={user:'👤',supervisor:'✅',admin:'🛡'};
+const PERM_ROLES=['user','supervisor'];
+const PERM_DEFS=[
+  ['verify','Xác nhận phiếu (Verified by)','Duyệt / huỷ duyệt phiếu đã kiểm — phiếu đã xác nhận bị khoá, chỉ người có quyền này mới sửa được'],
+  ['reopen','Mở lại phiếu đã hoàn tất','Gỡ chữ ký Checked by để kiểm sửa lại'],
+  ['fixNg','Đánh dấu đã khắc phục','Tab Không đạt → ✔ Đã khắc phục / Bỏ'],
+  ['deleteRec','Xoá phiếu','Xoá phiếu chưa xác nhận (Lịch sử phiếu → 🗑)']];
+const PERM_DEFAULT={user:{verify:false,reopen:false,fixNg:true,deleteRec:false},supervisor:{verify:true,reopen:true,fixNg:true,deleteRec:false}};
+const permNorm=m=>{const o={};PERM_ROLES.forEach(r=>{o[r]={};PERM_DEFS.forEach(([k])=>o[r][k]=!!((m&&m[r]&&k in m[r])?m[r][k]:PERM_DEFAULT[r][k]));});return o;};
+const AUTH={profile:(()=>{try{return JSON.parse(localStorage.getItem(PROFILE_KEY)||'null');}catch(e){return null;}})(),
+  perms:(()=>{try{return permNorm(JSON.parse(localStorage.getItem(PERM_KEY)||'null'));}catch(e){return permNorm(null);}})(),unsub:[],uid:null};
+const authEmail=u=>{u=String(u||'').trim().toLowerCase();return u.includes('@')?u:u+'@'+AUTH_DOMAIN;};
+const authName=e=>String(e||'').endsWith('@'+AUTH_DOMAIN)?e.slice(0,-(AUTH_DOMAIN.length+1)):e;
+function curRole(){if(AUTH.profile)return ROLES.includes(AUTH.profile.role)?AUTH.profile.role:'user';return CLOUD.ready||CLOUD.skip?'user':'admin';} // chưa có Firebase (mở file trên máy) → dùng độc lập, toàn quyền
+function can(p){const r=curRole();if(r==='admin')return true;if(p==='admin')return false;return !!(AUTH.perms[r]||{})[p];}
+function applyRoleUI(){
+  const b=document.body;b.classList.toggle('no-admin',!can('admin'));PERM_DEFS.forEach(([k])=>b.classList.toggle('no-'+k,!can(k)));
+  const forbidden={editor:'admin',settings:'admin',users:'admin'}[curTab];if(forbidden&&!can(forbidden))switchTab('check');
+  updateNgCount();}
+function authCache(){try{AUTH.profile?localStorage.setItem(PROFILE_KEY,JSON.stringify(AUTH.profile)):localStorage.removeItem(PROFILE_KEY);localStorage.setItem(PERM_KEY,JSON.stringify(AUTH.perms));}catch(e){}}
+function authStop(){AUTH.unsub.forEach(f=>{try{f();}catch(e){}});AUTH.unsub=[];AUTH.uid=null;}
+async function authDeny(msg){authStop();cloudStop();AUTH.profile=null;authCache();applyRoleUI();$('lgErr').textContent=msg;try{await CLOUD.auth.signOut();}catch(e){}}
+function authStart(u){
+  if(AUTH.uid===u.uid)return;authStop();AUTH.uid=u.uid;
+  if(AUTH.profile&&AUTH.profile.uid!==u.uid){AUTH.profile=null;authCache();}
+  const db=CLOUD.db,isOwner=(u.email||'').toLowerCase()===OWNER_EMAIL;
+  AUTH.unsub.push(db.collection(USERS_COL).doc(u.uid).onSnapshot(async snap=>{
+    let p=snap.exists?{uid:u.uid,...snap.data()}:null;
+    if(!p&&snap.metadata.fromCache)return;                         // chờ kết quả từ server
+    if(!p&&isOwner){p={username:authName(u.email),email:u.email,displayName:'Đặng Thanh Bình',role:'admin',active:true,shared:false,createdAt:new Date().toISOString(),createdBy:'owner'};
+      try{await db.collection(USERS_COL).doc(u.uid).set(p);}catch(e){console.warn('owner profile',e);}p.uid=u.uid;}
+    if(isOwner&&p){p.role='admin';p.active=true;}
+    if(!p)return authDeny('Tài khoản này chưa được cấp quyền vào app — liên hệ Admin.');
+    if(p.active===false)return authDeny('Tài khoản đã bị khoá — liên hệ Admin.');
+    const first=!AUTH.profile||AUTH.profile.uid!==u.uid;AUTH.profile=p;authCache();applyRoleUI();
+    if(!CLOUD.unsub.length){cloudSet('sync','Đang tải dữ liệu…');cloudListen();}
+    if(first)toast(`Xin chào ${p.displayName} · ${ROLE_LABEL[p.role]||''}`);
+    if(curTab==='users')renderUsers();},
+    err=>{console.warn('profile',err);
+      if(AUTH.profile&&AUTH.profile.uid===u.uid){applyRoleUI();if(!CLOUD.unsub.length)cloudListen();}
+      else if(err.code==='permission-denied')authDeny('Không đọc được hồ sơ quyền (kiểm tra Firestore Rules).');}));
+  AUTH.unsub.push(db.collection('mi').doc('permissions').onSnapshot(async snap=>{
+    if(!snap.exists&&!snap.metadata.fromCache&&can('admin')){try{await db.collection('mi').doc('permissions').set({matrix:permNorm(null),updatedAt:new Date().toISOString(),updatedBy:u.email});}catch(e){}return;}
+    if(snap.exists){AUTH.perms=permNorm(snap.data().matrix);authCache();applyRoleUI();if(curTab==='users')renderUsers();else if(curTab!=='check')switchTab(curTab);}},()=>{}));}
+
+/* phiên Firebase phụ (in-memory) để tạo / đổi mật khẩu tài khoản khác mà không đăng xuất Admin */
+async function authSecondary(fn){const app=firebase.initializeApp(FIREBASE_CONFIG,'sec-'+Date.now()),a=app.auth();
+  try{await a.setPersistence(firebase.auth.Auth.Persistence.NONE);return await fn(a);}finally{try{await a.signOut();}catch(e){}try{await app.delete();}catch(e){}}}
+const authErrMsg=e=>({'auth/email-already-in-use':'Tên đăng nhập / email đã tồn tại','auth/invalid-email':'Email không hợp lệ','auth/weak-password':'Mật khẩu quá yếu (tối thiểu 6 ký tự)',
+  'auth/invalid-credential':'Sai mật khẩu hiện tại','auth/wrong-password':'Sai mật khẩu hiện tại','auth/too-many-requests':'Thử quá nhiều lần — đợi vài phút','auth/network-request-failed':'Không có mạng',
+  'permission-denied':'Không có quyền (Firestore Rules)'})[e&&e.code]||(e&&(e.message||e.code))||'Lỗi không rõ';
+const pwCheck=(a,b)=>!a||a.length<6?'Mật khẩu tối thiểu 6 ký tự':(a!==b?'Mật khẩu nhập lại không khớp':'');
+
+/* ===================== [USERS · tab Người dùng] ===================== */
+let USERS_LIST=[];
+async function renderUsers(){const box=$('usersBody');
+  if(!can('admin')){box.innerHTML='<div class="card muted">Chỉ Admin.</div>';return;}
+  if(!CLOUD.user){box.innerHTML='<div class="card">Cần đăng nhập Firebase (nút ☁ ở góc trên) để quản lý người dùng.</div>';return;}
+  if(!USERS_LIST.length)box.innerHTML='<div class="card muted">Đang tải danh sách người dùng…</div>';
+  try{const snap=await CLOUD.db.collection(USERS_COL).get();USERS_LIST=snap.docs.map(d=>({uid:d.id,...d.data()}))
+    .sort((a,b)=>(b.shared?1:0)-(a.shared?1:0)||ROLES.indexOf(b.role)-ROLES.indexOf(a.role)||(a.displayName||'').localeCompare(b.displayName||''));}
+  catch(e){box.innerHTML=`<div class="card"><b>Không đọc được danh sách người dùng:</b> ${esc(authErrMsg(e))}</div>`;return;}
+  const me=CLOUD.user.uid,shared=USERS_LIST.find(u=>u.shared),empOpt=sel=>`<option value="">— không liên kết —</option>`+STATE.employees.map(e=>`<option value="${esc(e.code)}"${e.code===sel?' selected':''}>${esc(e.name)} · ${esc(e.code)}</option>`).join('');
+  const empName=c=>{const e=empByCode(c);return e?`${esc(e.name)} <span class="muted small">${esc(e.code)}</span>`:'<span class="muted">—</span>';};
+  const rows=USERS_LIST.map(u=>{const owner=(u.email||'').toLowerCase()===OWNER_EMAIL,self=u.uid===me;
+    return `<tr><td><b>${esc(u.displayName||'')}</b>${u.shared?' <span class="pill st-none">tài khoản chung</span>':''}${owner?' <span class="pill st-done">chủ dự án</span>':''}<div class="small muted">${esc(authName(u.email||u.username||''))}</div></td>
+      <td>${owner||u.shared?`${ROLE_ICON[u.role]||''} ${esc(ROLE_LABEL[u.role]||u.role)}`:`<select onchange="userUpdate('${u.uid}',{role:this.value},'Đổi vai trò → '+ROLE_LABEL[this.value])" aria-label="Vai trò">${ROLES.map(r=>`<option value="${r}"${u.role===r?' selected':''}>${ROLE_ICON[r]} ${ROLE_LABEL[r]}</option>`).join('')}</select>`}</td>
+      <td>${u.shared?'<span class="muted">chọn người ở màn hình Bắt đầu</span>':empName(u.employeeCode)}</td>
+      <td>${u.active===false?'<span class="pill st-draft">Đã khoá</span>':'<span class="pill st-verified">Hoạt động</span>'}</td>
+      <td class="small" style="white-space:nowrap">${u.createdAt?fmtDT(u.createdAt):''}<div class="muted">${esc(u.createdBy||'')}</div></td>
+      <td><div class="acts">${self?'<span class="small muted">(bạn)</span> ':''}<button class="btn sm" onclick="userEdit('${u.uid}')" title="Sửa">✎</button>
+        ${owner||self?'':`<button class="btn sm" onclick="userUpdate('${u.uid}',{active:${u.active===false}},'${u.active===false?'Mở khoá':'Khoá'} tài khoản')">${u.active===false?'Mở khoá':'Khoá'}</button>`}
+        <button class="btn sm" onclick="userPassword('${u.uid}')">🔑 Mật khẩu</button>
+        ${owner||self?'':`<button class="btn sm danger" onclick="userRemove('${u.uid}')" title="Xoá quyền">✕</button>`}</div></td></tr>`;}).join('');
+  box.innerHTML=`<div class="card"><h3>Ma trận phân quyền</h3>
+      <p class="small muted" style="margin-top:0">Tick quyền cho từng vai trò. <b>Admin</b> luôn toàn quyền (kể cả Checklist, Cài đặt, Người dùng). Mọi vai trò đều kiểm tra, hoàn tất phiếu và xem / xuất báo cáo.</p>
+      <div class="tbl-wrap"><table class="tbl" id="permTbl"><thead><tr><th>Quyền</th>${PERM_ROLES.map(r=>`<th style="text-align:center">${ROLE_ICON[r]} ${ROLE_LABEL[r]}</th>`).join('')}<th style="text-align:center">${ROLE_ICON.admin} Admin</th></tr></thead><tbody>
+      ${PERM_DEFS.map(([k,l,d])=>`<tr><td><b>${esc(l)}</b><div class="small muted">${esc(d)}</div></td>${PERM_ROLES.map(r=>`<td style="text-align:center"><input type="checkbox" data-r="${r}" data-k="${k}"${AUTH.perms[r][k]?' checked':''} style="width:20px;height:20px"></td>`).join('')}<td style="text-align:center">✓</td></tr>`).join('')}</tbody></table></div>
+      <div class="row" style="margin-top:10px"><button class="btn primary" onclick="permSave()">💾 Lưu phân quyền</button><span class="small muted">Áp dụng ngay cho mọi máy đang mở app.</span></div></div>
+    <div class="card"><h3>Tài khoản chung (tablet của tổ)</h3>
+      <p class="small muted" style="margin-top:0">Dùng cho tablet / điện thoại đặt tại xưởng: đăng nhập bằng tên <b>${SHARED_USERNAME}</b> + mật khẩu chung, người kiểm chọn tên mình ở màn hình Bắt đầu. Vai trò: Kỹ thuật viên.</p>
+      ${shared?`<p class="small">Đã có tài khoản chung <b>${esc(authName(shared.email))}</b>. Đổi mật khẩu bằng nút 🔑 trong danh sách bên dưới.</p>`:
+      `<div class="row"><label class="fld">Mật khẩu chung<input type="password" id="shPass" autocomplete="new-password"></label><label class="fld">Nhập lại<input type="password" id="shPass2" autocomplete="new-password"></label><button class="btn" onclick="sharedCreate()">＋ Tạo tài khoản chung</button></div>`}</div>
+    <div class="card"><h3>Tạo tài khoản riêng</h3>
+      <div class="row">
+        <label class="fld">Tên đăng nhập hoặc email<input type="text" id="nuUser" placeholder="vd: nam.th" autocapitalize="off" autocomplete="off"></label>
+        <label class="fld" style="flex:1 1 180px">Họ tên hiển thị<input type="text" id="nuName" placeholder="Trương Hồng Nam"></label>
+        <label class="fld">Vai trò<select id="nuRole">${ROLES.map(r=>`<option value="${r}">${ROLE_ICON[r]} ${ROLE_LABEL[r]}</option>`).join('')}</select></label>
+        <label class="fld">Liên kết nhân viên<select id="nuEmp">${empOpt('')}</select></label>
+        <label class="fld">Mật khẩu<input type="password" id="nuPass" autocomplete="new-password"></label>
+        <label class="fld">Nhập lại<input type="password" id="nuPass2" autocomplete="new-password"></label>
+        <button class="btn primary" id="nuBtn" onclick="userCreate()">＋ Tạo</button></div>
+      <p class="small muted" style="margin:8px 0 0">Tên đăng nhập 3–30 ký tự a-z, 0-9, dấu chấm, gạch (đăng nhập bằng tên này, không cần email). Hoặc nhập email thật để có thể gửi email đặt lại mật khẩu. Liên kết nhân viên → màn hình Bắt đầu tự chọn sẵn tên. Chủ dự án <b>${OWNER_EMAIL}</b> luôn là Admin.</p></div>
+    <div class="card"><h3>Danh sách tài khoản (${USERS_LIST.length})</h3>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Họ tên · đăng nhập</th><th>Vai trò</th><th>Nhân viên</th><th>Trạng thái</th><th>Tạo lúc</th><th></th></tr></thead><tbody>${rows||'<tr><td colspan="6" class="muted">Chưa có tài khoản</td></tr>'}</tbody></table></div>
+      <p class="small muted" style="margin:8px 0 0">“Xoá” gỡ quyền vào app ngay lập tức (máy đang mở sẽ bị đăng xuất). Tài khoản đăng nhập vẫn còn trong Firebase Authentication — xoá hẳn ở Firebase Console nếu cần.</p></div>`;}
+async function permSave(){if(!can('admin'))return;const m=permNorm(null);document.querySelectorAll('#permTbl input[data-r]').forEach(c=>m[c.dataset.r][c.dataset.k]=c.checked);
+  try{await CLOUD.db.collection('mi').doc('permissions').set({matrix:m,updatedAt:new Date().toISOString(),updatedBy:CLOUD.user.email});AUTH.perms=m;authCache();applyRoleUI();logAudit('Lưu ma trận phân quyền');save(true);toast('💾 Đã lưu phân quyền');}
+  catch(e){toast('Lỗi: '+authErrMsg(e));}}
+async function userCreateAccount(login,displayName,role,pw,extra){
+  const email=authEmail(login);let uid;
+  try{uid=await authSecondary(async a=>(await a.createUserWithEmailAndPassword(email,pw)).user.uid);}
+  catch(e){if(e.code!=='auth/email-already-in-use')throw e;   // đã có trong Auth (từng bị xoá quyền) → cấp lại nếu đúng mật khẩu
+    uid=await authSecondary(async a=>(await a.signInWithEmailAndPassword(email,pw)).user.uid).catch(()=>{throw Object.assign(new Error('Tên đăng nhập đã tồn tại (mật khẩu không khớp để cấp lại quyền)'),{code:'x'});});}
+  await CLOUD.db.collection(USERS_COL).doc(uid).set({username:authName(email),email,displayName,role,active:true,shared:false,employeeCode:'',createdAt:new Date().toISOString(),createdBy:AUTH.profile?AUTH.profile.displayName:CLOUD.user.email,...extra});
+  return uid;}
+async function sharedCreate(){const a=$('shPass').value,err=pwCheck(a,$('shPass2').value);if(err)return toast(err);
+  try{await userCreateAccount(SHARED_USERNAME,'Tài khoản chung tổ M&I','user',a,{shared:true});logAudit('Tạo tài khoản chung');save(true);toast('✔ Đã tạo tài khoản chung '+SHARED_USERNAME);renderUsers();}
+  catch(e){toast('Lỗi: '+authErrMsg(e));}}
+async function userCreate(){const login=$('nuUser').value.trim().toLowerCase(),name=$('nuName').value.trim(),role=$('nuRole').value,emp=$('nuEmp').value,a=$('nuPass').value;
+  if(!login.includes('@')&&!/^[a-z0-9._-]{3,30}$/.test(login))return toast('Tên đăng nhập 3–30 ký tự: a-z, 0-9, . _ -');
+  if(login.includes('@')&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(login))return toast('Email không hợp lệ');
+  if(login===SHARED_USERNAME||USERS_LIST.some(u=>(u.email||'')===authEmail(login)))return toast('Tên đăng nhập đã tồn tại');
+  const err=pwCheck(a,$('nuPass2').value);if(err)return toast(err);
+  const dn=name||(emp&&empByCode(emp)?empByCode(emp).name:authName(authEmail(login)));
+  $('nuBtn').disabled=true;
+  try{await userCreateAccount(login,dn,role,a,{employeeCode:emp});logAudit(`Tạo tài khoản ${authName(authEmail(login))} (${ROLE_LABEL[role]})`);save(true);toast('✔ Đã tạo tài khoản '+dn);renderUsers();}
+  catch(e){toast('Lỗi: '+authErrMsg(e));$('nuBtn').disabled=false;}}
+async function userUpdate(uid,patch,msg){const u=USERS_LIST.find(x=>x.uid===uid);if(!u)return;
+  if((u.email||'').toLowerCase()===OWNER_EMAIL&&('role' in patch||'active' in patch))return toast('Không đổi được vai trò / trạng thái của chủ dự án');
+  try{await CLOUD.db.collection(USERS_COL).doc(uid).set({...patch,updatedAt:new Date().toISOString(),updatedBy:AUTH.profile?AUTH.profile.displayName:''},{merge:true});
+    logAudit(`${msg}: ${u.displayName}`);save(true);toast('Đã cập nhật '+u.displayName);renderUsers();}
+  catch(e){toast('Lỗi: '+authErrMsg(e));renderUsers();}}
+async function userEdit(uid){const u=USERS_LIST.find(x=>x.uid===uid);if(!u)return;
+  const v=await modal({title:'Sửa tài khoản',ok:'Lưu',body:`<p class="small muted">${esc(authName(u.email||''))}</p>
+    <label class="fld">Họ tên hiển thị<input type="text" id="ueName" value="${esc(u.displayName||'')}" style="width:100%"></label>
+    ${u.shared?'':`<label class="fld" style="margin-top:8px">Liên kết nhân viên<select id="ueEmp" style="width:100%"><option value="">— không liên kết —</option>${STATE.employees.map(e=>`<option value="${esc(e.code)}"${e.code===u.employeeCode?' selected':''}>${esc(e.name)} · ${esc(e.code)}</option>`).join('')}</select></label>`}`,
+    onOpen:ov=>{ov._validate=()=>!!ov.querySelector('#ueName').value.trim();ov._value=()=>{const o={displayName:ov.querySelector('#ueName').value.trim()};const s=ov.querySelector('#ueEmp');if(s)o.employeeCode=s.value;return o;};}});
+  if(v)userUpdate(uid,v,'Sửa tài khoản');}
+function userRemove(uid){const u=USERS_LIST.find(x=>x.uid===uid);if(!u)return;
+  confirmBox('Xoá quyền',`Xoá quyền vào app của <b>${esc(u.displayName)}</b> (${esc(authName(u.email||''))})?${u.shared?' Các tablet dùng tài khoản chung sẽ bị đăng xuất cho tới khi tạo lại.':''}`,'Xoá quyền',true).then(async ok=>{if(!ok)return;
+    try{await CLOUD.db.collection(USERS_COL).doc(uid).delete();logAudit('Xoá quyền tài khoản: '+u.displayName);save(true);toast('Đã xoá quyền '+u.displayName);renderUsers();}catch(e){toast('Lỗi: '+authErrMsg(e));}});}
+async function userPassword(uid){const u=USERS_LIST.find(x=>x.uid===uid)||(AUTH.profile&&AUTH.profile.uid===uid?AUTH.profile:null);if(!u)return;
+  const real=u.email&&!u.email.endsWith('@'+AUTH_DOMAIN);
+  const v=await modal({title:'Đổi mật khẩu: '+(u.displayName||authName(u.email)),ok:'Đổi mật khẩu',body:`
+    <label class="fld">Mật khẩu hiện tại<input type="password" id="upOld" autocomplete="off" style="width:100%"></label>
+    <label class="fld" style="margin-top:8px">Mật khẩu mới<input type="password" id="upNew" autocomplete="new-password" style="width:100%"></label>
+    <label class="fld" style="margin-top:8px">Nhập lại<input type="password" id="upNew2" autocomplete="new-password" style="width:100%"></label>
+    <p class="small muted">Firebase (gói miễn phí) chỉ cho đổi khi biết mật khẩu hiện tại. Quên mật khẩu: ${real?'<button type="button" class="note-btn" id="upReset">gửi email đặt lại mật khẩu</button>, hoặc ':''}Xoá quyền rồi tạo lại tài khoản, hoặc đặt lại ở Firebase Console.</p>`,
+    onOpen:ov=>{ov._validate=()=>{const o=ov.querySelector('#upOld').value,e=!o?'Nhập mật khẩu hiện tại':pwCheck(ov.querySelector('#upNew').value,ov.querySelector('#upNew2').value);if(e)toast(e);return !e;};
+      ov._value=()=>({old:ov.querySelector('#upOld').value,nw:ov.querySelector('#upNew').value});
+      const rs=ov.querySelector('#upReset');if(rs)rs.onclick=async()=>{try{await CLOUD.auth.sendPasswordResetEmail(u.email);toast('Đã gửi email đặt lại mật khẩu tới '+u.email);}catch(e){toast('Lỗi: '+authErrMsg(e));}};}});
+  if(!v)return;
+  try{await authSecondary(async a=>{const c=await a.signInWithEmailAndPassword(u.email,v.old);await c.user.updatePassword(v.nw);});logAudit('Đổi mật khẩu: '+(u.displayName||u.email));save(true);toast('✔ Đã đổi mật khẩu');}
+  catch(e){toast('Lỗi: '+authErrMsg(e));}}
+
 /* ===================== [BOOT] ===================== */
 (function boot(){
-  renderPeople();let t='check';try{t=sessionStorage.getItem('ild_mi_tab')||'check';}catch(e){}
+  applyRoleUI();renderPeople();let t='check';try{t=sessionStorage.getItem('ild_mi_tab')||'check';}catch(e){}
   if(!document.getElementById('tab-'+t))t='check';switchTab(t);
   window.addEventListener('storage',e=>{if(e.key===KEY){STATE=load();switchTab(curTab);}});
 })();
