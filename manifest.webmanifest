@@ -1,0 +1,17 @@
+{
+  "name": "M&I Daily Checklist · ILD Coffee Vietnam",
+  "short_name": "M&I Checklist",
+  "description": "Phiếu kiểm tra hằng ngày M&I (ENG.M&I.F.001) theo ca — ILD Coffee Vietnam",
+  "lang": "vi",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#F7F0E6",
+  "theme_color": "#382E28",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

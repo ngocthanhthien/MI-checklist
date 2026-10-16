@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>M&amp;I Daily Checklist · ILD Coffee Vietnam</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#382E28">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="M&amp;I Checklist">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>try{var t=localStorage.getItem('ild_mi_theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 <style>
 /* ===================== [TOKENS · ILD Crafted] ===================== */
@@ -304,6 +312,8 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
   <div class="logo-wrap"><img id="logo" alt="iLD"></div>
   <div class="app-title">M&amp;I Daily Checklist<small>ENG.M&amp;I.F.001 · Engineering · ILD Coffee Vietnam</small></div>
   <div class="spacer"></div>
+  <button class="hbtn hidden" id="btnInstall" onclick="installApp()" title="Cài app lên màn hình chính">📲<span class="hide-sm"> Cài app</span></button>
+  <span class="hbtn hidden" id="offBadge" title="Đang mất mạng — app vẫn chạy, dữ liệu lưu trên máy" style="color:var(--warn)">⚡<span class="hide-sm"> Offline</span></span>
   <button class="hbtn" onclick="toggleTheme()" title="Sáng / Tối">🌓<span class="hide-sm"> Giao diện</span></button>
 </header>
 <nav class="tabs" id="tabs" aria-label="Chức năng">
@@ -487,6 +497,12 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
         <li>Danh sách nhân viên quản lý ở tab <b>Cài đặt</b> (thêm, sửa, xoá, nhập Excel).</li>
         <li>Tab <b>Checklist</b>: sửa / thêm / bớt hạng mục từng ca, hoặc <b>Nhập Excel</b> lại từ file biểu mẫu (mỗi sheet “Shift N check list” là một ca).</li>
       </ol>
+      <h3 style="margin-top:18px">Cài app lên màn hình chính</h3>
+      <ul class="small">
+        <li><b>Android / Chrome / Edge (PC):</b> bấm nút <b>📲 Cài app</b> ở góc trên, hoặc menu ⋮ → <i>Cài đặt ứng dụng / Thêm vào màn hình chính</i>.</li>
+        <li><b>iPad / iPhone (Safari):</b> bấm nút Chia sẻ <b>⬆</b> → <i>Thêm vào MH chính</i>.</li>
+        <li>Sau khi mở app 1 lần khi có mạng, app <b>chạy được khi mất mạng</b>. Có mạng lại, app tự lấy bản mới nhất.</li>
+      </ul>
       <p class="small muted">Dữ liệu chỉ lưu trên trình duyệt của máy đang dùng. Sao lưu JSON ở tab Cài đặt để chuyển sang máy khác.</p>
     </div>
   </section>
@@ -1001,6 +1017,18 @@ async function resetAll(){if(!await confirmBox('Xoá toàn bộ dữ liệu',`Xo
   if(!document.getElementById('tab-'+t))t='check';switchTab(t);
   window.addEventListener('storage',e=>{if(e.key===KEY){STATE=load();switchTab(curTab);}});
 })();
+
+/* ===================== [PWA] ===================== */
+let installEvt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;$('btnInstall').classList.remove('hidden');});
+window.addEventListener('appinstalled',()=>{installEvt=null;$('btnInstall').classList.add('hidden');toast('✔ Đã cài app lên màn hình chính');});
+async function installApp(){if(!installEvt)return;installEvt.prompt();const c=await installEvt.userChoice;installEvt=null;$('btnInstall').classList.add('hidden');if(c.outcome==='accepted')logAudit('Cài app (PWA)');}
+function netBadge(){$('offBadge').classList.toggle('hidden',navigator.onLine);}
+window.addEventListener('online',()=>{netBadge();toast('Đã có mạng lại');});window.addEventListener('offline',()=>{netBadge();toast('Mất mạng — app vẫn chạy, dữ liệu lưu trên máy');});netBadge();
+if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(e=>console.warn('SW',e)));
+  if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
+}
 </script>
 </body>
 </html>
