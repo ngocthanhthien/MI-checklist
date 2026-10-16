@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M&amp;I Daily Checklist · ILD Coffee Vietnam</title>
+<script>try{var t=localStorage.getItem('ild_mi_theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
+<style>
+/* ===================== [TOKENS · ILD Crafted] ===================== */
+:root{
+  --bg:#F7F0E6;--surface:#FFFFFF;--surface2:#FBF4E8;--selected:#F6E8CF;--line:#E6D6BA;--input:#99897A;
+  --text:#2A2018;--muted:#6B5842;--primary:#382E28;--primary-hover:#514135;--primary-text:#FFFFFF;--accent:#8A5A2F;
+  --red:#E30613;--focus:#2563EB;--th:#FBF4E8;--zebra:#FDF9F3;--overlay:rgba(42,32,24,.45);
+  --ok:#1B7A36;--warn:#A15C07;--fail:#B3261E;--ok-bg:#E4F2E7;--warn-bg:#FBEFD9;--fail-bg:#F9E4E1;--gray-bg:#F1E7D8;--info:#1D5FA8;--info-bg:#E3EEFA;
+  --shadow:0 1px 2px rgba(56,46,40,.08),0 2px 8px rgba(56,46,40,.06);--shadow-pop:0 14px 40px rgba(42,32,24,.22);
+  --r:10px;color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1F1A17;--surface:#2A231F;--surface2:#261F1B;--selected:#3F332B;--line:#4A3F37;--input:#968575;
+  --text:#F5EEE5;--muted:#C7B8A8;--primary:#E5D8C8;--primary-hover:#F2E8DC;--primary-text:#382E28;--accent:#D9A774;
+  --red:#FF4B55;--focus:#8AB0FF;--th:#342B25;--zebra:#2F2722;--overlay:rgba(0,0,0,.6);
+  --ok:#7CD699;--warn:#F2B24C;--fail:#FF8A80;--ok-bg:#1E3A27;--warn-bg:#44321A;--fail-bg:#4A2320;--gray-bg:#3A302A;--info:#8AB8F0;--info-bg:#1E2E44;
+  --shadow:0 1px 2px rgba(0,0,0,.35);--shadow-pop:0 14px 40px rgba(0,0,0,.55);color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#1F1A17;--surface:#2A231F;--surface2:#261F1B;--selected:#3F332B;--line:#4A3F37;--input:#968575;
+  --text:#F5EEE5;--muted:#C7B8A8;--primary:#E5D8C8;--primary-hover:#F2E8DC;--primary-text:#382E28;--accent:#D9A774;
+  --red:#FF4B55;--focus:#8AB0FF;--th:#342B25;--zebra:#2F2722;--overlay:rgba(0,0,0,.6);
+  --ok:#7CD699;--warn:#F2B24C;--fail:#FF8A80;--ok-bg:#1E3A27;--warn-bg:#44321A;--fail-bg:#4A2320;--gray-bg:#3A302A;--info:#8AB8F0;--info-bg:#1E2E44;
+  --shadow:0 1px 2px rgba(0,0,0,.35);--shadow-pop:0 14px 40px rgba(0,0,0,.55);color-scheme:dark;}
+
+/* ===================== [BASE] ===================== */
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font:15px/1.45 "Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;overflow-x:clip}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+h2{font-size:19px;margin:0 0 4px}
+h3{font-size:16px;margin:0 0 8px}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.hidden{display:none!important}
+
+header.top{display:flex;align-items:center;gap:12px;padding:10px 18px;background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30}
+.logo-wrap{background:#fff;border-radius:8px;padding:4px 8px;display:flex;align-items:center;border:1px solid #eadfcd}
+.logo-wrap img{height:30px;display:block}
+.app-title{font-weight:700;font-size:17px;line-height:1.15}
+.app-title small{display:block;font-weight:400;font-size:12px;color:var(--muted)}
+.spacer{flex:1}
+.hbtn{border:1px solid var(--line);background:var(--surface2);border-radius:999px;padding:6px 12px;font-size:13px}
+.hbtn:hover{background:var(--selected)}
+
+nav.tabs{display:flex;gap:4px;padding:8px 18px 0;background:var(--surface);border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:thin;position:sticky;top:53px;z-index:29}
+.tab{border:0;background:none;padding:9px 14px 11px;border-bottom:3px solid transparent;white-space:nowrap;color:var(--muted);font-weight:600}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--text);border-bottom-color:var(--red)}
+.tab .cnt[hidden]{display:none}
+.tab .cnt{display:inline-block;min-width:20px;padding:0 6px;border-radius:999px;background:var(--fail-bg);color:var(--fail);font-size:12px;margin-left:4px}
+
+main{max-width:1280px;margin:0 auto;padding:18px 18px 120px}
+section.panel{display:none}
+section.panel.active{display:block}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px}
+.card+.card{margin-top:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+label.fld{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);font-weight:600;min-width:0}
+input[type=text],input[type=date],input[type=search],select,textarea{background:var(--surface);border:1px solid var(--input);border-radius:8px;padding:8px 10px;min-height:40px;color:var(--text);max-width:100%}
+textarea{resize:vertical}
+.btn{border:1px solid var(--line);background:var(--surface2);border-radius:8px;padding:8px 14px;font-weight:600;min-height:40px;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:var(--selected)}
+.btn.primary{background:var(--primary);color:var(--primary-text);border-color:var(--primary)}
+.btn.primary:hover{background:var(--primary-hover)}
+.btn.danger{color:var(--fail);border-color:color-mix(in srgb,var(--fail) 40%,var(--line))}
+.btn.sm{min-height:32px;padding:4px 10px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* ===================== [CHECK] ===================== */
+.shift-pick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.shift-btn{border:2px solid var(--line);background:var(--surface);border-radius:var(--r);padding:12px 14px;text-align:left;box-shadow:var(--shadow)}
+.shift-btn b{font-size:18px;display:block}
+.shift-btn span{font-size:13px;color:var(--muted)}
+.shift-btn.active{border-color:var(--primary);background:var(--selected)}
+.shift-btn .st{float:right;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px}
+.st-none{background:var(--gray-bg);color:var(--muted)}
+.st-draft{background:var(--warn-bg);color:var(--warn)}
+.st-done{background:var(--info-bg);color:var(--info)}
+.st-verified{background:var(--ok-bg);color:var(--ok)}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap}
+
+.chk-head{display:grid;grid-template-columns:160px 1fr auto;gap:10px;align-items:end}
+.progress{height:8px;border-radius:99px;background:var(--gray-bg);overflow:hidden;margin-top:10px}
+.progress>i{display:block;height:100%;background:var(--ok);width:0;transition:width .2s}
+.filters{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:12px 0 0}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600}
+.chip.active{background:var(--primary);color:var(--primary-text);border-color:var(--primary)}
+.lock-banner{margin-top:12px;padding:10px 12px;border-radius:8px;background:var(--info-bg);color:var(--info);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+.area-title{margin:22px 0 8px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:800;display:flex;align-items:center;gap:8px}
+.area-title::after{content:"";flex:1;height:1px;background:var(--line)}
+.eq{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden}
+.eq-head{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface2);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.eq-name{font-weight:700}
+.eq-name code{font-family:Consolas,monospace;font-weight:600;font-size:13px;background:var(--gray-bg);padding:1px 6px;border-radius:5px;margin-left:6px;color:var(--accent)}
+.eq-meta{font-size:12px;color:var(--muted);margin-left:8px}
+.eq-actions{display:flex;gap:6px}
+.it{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:4px 12px;padding:10px 14px;border-top:1px solid var(--line);align-items:center}
+.it:first-of-type{border-top:0}
+.it.ng{background:color-mix(in srgb,var(--fail-bg) 55%,var(--surface))}
+.it.missing{box-shadow:inset 4px 0 0 var(--red)}
+.it-no{font-weight:700;color:var(--muted);font-size:13px;text-align:center;align-self:start;padding-top:2px}
+.it.done .it-no{color:var(--ok)}
+.it-task{font-weight:600}
+.it-std{font-size:13px;color:var(--muted)}
+.it-std b{color:var(--text);font-weight:600}
+.it-ctrl{display:flex;gap:8px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--input);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:var(--surface);padding:0 12px;min-height:40px;font-weight:600;font-size:13px;white-space:nowrap;color:var(--muted)}
+.seg button+button{border-left:1px solid var(--input)}
+.seg button[aria-pressed=true].v-run{background:var(--primary);color:var(--primary-text)}
+.seg button[aria-pressed=true].v-notrun{background:var(--gray-bg);color:var(--text);box-shadow:inset 0 0 0 2px var(--muted)}
+.seg button[aria-pressed=true].v-ok{background:var(--ok);color:#fff}
+.seg button[aria-pressed=true].v-ng{background:var(--fail);color:#fff}
+:root[data-theme="dark"] .seg button[aria-pressed=true].v-ok,:root[data-theme="dark"] .seg button[aria-pressed=true].v-ng{color:#1F1A17}
+.seg.dis{opacity:.45;pointer-events:none}
+.it-extra{grid-column:2/-1;display:flex;gap:8px;flex-wrap:wrap}
+.it-extra input{flex:1 1 220px;min-height:36px;padding:6px 10px}
+.it-extra input.reason{border-color:var(--fail)}
+.note-btn{border:0;background:none;color:var(--muted);font-size:13px;padding:2px 0;text-decoration:underline dotted}
+.locked .seg,.locked .eq-actions{pointer-events:none}
+.locked .eq-actions{opacity:.4}
+
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -4px 16px rgba(0,0,0,.08);padding:10px 18px}
+.bar-in{max-width:1280px;margin:0 auto;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.bar .stat{display:flex;gap:14px;font-size:14px;flex-wrap:wrap}
+.bar .stat b{font-size:16px}
+
+/* ===================== [TABLES] ===================== */
+.tbl-wrap{overflow:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table.tbl{border-collapse:collapse;width:100%;font-size:14px}
+.tbl th,.tbl td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.tbl th{background:var(--th);font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);position:sticky;top:0;z-index:1}
+.tbl tr:nth-child(even) td{background:var(--zebra)}
+.tbl td.num{text-align:right;font-variant-numeric:tabular-nums}
+.tbl .acts{display:flex;gap:4px;flex-wrap:wrap}
+.matrix{display:grid;grid-template-columns:70px repeat(var(--days),minmax(34px,1fr));gap:3px;font-size:12px;overflow-x:auto}
+.matrix .h{color:var(--muted);text-align:center;font-weight:600}
+.matrix .lbl{font-weight:700;align-self:center}
+.matrix .c{height:30px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-weight:700;border:0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;box-shadow:var(--shadow)}
+.kpi b{font-size:24px;display:block}
+.kpi span{font-size:13px;color:var(--muted)}
+
+/* editor */
+.ed td{padding:4px}
+.ed input,.ed textarea{width:100%;min-height:34px;padding:5px 7px;font-size:13px}
+.ed textarea{min-height:34px;height:52px}
+
+/* ===================== [MODAL / TOAST] ===================== */
+.ov{position:fixed;inset:0;background:var(--overlay);z-index:60;display:flex;align-items:flex-start;justify-content:center;padding:4vh 12px;overflow:auto}
+.dlg{background:var(--surface);border-radius:14px;box-shadow:var(--shadow-pop);width:min(520px,100%);padding:18px}
+.dlg.wide{width:min(1200px,100%)}
+.dlg-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--primary);color:var(--primary-text);padding:10px 16px;border-radius:10px;z-index:80;box-shadow:var(--shadow-pop);opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw}
+#toast.show{opacity:1}
+
+/* ===================== [PAPER FORM] ===================== */
+.paper{background:#fff;color:#111;padding:14px;font-size:11px;font-family:Arial,sans-serif;overflow-x:auto}
+.paper table{border-collapse:collapse;width:100%;min-width:900px}
+.paper td,.paper th{border:1px solid #333;padding:3px 4px;vertical-align:middle}
+.paper th{background:#eee;font-size:10px}
+.paper .c{text-align:center}
+.paper .x{text-align:center;font-weight:700;font-size:12px}
+.paper .ngrow td{background:#fde8e6}
+.paper .ttl{font-size:20px;font-weight:700;text-align:center}
+.paper .eqc{white-space:pre-line;font-weight:600}
+.paper .sig td{height:52px;vertical-align:top}
+.paper img{height:34px}
+#printArea{display:none}
+@media print{
+  @page{size:A4 landscape;margin:8mm}
+  body{background:#fff}
+  body>*:not(#printArea){display:none!important}
+  #printArea{display:block}
+  .paper{padding:0;overflow:visible}
+  .paper table{min-width:0}
+  .paper tr{break-inside:avoid}
+  .paper thead{display:table-header-group}
+}
+
+/* ===================== [RESPONSIVE] ===================== */
+@media (max-width:900px){
+  .chk-head{grid-template-columns:1fr 1fr}
+  .chk-head .who{grid-column:1/-1}
+  .it{grid-template-columns:28px minmax(0,1fr)}
+  .it-ctrl{grid-column:2/-1;flex-wrap:wrap}
+  .seg{flex:1}
+  .seg button{flex:1;min-height:46px}
+}
+@media (max-width:600px){
+  header.top{padding:8px 12px;gap:8px}
+  .app-title{font-size:15px}
+  .app-title small{display:none}
+  nav.tabs{padding:4px 8px 0;top:49px}
+  .tab{padding:8px 10px 10px;font-size:14px}
+  main{padding:12px 12px 140px}
+  .card{padding:12px}
+  .shift-pick{gap:6px}
+  .shift-btn{padding:8px 10px}
+  .shift-btn b{font-size:16px}
+  .shift-btn span{font-size:11px}
+  .shift-btn .st{float:none;display:inline-block;margin-top:4px}
+  .eq-head{padding:8px 12px}
+  .it{padding:10px 12px}
+  .bar{padding:8px 12px}
+  .bar .btn{flex:1;justify-content:center}
+  .hide-sm{display:none}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="logo-wrap"><img id="logo" alt="iLD"></div>
+  <div class="app-title">M&amp;I Daily Checklist<small>ENG.M&amp;I.F.001 · Engineering · ILD Coffee Vietnam</small></div>
+  <div class="spacer"></div>
+  <button class="hbtn" onclick="toggleTheme()" title="Sáng / Tối">🌓<span class="hide-sm"> Giao diện</span></button>
+</header>
+<nav class="tabs" id="tabs" aria-label="Chức năng">
+  <button class="tab active" data-tab="check">✅ Kiểm tra</button>
+  <button class="tab" data-tab="history">📋 Lịch sử phiếu</button>
+  <button class="tab" data-tab="ng">⚠️ Không đạt<span class="cnt" id="ngCnt" hidden></span></button>
+  <button class="tab" data-tab="editor">🛠️ Checklist</button>
+  <button class="tab" data-tab="settings">⚙️ Cài đặt</button>
+  <button class="tab" data-tab="guide">📖 Hướng dẫn</button>
+</nav>
+
+<main>
+  <!-- ===================== KIỂM TRA ===================== -->
+  <section class="panel active" id="tab-check">
+    <div class="shift-pick" id="shiftPick"></div>
+    <div class="card">
+      <div class="chk-head">
+        <label class="fld">Ngày kiểm tra<input type="date" id="ckDate"></label>
+        <label class="fld who">Người kiểm tra (Checked by)<input type="text" id="ckWho" list="peopleList" placeholder="Nhập tên người kiểm tra" autocomplete="off"></label>
+        <div class="row">
+          <button class="btn" onclick="markAllRemaining()" id="btnAllOk" title="Đánh Run + Đạt cho mọi mục còn trống">✓ Còn trống → Run · Đạt</button>
+        </div>
+      </div>
+      <datalist id="peopleList"></datalist>
+      <div class="progress"><i id="ckProg"></i></div>
+      <div class="filters" id="ckFilters"></div>
+      <div id="ckLock"></div>
+    </div>
+    <div id="ckList"></div>
+  </section>
+
+  <!-- ===================== LỊCH SỬ ===================== -->
+  <section class="panel" id="tab-history">
+    <div class="kpis" id="hsKpi"></div>
+    <div class="card">
+      <h3>Tình trạng 14 ngày gần nhất</h3>
+      <div class="matrix" id="hsMatrix"></div>
+      <p class="small muted" style="margin:8px 0 0">Bấm vào ô để mở phiếu. <span class="pill st-none">—</span> chưa có · <span class="pill st-draft">Nháp</span> · <span class="pill st-done">Đã kiểm</span> · <span class="pill st-verified">Đã xác nhận</span> · số đỏ = số mục Không đạt</p>
+    </div>
+    <div class="card">
+      <div class="row" style="margin-bottom:12px">
+        <label class="fld">Từ ngày<input type="date" id="hsFrom"></label>
+        <label class="fld">Đến ngày<input type="date" id="hsTo"></label>
+        <label class="fld">Ca<select id="hsShift"><option value="">Tất cả</option></select></label>
+        <label class="fld">Trạng thái<select id="hsStatus"><option value="">Tất cả</option><option value="draft">Nháp</option><option value="done">Đã kiểm</option><option value="verified">Đã xác nhận</option></select></label>
+        <div class="spacer"></div>
+        <button class="btn" onclick="exportHistory()">⬇ Xuất Excel</button>
+      </div>
+      <div class="tbl-wrap"><table class="tbl" id="hsTbl"></table></div>
+    </div>
+  </section>
+
+  <!-- ===================== KHÔNG ĐẠT ===================== -->
+  <section class="panel" id="tab-ng">
+    <div class="card">
+      <div class="row" style="margin-bottom:12px">
+        <label class="fld">Từ ngày<input type="date" id="ngFrom"></label>
+        <label class="fld">Đến ngày<input type="date" id="ngTo"></label>
+        <label class="fld">Ca<select id="ngShift"><option value="">Tất cả</option></select></label>
+        <label class="fld">Xử lý<select id="ngFix"><option value="">Tất cả</option><option value="open">Chưa khắc phục</option><option value="fixed">Đã khắc phục</option></select></label>
+        <label class="fld" style="flex:1 1 200px">Tìm<input type="search" id="ngQ" placeholder="Thiết bị, mã, lý do…"></label>
+        <button class="btn" onclick="exportNg()">⬇ Xuất Excel</button>
+      </div>
+      <div class="tbl-wrap"><table class="tbl" id="ngTbl"></table></div>
+    </div>
+    <div class="card">
+      <h3>Thiết bị không đạt nhiều nhất (theo bộ lọc)</h3>
+      <div id="ngTop"></div>
+    </div>
+  </section>
+
+  <!-- ===================== CHECKLIST EDITOR ===================== -->
+  <section class="panel" id="tab-editor">
+    <div class="card">
+      <div class="row">
+        <label class="fld">Checklist của ca<select id="edShift"></select></label>
+        <label class="fld" style="flex:1 1 200px">Khu vực phụ trách (hiển thị trên nút ca)<input type="text" id="edAreas" placeholder="VD: Floor 3 · Floor 4"></label>
+        <div class="spacer"></div>
+        <button class="btn" onclick="edImport()">⬆ Nhập Excel</button>
+        <button class="btn" onclick="edExport()">⬇ Xuất Excel</button>
+      </div>
+      <p class="small muted" style="margin:10px 0 0">Mỗi dòng là một hạng mục. Các dòng liền nhau có cùng <b>Thiết bị</b> được gộp thành một thẻ. Dòng 2 của ô Thiết bị là mã máy. Thay đổi chỉ áp dụng cho phiếu tạo mới — phiếu cũ giữ nguyên nội dung lúc kiểm.</p>
+    </div>
+    <div class="card">
+      <div class="tbl-wrap"><table class="tbl ed" id="edTbl"></table></div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn" onclick="edAdd()">＋ Thêm dòng</button>
+        <div class="spacer"></div>
+        <span class="small muted" id="edDirty"></span>
+        <button class="btn" onclick="edLoad()">Hoàn tác</button>
+        <button class="btn primary" onclick="edSave()">💾 Lưu checklist</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CÀI ĐẶT ===================== -->
+  <section class="panel" id="tab-settings">
+    <div class="card">
+      <h3>Thông tin biểu mẫu</h3>
+      <div class="row">
+        <label class="fld">Mã biểu mẫu<input type="text" id="stCode"></label>
+        <label class="fld">Hệ thống / System<input type="text" id="stSystem"></label>
+        <label class="fld">Department<input type="text" id="stDept"></label>
+      </div>
+      <h3 style="margin-top:18px">Quy tắc hoàn tất phiếu</h3>
+      <label class="small" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="stReqOk"> Bắt buộc chọn Đạt / Không đạt cả khi thiết bị <b>Not run</b></label>
+      <div class="row" style="margin-top:14px"><button class="btn primary" onclick="stSave()">💾 Lưu cài đặt</button></div>
+    </div>
+    <div class="card">
+      <h3>Dữ liệu</h3>
+      <p class="small muted" style="margin-top:0">Dữ liệu lưu trên trình duyệt của máy này (<code>localStorage</code>). Hãy sao lưu định kỳ để không mất dữ liệu khi xoá lịch sử trình duyệt hoặc đổi máy.</p>
+      <div class="row">
+        <button class="btn" onclick="backupJson()">⬇ Sao lưu JSON</button>
+        <button class="btn" onclick="restoreJson()">⬆ Phục hồi JSON</button>
+        <button class="btn danger" onclick="resetTemplates()">↺ Nạp lại checklist gốc</button>
+        <button class="btn danger" onclick="resetAll()">🗑 Xoá toàn bộ dữ liệu</button>
+      </div>
+      <p class="small muted" id="stInfo"></p>
+    </div>
+    <div class="card">
+      <h3>Nhật ký thao tác</h3>
+      <div class="tbl-wrap" style="max-height:320px"><table class="tbl" id="auditTbl"></table></div>
+    </div>
+  </section>
+
+  <!-- ===================== HƯỚNG DẪN ===================== -->
+  <section class="panel" id="tab-guide">
+    <div class="card">
+      <h2>Hướng dẫn sử dụng</h2>
+      <ol>
+        <li><b>Chọn ca</b> (Ca 1 / Ca 2 / Ca 3) ở đầu tab <b>Kiểm tra</b> — mỗi ca có danh sách thiết bị riêng theo biểu mẫu ENG.M&amp;I.F.001. Chọn <b>Ngày</b> và nhập <b>Người kiểm tra</b>.</li>
+        <li>Với từng hạng mục, chọn <b>Run / Not run</b> (thiết bị đang chạy hay dừng) rồi <b>Đạt / Không đạt</b>. Bấm lại nút đang chọn để bỏ chọn.</li>
+        <li>Chọn <b>Không đạt</b> thì phải ghi <b>Lý do</b>. Bấm “+ Ghi chú” để thêm Remark cho bất kỳ mục nào.</li>
+        <li>Nút <b>✓ Run · Đạt</b> trên mỗi thiết bị đánh nhanh cả nhóm; <b>⏸ Not run</b> đánh dấu thiết bị đang dừng. Nút <b>Còn trống → Run · Đạt</b> điền các mục chưa chọn.</li>
+        <li>Phiếu <b>tự lưu</b> từng thao tác (trạng thái <i>Nháp</i>). Kiểm xong bấm <b>Hoàn tất (Checked by)</b> — app báo các mục còn thiếu.</li>
+        <li>Trưởng ca / giám sát mở tab <b>Lịch sử phiếu</b> → <b>Xác nhận</b> để ký <b>Verified by</b>. Phiếu đã xác nhận bị khoá; muốn sửa phải <b>Huỷ xác nhận</b>.</li>
+        <li>Tab <b>Không đạt</b> gom mọi mục lỗi của các phiếu; đánh dấu <b>Đã khắc phục</b> khi xử lý xong.</li>
+        <li><b>In / PDF</b>: mở phiếu ở Lịch sử → 🖨 In (A4 ngang, đúng bố cục biểu mẫu giấy). <b>Xuất Excel</b> có ở từng phiếu, lịch sử và danh sách lỗi.</li>
+        <li>Tab <b>Checklist</b>: sửa / thêm / bớt hạng mục từng ca, hoặc <b>Nhập Excel</b> lại từ file biểu mẫu (mỗi sheet “Shift N check list” là một ca).</li>
+      </ol>
+      <p class="small muted">Dữ liệu chỉ lưu trên trình duyệt của máy đang dùng. Sao lưu JSON ở tab Cài đặt để chuyển sang máy khác.</p>
+    </div>
+  </section>
+</main>
+
+<div class="bar" id="ckBar">
+  <div class="bar-in">
+    <div class="stat">
+      <span>Đã kiểm <b id="bDone">0</b>/<span id="bTotal">0</span></span>
+      <span style="color:var(--ok)">Đạt <b id="bOk">0</b></span>
+      <span style="color:var(--fail)">Không đạt <b id="bNg">0</b></span>
+      <span class="muted">Not run <b id="bNr">0</b></span>
+    </div>
+    <div class="spacer"></div>
+    <button class="btn" onclick="viewRecord(curRec()&&curRec().id)" id="bView">👁 Xem phiếu</button>
+    <button class="btn primary" onclick="completeRecord()" id="bDoneBtn">✔ Hoàn tất (Checked by)</button>
+  </div>
+</div>
+
+<div id="printArea"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="fileIn" hidden>
+
+<script>
+/* ===================== [CONFIG] ===================== */
+const LOGO='data:image/png;base64,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';
+const DEFAULT_ITEMS={"S1":[{"id":"s1_001","area":"Floor 3","equip":"Bơm Chân không\nVC-500 G3801","task":"Kiểm tra dầu chân không","std":"Dầu ở giữa mắt thăm trên, không chuyển màu","method":"quan sát trực quan"},{"id":"s1_002","area":"Floor 3","equip":"Bơm Chân không\nVC-500 G3801","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_003","area":"Floor 3","equip":"Bơm Chân không\nVC-500 G3801","task":"Kiểm tra lọc Solberg","std":"Lọc không có FB","method":"quan sát trực quan"},{"id":"s1_004","area":"Floor 3","equip":"Bơm Chân không\nVC-500 G3811","task":"Kiểm tra dầu chân không","std":"Dầu ở giữa mắt thăm trên, không chuyển màu","method":"quan sát trực quan"},{"id":"s1_005","area":"Floor 3","equip":"Bơm Chân không\nVC-500 G3811","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_006","area":"Floor 3","equip":"Bơm Chân không\nVC-500 G3811","task":"Kiểm tra lọc Solberg","std":"Lọc không có FB","method":"quan sát trực quan"},{"id":"s1_007","area":"Floor 3","equip":"Bơm Chân không\nVC-500 G3611","task":"Kiểm tra dầu chân không","std":"Dầu ở giữa mắt thăm trên, không chuyển màu","method":"quan sát trực quan"},{"id":"s1_008","area":"Floor 3","equip":"Bơm Chân không\nVC-500 G3611","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_009","area":"Floor 3","equip":"Bơm Chân không\nVC-500 G3611","task":"Kiểm tra lọc Solberg","std":"Lọc không có FB","method":"quan sát trực quan"},{"id":"s1_010","area":"Floor 3","equip":"Bơm Chân không\nBUSCH G3601","task":"Kiểm tra dầu chân không","std":"Mức dầu trên sight glass = 2/3 mắt thăm","method":"quan sát trực quan"},{"id":"s1_011","area":"Floor 3","equip":"Bơm Chân không\nBUSCH G3601","task":"Kiểm tra nước làm mát","std":"Mức nước trên sight glass > 2/3 mắt thăm","method":"quan sát trực quan"},{"id":"s1_012","area":"Floor 3","equip":"Bơm Chân không\nBUSCH G3601","task":"Nhiệt độ nước làm mát","std":"Nhiệt độ < 75 độ","method":"quan sát trực quan"},{"id":"s1_013","area":"Floor 3","equip":"Bơm chân không\nOKTA 1000 G3501","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_014","area":"Floor 3","equip":"Bơm chân không\nOKTA 1000 G3501","task":"Kiểm tra dầu chân không","std":"Dầu ở giữa mắt thăm, không chuyển màu","method":"quan sát trực quan"},{"id":"s1_015","area":"Floor 3","equip":"Bơm chân không\nOKTA 1000 G3501","task":"Kiểm tra dầu nuôi phốt","std":"Level nằm trong mức cho phép >1/2","method":"quan sát trực quan"},{"id":"s1_016","area":"Floor 3","equip":"Bơm chân không\nOKTA 1000 G3511","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_017","area":"Floor 3","equip":"Bơm chân không\nOKTA 1000 G3511","task":"Kiểm tra dầu chân không","std":"Dầu ở giữa mắt thăm, không chuyển màu","method":"quan sát trực quan"},{"id":"s1_018","area":"Floor 3","equip":"Bơm chân không\nOKTA 1000 G3511","task":"Kiểm tra dầu nuôi phốt","std":"Level nằm trong mức cho phép >1/2","method":"quan sát trực quan"},{"id":"s1_019","area":"Floor 3","equip":"Bơm chân không\nOKTA 4000 G3401","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_020","area":"Floor 3","equip":"Bơm chân không\nOKTA 4000 G3401","task":"Kiểm tra dầu chân không","std":"Dầu ở giữa mắt thăm, không chuyển màu","method":"quan sát trực quan"},{"id":"s1_021","area":"Floor 3","equip":"Bơm chân không\nOKTA 4000 G3401","task":"Kiểm tra dầu nuôi phốt","std":"Level nằm trong mức cho phép >1/2","method":"quan sát trực quan"},{"id":"s1_022","area":"Floor 3","equip":"Bơm chân không\nOKTA 4000 G3411","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_023","area":"Floor 3","equip":"Bơm chân không\nOKTA 4000 G3411","task":"Kiểm tra dầu chân không","std":"Dầu ở giữa mắt thăm, không chuyển màu","method":"quan sát trực quan"},{"id":"s1_024","area":"Floor 3","equip":"Bơm chân không\nOKTA 4000 G3411","task":"Kiểm tra dầu nuôi phốt","std":"Level nằm trong mức cho phép >1/2","method":"quan sát trực quan"},{"id":"s1_025","area":"Floor 3","equip":"Bơm chân không\nOKTA 4000 G3421","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_026","area":"Floor 3","equip":"Bơm chân không\nOKTA 4000 G3421","task":"Kiểm tra dầu chân không","std":"Dầu ở giữa mắt thăm, không chuyển màu","method":"quan sát trực quan"},{"id":"s1_027","area":"Floor 3","equip":"Bơm chân không\nOKTA 4000 G3421","task":"Kiểm tra dầu nuôi phốt","std":"Level nằm trong mức cho phép >1/2","method":"quan sát trực quan"},{"id":"s1_028","area":"Floor 3","equip":"Bơm chân không\nOKTA 4000 G3431","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_029","area":"Floor 3","equip":"Bơm chân không\nOKTA 4000 G3431","task":"Kiểm tra dầu chân không","std":"Dầu ở giữa mắt thăm, không chuyển màu","method":"quan sát trực quan"},{"id":"s1_030","area":"Floor 3","equip":"Bơm chân không\nOKTA 4000 G3431","task":"Kiểm tra dầu nuôi phốt","std":"Level nằm trong mức cho phép >1/2","method":"quan sát trực quan"},{"id":"s1_031","area":"Floor 3","equip":"Bơm Heating\nG2010","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s1_032","area":"Floor 3","equip":"Bơm Heating\nG2010","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ đầu bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_033","area":"Floor 3","equip":"Bơm Heating\nG2020","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s1_034","area":"Floor 3","equip":"Bơm Heating\nG2020","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ đầu bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_035","area":"Floor 3","equip":"Bơm Heating\nG2030","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s1_036","area":"Floor 3","equip":"Bơm Heating\nG2030","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ đầu bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_037","area":"Floor 3","equip":"Bơm Heating\nG2040","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s1_038","area":"Floor 3","equip":"Bơm Heating\nG2040","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ đầu bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_039","area":"Floor 3","equip":"Bơm Heating\nG2050","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s1_040","area":"Floor 3","equip":"Bơm Heating\nG2050","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ đầu bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_041","area":"Floor 3","equip":"Bơm Heating\nG2060","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s1_042","area":"Floor 3","equip":"Bơm Heating\nG2060","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ đầu bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_043","area":"Floor 3","equip":"Bơm Heating\nG2070","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s1_044","area":"Floor 3","equip":"Bơm Heating\nG2070","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ đầu bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_045","area":"Floor 3","equip":"Bơm Heating\nG2080","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s1_046","area":"Floor 3","equip":"Bơm Heating\nG2080","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ đầu bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_047","area":"Floor 3","equip":"Bơm Heating\nG2090","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s1_048","area":"Floor 3","equip":"Bơm Heating\nG2090","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ đầu bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_049","area":"Floor 3","equip":"Bơm Heating\nG21000","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s1_050","area":"Floor 3","equip":"Bơm Heating\nG21000","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ đầu bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_051","area":"Floor 3","equip":"Bơm Heating\nG2110","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s1_052","area":"Floor 3","equip":"Bơm Heating\nG2110","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ đầu bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_053","area":"Floor 3","equip":"Bơm Heating\nG2120","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s1_054","area":"Floor 3","equip":"Bơm Heating\nG2120","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ đầu bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_055","area":"Floor 3","equip":"Hot-Water pump\nG2202","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s1_056","area":"Floor 3","equip":"Hot-Water pump\nG2202","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ đầu bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_057","area":"Floor 3","equip":"Cold-Water pump\nG2802","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s1_058","area":"Floor 3","equip":"Cold-Water pump\nG2802","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ đầu bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_059","area":"Floor 3","equip":"Elevator return\nG9640","task":"Kiểm tra betl tải","std":"Dây belt cả 2 bên không hư hại, không lệch khỏi pully","method":"quan sát trực quan"},{"id":"s1_060","area":"Floor 3","equip":"Return Pusher\nG9641&G9647","task":"Kiểm tra tiếng ồn","std":"Hộp số, motor không có tiếng động lạ","method":"quan sát trực quan"},{"id":"s1_061","area":"Floor 3","equip":"Return Pusher\nG9641&G9647","task":"Kiểm tra cần đẩy","std":"Cần đẩy không lệch, hoạt động mượt mà","method":"quan sát trực quan"},{"id":"s1_062","area":"Floor 3","equip":"Cold room Pusher\nG9646","task":"Kiểm tra tiếng ồn","std":"Hộp số, motor không có tiếng động lạ","method":"quan sát trực quan"},{"id":"s1_063","area":"Floor 3","equip":"Cold room Pusher\nG9646","task":"Kiểm tra cần đẩy","std":"Cần đẩy không lệch, hoạt động mượt mà","method":"quan sát trực quan"},{"id":"s1_064","area":"Floor 3","equip":"Bơm thủy lực\nG7951","task":"Kiểm tra tiếng ồn","std":"Motor và đầu bơm không có tiếng ồn lạ","method":"quan sát trực quan"},{"id":"s1_065","area":"Floor 3","equip":"Bơm thủy lực\nG7951","task":"Kiểm tra các kết nối thủy lực","std":"Không lak dầu","method":"quan sát trực quan"},{"id":"s1_066","area":"Floor 3","equip":"Bơm thủy lực\nG7952","task":"Kiểm tra tiếng ồn","std":"Motor và đầu bơm không có tiếng ồn lạ","method":"quan sát trực quan"},{"id":"s1_067","area":"Floor 3","equip":"Bơm thủy lực\nG7952","task":"Kiểm tra các kết nối thủy lực","std":"Không lak dầu","method":"quan sát trực quan"},{"id":"s1_068","area":"Floor 3","equip":"Motor giải nhiệt dầu thủy lực\nG7953","task":"Kiểm tra tiếng ồn","std":"Motor không có tiếng ồn lạ","method":"quan sát trực quan"},{"id":"s1_069","area":"Floor 3","equip":"Motor giải nhiệt dầu thủy lực\nG7953","task":"Kiểm tra các kết nối thủy lực","std":"Không lak dầu","method":"quan sát trực quan"},{"id":"s1_070","area":"Floor 3","equip":"Tank dầu thủy lực","task":"Kiểm tra mức dầu trên tank","std":"Mức dầu vẫn còn nằm trong mức cho phép","method":"quan sát trực quan"},{"id":"s1_071","area":"Floor 3","equip":"Tank dầu thủy lực","task":"Kiểm tra mức dầu trên SCADA","std":"Mức dầu so với ngày trước đó","method":"Xem mức trên màn hình SCADA"},{"id":"s1_072","area":"Floor 3","equip":"Sàn Rung DEVEX\nF22200","task":"Kiểm tra tiếng ồn","std":"Motor không có tiếng động lạ","method":"quan sát trực quan"},{"id":"s1_073","area":"Floor 3","equip":"Sàn Rung DEVEX\nF22200","task":"Kiểm tra dây belt","std":"Dây belt không hư hại","method":"quan sát trực quan"},{"id":"s1_074","area":"Floor 3","equip":"Vacuum pump\nV29550 M01","task":"Kiểm tra tiếng ồn","std":"Motor, đầu bơm không có tiếng động lạ","method":"quan sát trực quan"},{"id":"s1_075","area":"Floor 3","equip":"Vacuum pump\nV29550 M01","task":"Kiểm tra nước trong bình chứa","std":"Đủ nước làm kín, nhìn thấy nước trong sight glass","method":"quan sát trực quan"},{"id":"s1_076","area":"Floor 3","equip":"Vacuum pump\nV29570 M01","task":"Kiểm tra tiếng ồn","std":"Motor, đầu bơm không có tiếng động lạ","method":"quan sát trực quan"},{"id":"s1_077","area":"Floor 3","equip":"Vacuum pump\nV29570 M01","task":"Kiểm tra nước trong bình chứa","std":"Đủ nước làm kín, nhìn thấy nước trong sight glass","method":"quan sát trực quan"},{"id":"s1_078","area":"Floor 3","equip":"Vacuum pump\nV29580 M01","task":"Kiểm tra tiếng ồn","std":"Motor, đầu bơm không có tiếng động lạ","method":"quan sát trực quan"},{"id":"s1_079","area":"Floor 3","equip":"Vacuum pump\nV29580 M01","task":"Kiểm tra nước trong bình chứa","std":"Đủ nước làm kín, nhìn thấy nước trong sight glass","method":"quan sát trực quan"},{"id":"s1_080","area":"Floor 3","equip":"Vacuum pump\nV27250 M01","task":"Kiểm tra tiếng ồn","std":"Motor, đầu bơm không có tiếng động lạ","method":"quan sát trực quan"},{"id":"s1_081","area":"Floor 3","equip":"Vacuum pump\nV27250 M01","task":"Kiểm tra nước trong bình chứa","std":"Đủ nước làm kín, nhìn thấy nước trong sight glass","method":"quan sát trực quan"},{"id":"s1_082","area":"Floor 3","equip":"Vacuum pump\nV27252 M01","task":"Kiểm tra tiếng ồn","std":"Motor, đầu bơm không có tiếng động lạ","method":"quan sát trực quan"},{"id":"s1_083","area":"Floor 3","equip":"Vacuum pump\nV27252 M01","task":"Kiểm tra nước trong bình chứa","std":"Đủ nước làm kín, nhìn thấy nước trong sight glass","method":"quan sát trực quan"},{"id":"s1_084","area":"Floor 4","equip":"Máy nghiền coarse\nZ22150","task":"Kiểm tra tiếng ồn","std":"Motor chính và phụ không có tiếng động lạ","method":"quan sát trực quan"},{"id":"s1_085","area":"Floor 4","equip":"Máy nghiền coarse\nZ22150","task":"Kiểm tra dầu","std":"Hộp số chính và hộp số phụ không leak dầu","method":"quan sát trực quan"},{"id":"s1_086","area":"Floor 4","equip":"Máy nghiền coarse\nZ22150","task":"Kiểm tra áp khí nén","std":"Đủ 6bar","method":"quan sát trực quan"},{"id":"s1_087","area":"Floor 4","equip":"Máy nghiền Fines\nZ22350","task":"Kiểm tra tiếng ồn","std":"Motor chính và phụ không có tiếng động lạ","method":"quan sát trực quan"},{"id":"s1_088","area":"Floor 4","equip":"Máy nghiền Fines\nZ22350","task":"Kiểm tra dầu","std":"Hộp số chính và hộp số phụ không leak dầu","method":"quan sát trực quan"},{"id":"s1_089","area":"Floor 4","equip":"Máy nghiền Fines\nZ22350","task":"Kiểm tra áp khí nén","std":"Đủ 6bar","method":"quan sát trực quan"},{"id":"s1_090","area":"Floor 4","equip":"Máy nén khí DEVEX","task":"Kiểm tra dây belt","std":"Dây belt không hư hại","method":"quan sát trực quan"},{"id":"s1_091","area":"Floor 4","equip":"Bơm Foaming tầng 4\nG8101","task":"Kiêm tra seal","std":"Không leak cà phê phía guông bơm\nKhông leak dầu hộp số","method":"quan sát trực quan"},{"id":"s1_092","area":"Floor 4","equip":"Bơm Foaming tầng 4\nG8101","task":"Kiểm tra dầu","std":"Mức dầu ở giữa mắt thăm dầu\nDầu hộp số không leak","method":"quan sát trực quan"},{"id":"s1_093","area":"Floor 4","equip":"Bơm Foaming tầng 4\nG8101","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ đầu bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_094","area":"Floor 4","equip":"Pre_cooler Motor\nG8150","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_095","area":"Floor 4","equip":"Pre_cooler Motor\nG8150","task":"Kiểm tra dầu","std":"Dầu hộp số không leak","method":"quan sát trực quan"},{"id":"s1_096","area":"Floor 4","equip":"Pre_cooler Motor\nG8150","task":"Kiểm tra nước làm mát seal","std":"Có nước chảy ra ở đầu ra","method":"quan sát trực quan"},{"id":"s1_097","area":"Floor 4","equip":"Cooler motor\nG8104","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_098","area":"Floor 4","equip":"Cooler motor\nG8104","task":"Kiểm tra dầu","std":"Dầu hộp số không leak","method":"quan sát trực quan"},{"id":"s1_099","area":"Floor 4","equip":"Cooler motor\nG8104","task":"Kiểm tra nước làm mát seal","std":"Có nước chảy ra ở đầu ra","method":"quan sát trực quan"},{"id":"s1_100","area":"Floor 4","equip":"Pre_Freezer motor\nG8107","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_101","area":"Floor 4","equip":"Pre_Freezer motor\nG8107","task":"Kiểm tra dầu","std":"Dầu hộp số không leak","method":"quan sát trực quan"},{"id":"s1_102","area":"Floor 4","equip":"Pre_Freezer motor\nG8107","task":"Kiểm tra nước làm mát seal","std":"Có nước chảy ra ở đầu ra","method":"quan sát trực quan"},{"id":"s1_103","area":"Floor 4","equip":"Bơm Mixing Nitrogen","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s1_104","area":"Floor 4","equip":"Bơm Mixing Nitrogen","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s1_105","area":"Floor 4","equip":"Bơm Mixing Nitrogen","task":"Kiểm tra nước giải nhiệt seal","std":"Có nước seal, không lẫn cà phê","method":"quan sát trực quan"},{"id":"s1_106","area":"Floor 4","equip":"Bơm Foaming tầng 4\nG8110","task":"Kiêm tra seal","std":"Không leak cà phê phía guông bơm\nKhông leak dầu hộp số","method":"quan sát trực quan"},{"id":"s1_107","area":"Floor 4","equip":"Bơm Foaming tầng 4\nG8110","task":"Kiểm tra dầu","std":"Mức dầu ở giữa mắt thăm dầu\nDầu hộp số không leak","method":"quan sát trực quan"},{"id":"s1_108","area":"Floor 4","equip":"Bơm Foaming tầng 4\nG8110","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ đầu bơm, bạc đạn motor","method":"quan sát trực quan"}],"S2":[{"id":"s2_001","area":"Floor 1","equip":"Bơm cao áp\nP23400","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_002","area":"Floor 1","equip":"Bơm cao áp\nP23400","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_003","area":"Floor 1","equip":"Bơm nước nóng\nP23200 M01","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_004","area":"Floor 1","equip":"Bơm nước nóng\nP23200 M01","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_005","area":"Floor 1","equip":"Bơm nước nóng\nP23200 M01","task":"Kiểm tra áp bơm","std":"Áp đạt 5bar đầu ra ở đồng hồ","method":"quan sát trực quan"},{"id":"s2_006","area":"Floor 1","equip":"Bơm nước nóng\nP23200 M02","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_007","area":"Floor 1","equip":"Bơm nước nóng\nP23200 M02","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_008","area":"Floor 1","equip":"Bơm nước nóng\nP23200 M02","task":"Kiểm tra áp bơm","std":"Áp đạt 5bar đầu ra ở đồng hồ","method":"quan sát trực quan"},{"id":"s2_009","area":"Floor 1","equip":"Bơm ly tâm\nP25332 M01","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_010","area":"Floor 1","equip":"Bơm ly tâm\nP25332 M01","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_011","area":"Floor 1","equip":"Bơm cặn\nP26910 M01","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_012","area":"Floor 1","equip":"Bơm cặn\nP26910 M01","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_013","area":"Floor 1","equip":"Bơm cặn\nP26920 M01","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_014","area":"Floor 1","equip":"Bơm cặn\nP26920 M01","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_015","area":"Floor 1","equip":"Bơm cặn\nP26930 M01","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_016","area":"Floor 1","equip":"Bơm cặn\nP26930 M01","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_017","area":"Floor 1","equip":"Bơm ly tâm P26120","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_018","area":"Floor 1","equip":"Bơm ly tâm P26120","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_019","area":"Floor 1","equip":"Bơm ly tâm P26170","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_020","area":"Floor 1","equip":"Bơm ly tâm P26170","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_021","area":"Floor 1","equip":"Bơm ly tâm P26650","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_022","area":"Floor 1","equip":"Bơm ly tâm P26650","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_023","area":"Floor 1","equip":"Bơm ly tâm P23120","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_024","area":"Floor 1","equip":"Bơm ly tâm P23120","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_025","area":"Floor 1","equip":"Bơm ly tâm\nP24996","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_026","area":"Floor 1","equip":"Bơm ly tâm\nP24996","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_027","area":"Floor 1","equip":"Bơm set tank 1\nP27990","task":"Kiêm tra seal","std":"Không leak cà phê phía guông bơm\nKhông leak dầu hộp số","method":"quan sát trực quan"},{"id":"s2_028","area":"Floor 1","equip":"Bơm set tank 1\nP27990","task":"Kiểm tra dầu","std":"Mức dầu ở giữa mắt thăm dầu","method":"quan sát trực quan"},{"id":"s2_029","area":"Floor 1","equip":"Bơm set tank 1\nP27990","task":"Kiểm tra nước giải nhiệt seal","std":"Có nước seal, không lẫn cà phê","method":"quan sát trực quan"},{"id":"s2_030","area":"Floor 1","equip":"Bơm set tank 1\nP27990","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_031","area":"Floor 1","equip":"Bơm set tank 2\nP27980","task":"Kiêm tra seal","std":"Không leak cà phê phía guông bơm\nKhông leak dầu hộp số","method":"quan sát trực quan"},{"id":"s2_032","area":"Floor 1","equip":"Bơm set tank 2\nP27980","task":"Kiểm tra dầu","std":"Mức dầu ở giữa mắt thăm dầu","method":"quan sát trực quan"},{"id":"s2_033","area":"Floor 1","equip":"Bơm set tank 2\nP27980","task":"Kiểm tra nước giải nhiệt seal","std":"Có nước seal, không lẫn cà phê","method":"quan sát trực quan"},{"id":"s2_034","area":"Floor 1","equip":"Bơm set tank 2\nP27980","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_035","area":"Floor 1","equip":"Bơm set tank 3\nP27985","task":"Kiêm tra seal","std":"Không leak cà phê phía guông bơm\nKhông leak dầu hộp số","method":"quan sát trực quan"},{"id":"s2_036","area":"Floor 1","equip":"Bơm set tank 3\nP27985","task":"Kiểm tra dầu","std":"Mức dầu ở giữa mắt thăm dầu","method":"quan sát trực quan"},{"id":"s2_037","area":"Floor 1","equip":"Bơm set tank 3\nP27985","task":"Kiểm tra nước giải nhiệt seal","std":"Có nước seal, không lẫn cà phê","method":"quan sát trực quan"},{"id":"s2_038","area":"Floor 1","equip":"Bơm set tank 3\nP27985","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_039","area":"Floor 1","equip":"Bơm CIP\nP23160","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_040","area":"Floor 1","equip":"Bơm CIP\nP23160","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_041","area":"Floor 1","equip":"Bơm nước RO\nP23020","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_042","area":"Floor 1","equip":"Bơm nước RO\nP23020","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_043","area":"Floor 1","equip":"Bơm Evap ( ly tâm)\nP27105","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_044","area":"Floor 1","equip":"Bơm Evap ( ly tâm)\nP27105","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_045","area":"Floor 1","equip":"Bơm Evap path 1\nP27152","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_046","area":"Floor 1","equip":"Bơm Evap path 1\nP27152","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_047","area":"Floor 1","equip":"Bơm Evap path 1\nP27152","task":"Kiểm tra nước giải nhiệt seal","std":"Có nước seal, không lẫn cà phê","method":"quan sát trực quan"},{"id":"s2_048","area":"Floor 1","equip":"Bơm Evap path 2\nP27153","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_049","area":"Floor 1","equip":"Bơm Evap path 2\nP27153","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_050","area":"Floor 1","equip":"Bơm Evap path 2\nP27153","task":"Kiểm tra nước giải nhiệt seal","std":"Có nước seal, không lẫn cà phê","method":"quan sát trực quan"},{"id":"s2_051","area":"Floor 1","equip":"Bơm Evap path 3\nP27154","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_052","area":"Floor 1","equip":"Bơm Evap path 3\nP27154","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_053","area":"Floor 1","equip":"Bơm Evap path 3\nP27154","task":"Kiểm tra nước giải nhiệt seal","std":"Có nước seal, không lẫn cà phê","method":"quan sát trực quan"},{"id":"s2_054","area":"Floor 1","equip":"Bơm Evap path 4\nP27155","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_055","area":"Floor 1","equip":"Bơm Evap path 4\nP27155","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_056","area":"Floor 1","equip":"Bơm Evap path 4\nP27155","task":"Kiểm tra nước giải nhiệt seal","std":"Có nước seal, không lẫn cà phê","method":"quan sát trực quan"},{"id":"s2_057","area":"Floor 1","equip":"Bơm Evap path 5\nP27156","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_058","area":"Floor 1","equip":"Bơm Evap path 5\nP27156","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_059","area":"Floor 1","equip":"Bơm Evap path 5\nP27156","task":"Kiểm tra nước giải nhiệt seal","std":"Có nước seal, không lẫn cà phê","method":"quan sát trực quan"},{"id":"s2_060","area":"Floor 1","equip":"Bơm Evap path 6\nP27157","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_061","area":"Floor 1","equip":"Bơm Evap path 6\nP27157","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_062","area":"Floor 1","equip":"Bơm Evap path 6\nP27157","task":"Kiểm tra nước giải nhiệt seal","std":"Có nước seal, không lẫn cà phê","method":"quan sát trực quan"},{"id":"s2_063","area":"Floor 1","equip":"Bơm thu hồi condensate\nP27159","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_064","area":"Floor 1","equip":"Bơm thu hồi condensate\nP27159","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_065","area":"Floor 1","equip":"Bơm thu hồi condensate\nP27159","task":"Kiểm tra nước giải nhiệt seal","std":"Có nước seal, không lẫn cà phê","method":"quan sát trực quan"},{"id":"s2_066","area":"Floor 1","equip":"Bơm nước ngưng MVR\nP27315","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_067","area":"Floor 1","equip":"Bơm nước ngưng MVR\nP27315","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_068","area":"Floor 1","equip":"Bơm nước seal\nP29820","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s2_069","area":"Floor 1","equip":"Bơm nước seal\nP29820","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_070","area":"Floor 1","equip":"Quạt MVR\n27300 M01","task":"Kiểm tra độ rung","std":"Độ rung trên SCADA: <12um\nĐo tay : <0.9","method":"Đo bằng máy rung"},{"id":"s2_071","area":"Floor 1","equip":"Quạt MVR\n27300 M01","task":"Kiểm tra dầu giải nhiệt","std":"Nhiệt độ gối đỡ : 59 - 61 độ","method":"quan sát trực quan"},{"id":"s2_072","area":"Floor 1","equip":"Quạt giải nhiệt\n27300 M19","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ bạc đạn motor","method":"quan sát trực quan"},{"id":"s2_073","area":"Floor 1","equip":"Bơm nhớt giải nhiệt\nP27305 M01","task":"Kiểm tra áp dầu","std":"Áp dầu đạt 6bar","method":"quan sát trực quan"},{"id":"s2_074","area":"Floor 1","equip":"Bơm nhớt giải nhiệt\nP27305 M01","task":"Kiểm tra mức dầu","std":"Level nằm trong mức cho phép","method":"quan sát trực quan"},{"id":"s2_075","area":"Floor 1","equip":"Bơm nhớt giải nhiệt\nP27305 M01","task":"Kiểm traấp nước giải nhiệt dầu","std":"Đầu vào 7bar\nĐầu ra 3bar","method":"quan sát trực quan"}],"S3":[{"id":"s3_001","area":"Floor 2","equip":"Bơm SE draw off\nP25720 M01","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s3_002","area":"Floor 2","equip":"Bơm SE draw off\nP25720 M01","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s3_003","area":"Floor 2","equip":"Bơm SE draw off\nP25720 M01","task":"Kiểm tra nước giải nhiệt seal","std":"Có nước seal, không lẫn cà phê","method":"quan sát trực quan"},{"id":"s3_004","area":"Floor 2","equip":"Rotary filter SE\nF25705 M01","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ bạc đạn motor","method":"quan sát trực quan"},{"id":"s3_005","area":"Floor 2","equip":"Rotary filter SE\nF25705 M01","task":"Kiểm tra hộp số","std":"Hộp số không leak dầu, không có tiếng động lạ","method":"quan sát trực quan"},{"id":"s3_006","area":"Floor 2","equip":"Bơm cao áp\nP25770 M01","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s3_007","area":"Floor 2","equip":"Bơm cao áp\nP25770 M01","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s3_008","area":"Floor 2","equip":"Bơm Aroma PE\nP25336 M01","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s3_009","area":"Floor 2","equip":"Bơm Aroma PE\nP25336 M01","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s3_010","area":"Floor 2","equip":"Bơm PE draw off\nP25321 M01","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s3_011","area":"Floor 2","equip":"Bơm PE draw off\nP25321 M01","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s3_012","area":"Floor 2","equip":"Bơm PE draw off\nP25321 M01","task":"Kiểm tra nước giải nhiệt seal","std":"Có nước seal, không lẫn cà phê","method":"quan sát trực quan"},{"id":"s3_013","area":"Floor 2","equip":"Rotary filter PE\nF25310 M01","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ bạc đạn motor","method":"quan sát trực quan"},{"id":"s3_014","area":"Floor 2","equip":"Rotary filter PE\nF25310 M01","task":"Kiểm tra hộp số","std":"Hộp số không leak dầu, không có tiếng động lạ","method":"quan sát trực quan"},{"id":"s3_015","area":"Floor 2","equip":"Bơm Strip Aroma\nP25370 M01","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s3_016","area":"Floor 2","equip":"Bơm Strip Aroma\nP25370 M01","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s3_017","area":"Floor 2","equip":"Bơm CIP return\nP25395 M01","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s3_018","area":"Floor 2","equip":"Bơm CIP return\nP25395 M01","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s3_019","area":"Floor 2","equip":"Bơm CIP return\nP25395 M01","task":"Kiểm tra nước giải nhiệt seal","std":"Có nước seal, không lẫn cà phê","method":"quan sát trực quan"},{"id":"s3_020","area":"Floor 2","equip":"Bơm trục vít Aroma\nP25390 M01","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s3_021","area":"Floor 2","equip":"Bơm trục vít Aroma\nP25390 M01","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ đầu bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s3_022","area":"Floor 2","equip":"Máy ly tâm\nS26300","task":"Kiểm tra dầu máy","std":"Oil level nằm trong mức cho phép.\nMàu nhớt không chuyển màu đen.","method":"quan sát trực quan"},{"id":"s3_023","area":"Floor 2","equip":"Máy ly tâm\nS26300","task":"Kiểm tra độ rung","std":"Độ rung máy <7mm/s khi xả bowl","method":"Quan sát trên Scada"},{"id":"s3_024","area":"Floor 2","equip":"Máy ly tâm\nS26400","task":"Kiểm tra dầu máy","std":"Oil level nằm trong mức cho phép.\nMàu nhớt không chuyển màu đen.","method":"quan sát trực quan"},{"id":"s3_025","area":"Floor 2","equip":"Máy ly tâm\nS26400","task":"Kiểm tra độ rung","std":"Độ rung máy <7mm/s khi xả bowl","method":"Quan sát trên Scada"},{"id":"s3_026","area":"Floor 2","equip":"Bơm foaming tầng 2\nG8001","task":"Kiêm tra seal","std":"Không leak cà phê phía guông bơm\nKhông leak dầu hộp số","method":"quan sát trực quan"},{"id":"s3_027","area":"Floor 2","equip":"Bơm foaming tầng 2\nG8001","task":"Kiểm tra dầu","std":"Mức dầu ở giữa mắt thăm dầu\nDầu hộp số và dầu bơm không leak","method":"quan sát trực quan"},{"id":"s3_028","area":"Floor 2","equip":"Bơm foaming tầng 2\nG8001","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ đầu bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s3_029","area":"Floor 2","equip":"Filmelter tank\nC8001","task":"Kiểm tra motor và hộp số","std":"Không có tiếng ồn bất thường từ hộp số, bạc đạn motor","method":"quan sát trực quan"},{"id":"s3_030","area":"Floor 2","equip":"Filmelter tank\nC8001","task":"Kiểm tra nước giải nhiệt seal","std":"Có nước seal, không lẫn cà phê","method":"quan sát trực quan"},{"id":"s3_031","area":"Floor 2","equip":"Bơm gia nhiệt\nG8050","task":"Kiêm tra seal","std":"Không leak","method":"quan sát trực quan"},{"id":"s3_032","area":"Floor 2","equip":"Bơm gia nhiệt\nG8050","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ đầu bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s3_033","area":"Floor 2","equip":"Bơm De-Icing\nG4303","task":"Kiêm tra lưu lượng","std":"Lưu lượng bơm khi chạy đạt 1850 - 2000 l/h","method":"quan sát trực quan"},{"id":"s3_034","area":"Floor 2","equip":"Bơm De-Icing\nG4303","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s3_035","area":"Floor 2","equip":"Bơm De-Icing\nG4303","task":"Kiểm tra nước giải nhiệt seal","std":"Có nước seal lưu lượng 20l/h","method":"quan sát trực quan"},{"id":"s3_036","area":"Floor 2","equip":"Bơm De-Icing\nG4313","task":"Kiêm tra lưu lượng","std":"Lưu lượng bơm khi chạy đạt 1850 - 2000 l/h","method":"quan sát trực quan"},{"id":"s3_037","area":"Floor 2","equip":"Bơm De-Icing\nG4313","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s3_038","area":"Floor 2","equip":"Bơm De-Icing\nG4313","task":"Kiểm tra nước giải nhiệt seal","std":"Có nước seal lưu lượng 20l/h","method":"quan sát trực quan"},{"id":"s3_039","area":"Floor 2","equip":"Bơm Chân không\nVC-500 G3701","task":"Kiểm tra dầu chân không","std":"Dầu ở giữa mắt thăm trên, không chuyển màu","method":"quan sát trực quan"},{"id":"s3_040","area":"Floor 2","equip":"Bơm Chân không\nVC-500 G3701","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s3_041","area":"Floor 2","equip":"Bơm Chân không\nVC-500 G3701","task":"Kiểm tra lọc Solberg","std":"Lọc không có FB","method":"quan sát trực quan"},{"id":"s3_042","area":"Floor 2","equip":"Bơm Chân không\nVC-500 G3711","task":"Kiểm tra dầu chân không","std":"Dầu ở giữa mắt thăm trên, không chuyển màu","method":"quan sát trực quan"},{"id":"s3_043","area":"Floor 2","equip":"Bơm Chân không\nVC-500 G3711","task":"Kiểm tra tiếng ồn","std":"Không có tiếng ồn bất thường từ guồng bơm, bạc đạn motor","method":"quan sát trực quan"},{"id":"s3_044","area":"Floor 2","equip":"Bơm Chân không\nVC-500 G3711","task":"Kiểm tra lọc Solberg","std":"Lọc không có FB","method":"quan sát trực quan"},{"id":"s3_045","area":"Floor 2","equip":"Bộ van thủy lực\nStack 2","task":"Kiểm tra các đầu nối thủy lực","std":"Không leak dầu","method":"quan sát trực quan"},{"id":"s3_046","area":"Floor 2","equip":"Bộ van thủy lực\nStack 2","task":"Kiểm tra bộ chia cân bằng Elevator inlet","std":"Không leak dầu","method":"quan sát trực quan"},{"id":"s3_047","area":"Floor 2","equip":"Bộ van thủy lực\nStack 4","task":"Kiểm tra các đầu nối thủy lực","std":"Không leak dầu","method":"quan sát trực quan"},{"id":"s3_048","area":"Floor 2","equip":"Bộ van thủy lực\nStack 4","task":"Kiểm tra bộ chia cân bằng Elevator inlet","std":"Không leak dầu","method":"quan sát trực quan"},{"id":"s3_049","area":"Floor 2","equip":"Bộ van thủy lực\nStack 1.1","task":"Kiểm tra các đầu nối thủy lực","std":"Không leak dầu","method":"quan sát trực quan"},{"id":"s3_050","area":"Floor 2","equip":"Bộ van thủy lực\nStack 1.2","task":"Kiểm tra các đầu nối thủy lực","std":"Không leak dầu","method":"quan sát trực quan"},{"id":"s3_051","area":"Floor 2","equip":"Bộ van thủy lực\nStack 1.3","task":"Kiểm tra các đầu nối thủy lực","std":"Không leak dầu","method":"quan sát trực quan"},{"id":"s3_052","area":"Floor 2","equip":"Bộ van thủy lực\nStack 1.4","task":"Kiểm tra các đầu nối thủy lực","std":"Không leak dầu","method":"quan sát trực quan"},{"id":"s3_053","area":"Floor 2","equip":"Bộ van thủy lực\nStack 3","task":"Kiểm tra các đầu nối thủy lực","std":"Không leak dầu","method":"quan sát trực quan"},{"id":"s3_054","area":"Floor 2","equip":"Bộ van thủy lực\nStack 3","task":"Kiểm tra xy lanh cửa G9601","std":"Không leak dầu","method":"quan sát trực quan"},{"id":"s3_055","area":"Floor 2","equip":"Bộ van thủy lực\nStack 3","task":"Kiểm tra xy lanh cửa G9603","std":"Không leak dầu","method":"quan sát trực quan"},{"id":"s3_056","area":"Floor 2","equip":"Bộ van thủy lực\nStack 5","task":"Kiểm tra các đầu nối thủy lực","std":"Không leak dầu","method":"quan sát trực quan"},{"id":"s3_057","area":"Floor 2","equip":"Bộ van thủy lực\nStack 5","task":"Kiểm tra xy lanh cửa G9611","std":"Không leak dầu","method":"quan sát trực quan"},{"id":"s3_058","area":"Floor 2","equip":"Bộ van thủy lực\nStack 5","task":"Kiểm tra xy lanh cửa G9613","std":"Không leak dầu","method":"quan sát trực quan"},{"id":"s3_059","area":"Floor 2","equip":"Motor Lockslide outlet\nG9614","task":"Kiểm tra tiếng ồn","std":"Hộp số, motor không có tiếng động lạ","method":"quan sát trực quan"},{"id":"s3_060","area":"Floor 2","equip":"Motor pusher outlet\nG9610","task":"Kiểm tra tiếng ồn","std":"Hộp số, motor không có tiếng động lạ","method":"quan sát trực quan"},{"id":"s3_061","area":"Floor 2","equip":"Motor Empty converyor\nG9672","task":"Kiểm tra tiếng ồn","std":"Hộp số, motor không có tiếng động lạ","method":"quan sát trực quan"},{"id":"s3_062","area":"Floor 2","equip":"Motor Empty converyor\nG9672","task":"Kiểm tra dây belt","std":"Dây belt không hư hại","method":"quan sát trực quan"},{"id":"s3_063","area":"Floor 2","equip":"Motor Empty converyor\nG9672","task":"Kiểm tra dầu hộp số","std":"Không leak dầu","method":"quan sát trực quan"},{"id":"s3_064","area":"Floor 2","equip":"Motor Lockslide outlet\nG9604","task":"Kiểm tra tiếng ồn","std":"Hộp số, motor không có tiếng động lạ","method":"quan sát trực quan"},{"id":"s3_065","area":"Floor 2","equip":"Inlet Conveyor\nG9662","task":"Kiểm tra tiếng ồn","std":"Hộp số, motor không có tiếng động lạ","method":"quan sát trực quan"},{"id":"s3_066","area":"Floor 2","equip":"Inlet Conveyor\nG9662","task":"Kiểm tra dây belt","std":"Dây belt không hư hại","method":"quan sát trực quan"},{"id":"s3_067","area":"Floor 2","equip":"Inlet Conveyor\nG9662","task":"Kiểm tra dầu hộp số","std":"Không leak dầu","method":"quan sát trực quan"},{"id":"s3_068","area":"Floor 2","equip":"Tray pusher Inlet\nG9600","task":"Kiểm tra tiếng ồn","std":"Hộp số, motor không có tiếng động lạ","method":"quan sát trực quan"},{"id":"s3_069","area":"Floor 2","equip":"Tray pusher Inlet\nG9600","task":"Kiểm tra cần đẩy","std":"Cần đẩy không lệch, hoạt động mượt mà","method":"quan sát trực quan"}]};
+const KEY='ild_mi_checklist_v1';
+const SHIFTS=[{id:'S1',name:'Ca 1'},{id:'S2',name:'Ca 2'},{id:'S3',name:'Ca 3'}];
+const STATUS={draft:'Nháp',done:'Đã kiểm',verified:'Đã xác nhận'};
+document.getElementById('logo').src=LOGO;
+
+/* ===================== [STATE / STORAGE] ===================== */
+const clone=o=>JSON.parse(JSON.stringify(o));
+const uid=p=>(p||'id')+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+function areasOf(items){return [...new Set(items.map(i=>i.area).filter(Boolean))].join(' · ');}
+function freshTemplates(){const t={};SHIFTS.forEach(s=>{const items=clone(DEFAULT_ITEMS[s.id]||[]);t[s.id]={areas:areasOf(items),items};});return t;}
+function freshState(){return {v:1,templates:freshTemplates(),records:[],people:[],settings:{code:'ENG.M&I.F.001',system:'Process',dept:'ENGINEERING',reqOkNotRun:false},audit:[]};}
+function load(){
+  try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&s.templates&&Array.isArray(s.records)){
+    const f=freshState();s.settings=Object.assign(f.settings,s.settings||{});s.people=s.people||[];s.audit=s.audit||[];
+    SHIFTS.forEach(x=>{if(!s.templates[x.id])s.templates[x.id]=f.templates[x.id];});return s;}}catch(e){console.error(e);}
+  return freshState();
+}
+let STATE=load();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(STATE));}catch(e){toast('⚠ Không lưu được: '+e.message);}}
+function logAudit(action){STATE.audit.unshift({t:new Date().toISOString(),who:document.getElementById('ckWho').value.trim()||'—',action});STATE.audit=STATE.audit.slice(0,500);}
+
+/* ===================== [UTIL] ===================== */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const todayISO=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());};
+const addDays=(iso,n)=>{const d=new Date(iso+'T00:00:00');d.setDate(d.getDate()+n);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());};
+const fmtDate=iso=>iso?iso.slice(8,10)+'/'+iso.slice(5,7)+'/'+iso.slice(0,4):'';
+const fmtDT=iso=>{if(!iso)return '';const d=new Date(iso);return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear()+' '+pad(d.getHours())+':'+pad(d.getMinutes());};
+const shiftName=id=>(SHIFTS.find(s=>s.id===id)||{}).name||id;
+const fold=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase();
+function splitEquip(e){const lines=String(e||'').split('\n').map(x=>x.trim()).filter(Boolean);return {name:lines[0]||'',code:lines.slice(1).join(' ')};}
+let toastT;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600);}
+function toggleTheme(){const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;r.dataset.theme=dark?'light':'dark';try{localStorage.setItem('ild_mi_theme',r.dataset.theme);}catch(e){}}
+function download(name,content,type){const b=content instanceof Blob?content:new Blob([content],{type});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);}
+function pickFile(accept){return new Promise(res=>{const f=$('fileIn');f.value='';f.accept=accept;f.onchange=()=>res(f.files[0]||null);f.click();});}
+
+/* modal */
+function modal({title,body,ok='OK',cancel='Huỷ',wide=false,danger=false,onOpen}){
+  return new Promise(res=>{const ov=document.createElement('div');ov.className='ov';
+    ov.innerHTML=`<div class="dlg${wide?' wide':''}" role="dialog" aria-modal="true"><h3>${esc(title)}</h3><div class="dlg-body">${body||''}</div><div class="dlg-foot">${cancel?`<button class="btn" data-a="0">${esc(cancel)}</button>`:''}${ok?`<button class="btn ${danger?'danger':'primary'}" data-a="1">${esc(ok)}</button>`:''}</div></div>`;
+    const close=v=>{ov.remove();document.removeEventListener('keydown',kd);res(v);};
+    const kd=e=>{if(e.key==='Escape')close(false);};
+    ov.addEventListener('click',e=>{if(e.target===ov)close(false);const a=e.target.closest('[data-a]');if(a){if(a.dataset.a==='1'&&ov._validate&&!ov._validate())return;close(a.dataset.a==='1'?(ov._value?ov._value():true):false);}});
+    document.addEventListener('keydown',kd);document.body.appendChild(ov);if(onOpen)onOpen(ov);
+    const f=ov.querySelector('input,textarea,select,[data-a="1"]');f&&f.focus();});
+}
+const confirmBox=(title,msg,ok='Đồng ý',danger=false)=>modal({title,body:`<p>${msg}</p>`,ok,danger});
+function askName(title,msg,def){return modal({title,ok:'Xác nhận',body:`<p class="small muted">${msg}</p><input type="text" id="mdName" list="peopleList" value="${esc(def||'')}" style="width:100%" placeholder="Họ tên">`,
+  onOpen:ov=>{const i=ov.querySelector('#mdName');ov._value=()=>i.value.trim();ov._validate=()=>{if(!i.value.trim()){i.focus();toast('Nhập họ tên');return false;}return true;};i.addEventListener('keydown',e=>{if(e.key==='Enter')ov.querySelector('[data-a="1"]').click();});}});}
+function rememberPerson(n){n=(n||'').trim();if(!n)return;STATE.people=[n,...STATE.people.filter(p=>p!==n)].slice(0,60);renderPeople();}
+function renderPeople(){$('peopleList').innerHTML=STATE.people.map(p=>`<option value="${esc(p)}">`).join('');}
+
+/* ===================== [NAV] ===================== */
+let curTab='check';
+function switchTab(t){curTab=t;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));
+  document.querySelectorAll('section.panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+t));
+  $('ckBar').classList.toggle('hidden',t!=='check');
+  ({check:renderCheck,history:renderHistory,ng:renderNg,editor:edLoad,settings:renderSettings,guide:()=>{}})[t]();
+  try{sessionStorage.setItem('ild_mi_tab',t);}catch(e){}}
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(!b)return;if(curTab==='editor'&&ED.dirty&&b.dataset.tab!=='editor'&&!window.confirm('Checklist đang sửa chưa lưu. Rời tab và bỏ thay đổi?'))return;if(b.dataset.tab!=='editor')ED.dirty=false;switchTab(b.dataset.tab);});
+
+/* ===================== [RECORDS / LOGIC] ===================== */
+const UI={shift:'S1',date:todayISO(),area:'',onlyOpen:false,noteOpen:{}};
+try{const p=JSON.parse(localStorage.getItem('ild_mi_ui')||'{}');if(p.shift)UI.shift=p.shift;}catch(e){}
+const saveUI=()=>{try{localStorage.setItem('ild_mi_ui',JSON.stringify({shift:UI.shift,who:$('ckWho').value}));}catch(e){}};
+const findRec=(shift,date)=>STATE.records.find(r=>r.shift===shift&&r.date===date);
+const curRec=()=>findRec(UI.shift,UI.date);
+const curItems=()=>{const r=curRec();return r?r.items:STATE.templates[UI.shift].items;};
+function ensureRec(){let r=curRec();if(r)return r;
+  r={id:uid('rec'),shift:UI.shift,date:UI.date,status:'draft',checker:$('ckWho').value.trim(),items:clone(STATE.templates[UI.shift].items),results:{},createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};
+  STATE.records.push(r);logAudit(`Tạo phiếu ${shiftName(r.shift)} ${fmtDate(r.date)}`);return r;}
+function itemState(it,res,reqOk){const x=res[it.id]||{};
+  if(!x.run)return 'open';
+  if(x.ok==='NG'&&!(x.reason||'').trim())return 'open';
+  if(x.run==='RUN'&&!x.ok)return 'open';
+  if(x.run==='NOTRUN'&&reqOk&&!x.ok)return 'open';
+  return 'done';}
+function recStats(r){const res=r?r.results:{},items=r?r.items:STATE.templates[UI.shift].items,req=STATE.settings.reqOkNotRun;let done=0,ok=0,ng=0,nr=0;
+  items.forEach(it=>{const x=res[it.id]||{};if(itemState(it,res,req)==='done')done++;if(x.ok==='OK')ok++;if(x.ok==='NG')ng++;if(x.run==='NOTRUN')nr++;});
+  return {total:items.length,done,ok,ng,nr};}
+const locked=r=>!!r&&r.status!=='draft';
+
+/* ===================== [CHECK UI] ===================== */
+function renderShiftPick(){
+  $('shiftPick').innerHTML=SHIFTS.map(s=>{const r=findRec(s.id,UI.date),st=r?r.status:'none',t=STATE.templates[s.id];
+    const lab=r?(STATUS[st]+(r.status==='draft'?` ${recStats(r).done}/${r.items.length}`:'')):'Chưa kiểm';
+    return `<button class="shift-btn${s.id===UI.shift?' active':''}" data-s="${s.id}"><span class="st st-${st}">${esc(lab)}</span><b>${s.name}</b><span>${esc(t.areas||'')} · ${t.items.length} mục</span></button>`;}).join('');
+}
+$('shiftPick').addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(!b)return;UI.shift=b.dataset.s;UI.area='';saveUI();renderCheck();});
+$('ckDate').addEventListener('change',e=>{UI.date=e.target.value||todayISO();renderCheck();});
+$('ckWho').addEventListener('input',e=>{saveUI();const r=curRec();if(r&&r.status==='draft'){r.checker=e.target.value.trim();save();}});
+$('ckWho').addEventListener('change',e=>rememberPerson(e.target.value)||save());
+
+function groups(items){const out=[];items.forEach((it,i)=>{const last=out[out.length-1];if(last&&last.area===it.area&&last.equip===it.equip)last.idx.push(i);else out.push({area:it.area,equip:it.equip,idx:[i]});});return out;}
+
+function renderCheck(){
+  $('ckDate').value=UI.date;renderShiftPick();
+  const r=curRec(),items=curItems(),res=r?r.results:{},lk=locked(r);
+  if(r&&r.checker&&r.status!=='draft')$('ckWho').value=r.checker;
+  // filters
+  const areas=[...new Set(items.map(i=>i.area).filter(Boolean))];
+  $('ckFilters').innerHTML=`<button class="chip${!UI.area?' active':''}" data-f="">Tất cả khu vực</button>`+areas.map(a=>`<button class="chip${UI.area===a?' active':''}" data-f="${esc(a)}">${esc(a)}</button>`).join('')+
+    `<span class="spacer"></span><label class="small" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="ckOnlyOpen"${UI.onlyOpen?' checked':''}> Chỉ hiện mục chưa xong / không đạt</label>`;
+  $('ckOnlyOpen').onchange=e=>{UI.onlyOpen=e.target.checked;renderCheck();};
+  // lock banner
+  if(lk){const vb=r.status==='verified'?` · Xác nhận: <b>${esc(r.verifiedBy)}</b> ${fmtDT(r.verifiedAt)}`:'';
+    $('ckLock').innerHTML=`<div class="lock-banner">🔒 Phiếu ${STATUS[r.status].toLowerCase()} — Checked by <b>${esc(r.checker)}</b> ${fmtDT(r.doneAt)}${vb}<span class="spacer"></span>${r.status==='done'?'<button class="btn sm" onclick="reopenRecord()">✎ Mở lại để sửa</button>':''}</div>`;}
+  else $('ckLock').innerHTML=r?'':`<div class="lock-banner">📝 Chưa có phiếu ${shiftName(UI.shift)} ngày ${fmtDate(UI.date)} — phiếu sẽ được tạo khi bạn chọn mục đầu tiên.</div>`;
+  $('btnAllOk').disabled=lk;
+  // list
+  const req=STATE.settings.reqOkNotRun;let html='',lastArea=null;
+  groups(items).forEach(g=>{
+    if(UI.area&&g.area!==UI.area)return;
+    const show=g.idx.filter(i=>!UI.onlyOpen||itemState(items[i],res,req)==='open'||(res[items[i].id]||{}).ok==='NG');
+    if(!show.length)return;
+    if(g.area!==lastArea){html+=`<div class="area-title">${esc(g.area||'—')}</div>`;lastArea=g.area;}
+    const e=splitEquip(g.equip),gi=g.idx[0];
+    const nDone=g.idx.filter(i=>itemState(items[i],res,req)==='done').length;
+    html+=`<div class="eq${lk?' locked':''}"><div class="eq-head"><div><span class="eq-name">${esc(e.name)}${e.code?`<code>${esc(e.code)}</code>`:''}</span><span class="eq-meta">${nDone}/${g.idx.length}</span></div>
+      <div class="eq-actions"><button class="btn sm" onclick="eqSet(${gi},'RUN','OK')">✓ Run · Đạt</button><button class="btn sm" onclick="eqSet(${gi},'NOTRUN')">⏸ Not run</button></div></div>`;
+    show.forEach(i=>html+=rowHTML(items[i],i,res,lk));
+    html+='</div>';});
+  $('ckList').innerHTML=html||`<div class="card muted">Không có mục nào phù hợp bộ lọc.</div>`;
+  updateBar();
+}
+function rowHTML(it,i,res,lk){
+  const x=res[it.id]||{},st=itemState(it,res,STATE.settings.reqOkNotRun),showNote=x.note||UI.noteOpen[it.id];
+  const b=(k,v,cls,lab)=>`<button type="button" class="${cls}" aria-pressed="${x[k]===v}" onclick="setRes(${i},'${k}','${v}')">${lab}</button>`;
+  return `<div class="it${st==='done'?' done':''}${x.ok==='NG'?' ng':''}" id="it-${i}">
+    <div class="it-no">${st==='done'?'✓':i+1}</div>
+    <div><div class="it-task">${esc(it.task)}</div><div class="it-std"><b>Tiêu chuẩn:</b> ${esc(it.std).replace(/\n/g,'<br>')}${it.method?` · <i>${esc(it.method)}</i>`:''}</div></div>
+    <div class="it-ctrl"><div class="seg">${b('run','RUN','v-run','Run')}${b('run','NOTRUN','v-notrun','Not run')}</div>
+      <div class="seg">${b('ok','OK','v-ok','Đạt')}${b('ok','NG','v-ng','Không đạt')}</div></div>
+    <div class="it-extra">${x.ok==='NG'?`<input class="reason" placeholder="Lý do không đạt (bắt buộc)" value="${esc(x.reason||'')}" oninput="setTxt(${i},'reason',this.value)" ${lk?'readonly':''}>`:''}
+      ${showNote?`<input placeholder="Ghi chú / Remark" value="${esc(x.note||'')}" oninput="setTxt(${i},'note',this.value)" ${lk?'readonly':''}>`:(lk?'':`<button type="button" class="note-btn" onclick="UI.noteOpen['${it.id}']=1;redrawRow(${i},true)">+ Ghi chú</button>`)}</div>
+  </div>`;
+}
+function redrawRow(i,focusNote){const r=curRec(),items=curItems(),el=$('it-'+i);if(!el)return;el.outerHTML=rowHTML(items[i],i,r?r.results:{},locked(r));
+  if(focusNote){const ins=$('it-'+i).querySelectorAll('.it-extra input');ins[ins.length-1]&&ins[ins.length-1].focus();}}
+function touch(r){r.updatedAt=new Date().toISOString();if(!r.checker)r.checker=$('ckWho').value.trim();save();}
+function setRes(i,k,v){let r=curRec();if(locked(r))return;const isNew=!r;r=ensureRec();const it=r.items[i],x=r.results[it.id]||(r.results[it.id]={});
+  x[k]=x[k]===v?undefined:v;
+  if(k==='ok'&&x.ok&&!x.run)x.run='RUN';
+  touch(r);if(isNew){renderCheck();return;}
+  redrawRow(i,k==='ok'&&x.ok==='NG');refreshEqMeta();updateBar();renderShiftPick();}
+function setTxt(i,k,v){let r=curRec();if(locked(r))return;const isNew=!r;r=ensureRec();const it=r.items[i];(r.results[it.id]||(r.results[it.id]={}))[k]=v;touch(r);
+  if(isNew){renderShiftPick();$('ckLock').innerHTML='';}
+  const el=$('it-'+i);if(el){const st=itemState(it,r.results,STATE.settings.reqOkNotRun);el.classList.toggle('done',st==='done');el.querySelector('.it-no').textContent=st==='done'?'✓':i+1;if(st==='done')el.classList.remove('missing');}
+  refreshEqMeta();updateBar();}
+function eqSet(gi,run,ok){let r=curRec();if(locked(r))return;r=ensureRec();const g=groups(r.items).find(g=>g.idx[0]===gi);if(!g)return;
+  g.idx.forEach(i=>{const it=r.items[i],x=r.results[it.id]||(r.results[it.id]={});x.run=run;if(ok){if(x.ok!=='NG')x.ok=ok;}else if(x.ok==='OK')x.ok=undefined;});
+  touch(r);renderCheck();}
+async function markAllRemaining(){let r=curRec();if(locked(r))return;const items=curItems(),res=r?r.results:{};
+  const n=items.filter(it=>!(res[it.id]||{}).run).length;if(!n){toast('Không còn mục trống');return;}
+  if(!await confirmBox('Điền nhanh',`Đánh <b>Run · Đạt</b> cho <b>${n}</b> mục chưa chọn? Chỉ dùng khi bạn đã thực sự kiểm tra các mục này.`))return;
+  r=ensureRec();r.items.forEach(it=>{const x=r.results[it.id]||(r.results[it.id]={});if(!x.run){x.run='RUN';if(!x.ok)x.ok='OK';}});touch(r);logAudit(`Điền nhanh ${n} mục — ${shiftName(r.shift)} ${fmtDate(r.date)}`);save();renderCheck();}
+function refreshEqMeta(){const r=curRec();if(!r)return;const req=STATE.settings.reqOkNotRun;
+  document.querySelectorAll('#ckList .eq').forEach(eq=>{const ids=[...eq.querySelectorAll('.it')].map(e=>+e.id.slice(3));if(!ids.length)return;const g=groups(r.items).find(g=>g.idx.includes(ids[0]));if(!g)return;
+    eq.querySelector('.eq-meta').textContent=g.idx.filter(i=>itemState(r.items[i],r.results,req)==='done').length+'/'+g.idx.length;});}
+function updateBar(){const r=curRec(),s=recStats(r);$('bDone').textContent=s.done;$('bTotal').textContent=s.total;$('bOk').textContent=s.ok;$('bNg').textContent=s.ng;$('bNr').textContent=s.nr;
+  $('ckProg').style.width=(s.total?s.done/s.total*100:0)+'%';$('bDoneBtn').disabled=locked(r);$('bView').disabled=!r;updateNgCount();}
+async function completeRecord(){
+  const who=$('ckWho').value.trim();if(!who){toast('Nhập tên người kiểm tra');$('ckWho').focus();return;}
+  let r=curRec();if(!r){toast('Phiếu chưa có dữ liệu');return;}
+  const req=STATE.settings.reqOkNotRun,miss=r.items.map((it,i)=>itemState(it,r.results,req)==='open'?i:-1).filter(i=>i>=0);
+  if(miss.length){UI.area='';UI.onlyOpen=false;renderCheck();miss.forEach(i=>$('it-'+i)&&$('it-'+i).classList.add('missing'));
+    const el=$('it-'+miss[0]);el&&el.scrollIntoView({behavior:'smooth',block:'center'});
+    toast(`Còn ${miss.length} mục chưa xong (thiếu Run/Not run, Đạt/Không đạt hoặc lý do)`);return;}
+  const s=recStats(r);
+  if(!await confirmBox('Hoàn tất phiếu',`${shiftName(r.shift)} · ${fmtDate(r.date)}<br>Đạt <b>${s.ok}</b> · Không đạt <b style="color:var(--fail)">${s.ng}</b> · Not run <b>${s.nr}</b><br><br>Ký <b>Checked by: ${esc(who)}</b>? Sau khi hoàn tất phiếu sẽ khoá.`,'Hoàn tất'))return;
+  r.checker=who;r.status='done';r.doneAt=new Date().toISOString();rememberPerson(who);logAudit(`Hoàn tất phiếu ${shiftName(r.shift)} ${fmtDate(r.date)} (${s.ng} không đạt)`);touch(r);renderCheck();toast('✔ Đã hoàn tất phiếu');}
+async function reopenRecord(){const r=curRec();if(!r||r.status!=='done')return;if(!await confirmBox('Mở lại phiếu','Mở lại phiếu để sửa? Chữ ký Checked by sẽ bị gỡ cho đến khi hoàn tất lại.','Mở lại'))return;
+  r.status='draft';delete r.doneAt;logAudit(`Mở lại phiếu ${shiftName(r.shift)} ${fmtDate(r.date)}`);touch(r);renderCheck();}
+
+/* ===================== [HISTORY] ===================== */
+function openRec(shift,date){UI.shift=shift;UI.date=date;UI.area='';saveUI();switchTab('check');window.scrollTo(0,0);}
+function renderHistory(){
+  if(!$('hsShift').options.length||$('hsShift').options.length<2){$('hsShift').innerHTML+=SHIFTS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');}
+  if(!$('hsFrom').value)$('hsFrom').value=addDays(todayISO(),-30);if(!$('hsTo').value)$('hsTo').value=todayISO();
+  // KPI
+  const all=STATE.records,t=todayISO(),last30=all.filter(r=>r.date>=addDays(t,-29));
+  const doneN=last30.filter(r=>r.status!=='draft').length,ngN=last30.reduce((a,r)=>a+recStats(r).ng,0),pend=all.filter(r=>r.status==='done').length;
+  $('hsKpi').innerHTML=[[last30.length,'Phiếu 30 ngày'],[doneN+'/'+(30*3),'Ca đã kiểm (30 ngày)'],[ngN,'Mục không đạt (30 ngày)'],[pend,'Chờ xác nhận']].map(([b,s])=>`<div class="kpi"><b>${b}</b><span>${s}</span></div>`).join('');
+  // matrix
+  const days=[...Array(14)].map((_,i)=>addDays(t,i-13));const m=$('hsMatrix');m.style.setProperty('--days',14);
+  let h='<div></div>'+days.map(d=>`<div class="h">${d.slice(8,10)}/${d.slice(5,7)}</div>`).join('');
+  SHIFTS.forEach(s=>{h+=`<div class="lbl">${s.name}</div>`;days.forEach(d=>{const r=findRec(s.id,d),st=r?r.status:'none',ng=r?recStats(r).ng:0;
+    h+=`<button class="c st-${st}" title="${s.name} ${fmtDate(d)} — ${r?STATUS[st]:'Chưa có'}" onclick="openRec('${s.id}','${d}')">${r?(ng?`<span style="color:var(--fail)">${ng}</span>`:(st==='draft'?'…':'✓')):'—'}</button>`;});});
+  m.innerHTML=h;
+  // table
+  const list=histFiltered();
+  $('hsTbl').innerHTML=`<thead><tr><th>Ngày</th><th>Ca</th><th>Checked by</th><th class="num">Tiến độ</th><th class="num">Đạt</th><th class="num">Không đạt</th><th class="num">Not run</th><th>Trạng thái</th><th>Verified by</th><th></th></tr></thead><tbody>`+
+    (list.map(r=>{const s=recStats(r);return `<tr><td>${fmtDate(r.date)}</td><td>${shiftName(r.shift)}</td><td>${esc(r.checker||'')}</td><td class="num">${s.done}/${s.total}</td><td class="num">${s.ok}</td><td class="num" style="${s.ng?'color:var(--fail);font-weight:700':''}">${s.ng}</td><td class="num">${s.nr}</td>
+      <td><span class="pill st-${r.status}">${STATUS[r.status]}</span></td><td>${r.verifiedBy?esc(r.verifiedBy)+'<div class="small muted">'+fmtDT(r.verifiedAt)+'</div>':''}</td>
+      <td><div class="acts"><button class="btn sm" onclick="viewRecord('${r.id}')">👁 Xem</button><button class="btn sm" onclick="openRec('${r.shift}','${r.date}')">✎ Mở</button>
+      ${r.status==='done'?`<button class="btn sm primary" onclick="verifyRecord('${r.id}')">✔ Xác nhận</button>`:''}${r.status==='verified'?`<button class="btn sm" onclick="unverifyRecord('${r.id}')">Huỷ xác nhận</button>`:''}
+      ${r.status!=='verified'?`<button class="btn sm danger" onclick="deleteRecord('${r.id}')" title="Xoá phiếu">🗑</button>`:''}</div></td></tr>`;}).join('')||`<tr><td colspan="10" class="muted">Không có phiếu trong khoảng đã chọn.</td></tr>`)+'</tbody>';
+}
+function histFiltered(){const f=$('hsFrom').value,t=$('hsTo').value,s=$('hsShift').value,st=$('hsStatus').value;
+  return STATE.records.filter(r=>(!f||r.date>=f)&&(!t||r.date<=t)&&(!s||r.shift===s)&&(!st||r.status===st)).sort((a,b)=>b.date.localeCompare(a.date)||a.shift.localeCompare(b.shift));}
+['hsFrom','hsTo','hsShift','hsStatus'].forEach(id=>$(id).addEventListener('change',renderHistory));
+const recById=id=>STATE.records.find(r=>r.id===id);
+async function verifyRecord(id){const r=recById(id);if(!r)return;const n=await askName('Xác nhận phiếu (Verified by)',`${shiftName(r.shift)} · ${fmtDate(r.date)} · Checked by ${esc(r.checker)} · Không đạt: ${recStats(r).ng}`,'');if(!n)return;
+  r.status='verified';r.verifiedBy=n;r.verifiedAt=new Date().toISOString();rememberPerson(n);logAudit(`Xác nhận phiếu ${shiftName(r.shift)} ${fmtDate(r.date)} — ${n}`);save();renderHistory();toast('✔ Đã xác nhận');closeView();}
+async function unverifyRecord(id){const r=recById(id);if(!r||!await confirmBox('Huỷ xác nhận',`Huỷ xác nhận phiếu ${shiftName(r.shift)} ${fmtDate(r.date)} (đang ký bởi ${esc(r.verifiedBy)})?`,'Huỷ xác nhận',true))return;
+  r.status='done';delete r.verifiedBy;delete r.verifiedAt;logAudit(`Huỷ xác nhận phiếu ${shiftName(r.shift)} ${fmtDate(r.date)}`);save();renderHistory();}
+async function deleteRecord(id){const r=recById(id);if(!r||!await confirmBox('Xoá phiếu',`Xoá vĩnh viễn phiếu ${shiftName(r.shift)} ngày ${fmtDate(r.date)}? Không thể hoàn tác.`,'Xoá',true))return;
+  STATE.records=STATE.records.filter(x=>x!==r);logAudit(`Xoá phiếu ${shiftName(r.shift)} ${fmtDate(r.date)}`);save();renderHistory();toast('Đã xoá phiếu');}
+
+/* ===================== [PAPER FORM / VIEW / PRINT] ===================== */
+function paperHTML(r){
+  const S=STATE.settings,res=r.results,X=b=>b?'X':'';let body='';
+  const areaSpan={},eqSpan={};r.items.forEach((it,i)=>{if(i===0||it.area!==r.items[i-1].area){let n=0;for(let j=i;j<r.items.length&&r.items[j].area===it.area;j++)n++;areaSpan[i]=n;}});
+  groups(r.items).forEach(g=>eqSpan[g.idx[0]]=g.idx.length);
+  r.items.forEach((it,i)=>{const x=res[it.id]||{};
+    body+=`<tr${x.ok==='NG'?' class="ngrow"':''}><td class="c">${i+1}</td>${areaSpan[i]?`<td class="c" rowspan="${areaSpan[i]}"><b>${esc(it.area)}</b></td>`:''}${eqSpan[i]?`<td class="eqc" rowspan="${eqSpan[i]}">${esc(it.equip)}</td>`:''}
+      <td>${esc(it.task)}</td><td>${esc(it.std).replace(/\n/g,'<br>')}</td><td>${esc(it.method)}</td><td class="x">${X(x.run==='RUN')}</td><td class="x">${X(x.run==='NOTRUN')}</td><td class="x">${X(x.ok==='OK')}</td><td class="x">${X(x.ok==='NG')}</td><td>${esc(x.reason||'')}</td><td>${esc(x.note||'')}${x.fixedAt?`<div><i>Đã khắc phục ${fmtDT(x.fixedAt)}${x.fixNote?': '+esc(x.fixNote):''}</i></div>`:''}</td></tr>`;});
+  return `<div class="paper"><table>
+    <thead>
+    <tr><td colspan="3" rowspan="2" class="c"><img src="${LOGO}" alt="iLD"><div><b>ILD COFFEE VIETNAM</b></div></td><td colspan="7" rowspan="2" class="ttl">M&amp;I DAILY CHECK LIST</td><td colspan="2">${esc(S.code)}</td></tr>
+    <tr><td colspan="2">Shift: <b>${esc(shiftName(r.shift).replace('Ca ',''))}</b></td></tr>
+    <tr><td colspan="4">Hệ thống/System: <b>${esc(S.system)}</b></td><td colspan="2">Department: <b>${esc(S.dept)}</b></td><td colspan="4">Ngày/Tháng/Năm: <b>${fmtDate(r.date)}</b></td><td colspan="2">Tên: <b>${esc(r.checker||'')}</b></td></tr>
+    <tr><th style="width:28px">No.</th><th style="width:52px">Area</th><th style="width:120px">THIẾT BỊ<br>EQUIPMENTS</th><th>Công việc thực hiện<br>Tasklist</th><th>Tiêu chuẩn kiểm tra<br>Standard</th><th style="width:90px">Phương pháp<br>Method</th><th style="width:34px">Run</th><th style="width:34px">Not run</th><th style="width:34px">Đạt</th><th style="width:40px">Không Đạt</th><th style="width:120px">Lý do không đạt<br>Reason</th><th style="width:120px">GHI CHÚ / REMARK</th></tr>
+    </thead><tbody>${body}</tbody>
+    <tbody class="sig"><tr><td colspan="6">Checked By: <b>${esc(r.checker||'')}</b><br><span>${r.doneAt?fmtDT(r.doneAt):''}</span></td><td colspan="6">Verified By: <b>${esc(r.verifiedBy||'')}</b><br><span>${r.verifiedAt?fmtDT(r.verifiedAt):''}</span></td></tr></tbody>
+  </table></div>`;
+}
+let viewOv=null;function closeView(){if(viewOv){viewOv.remove();viewOv=null;}}
+function viewRecord(id){const r=recById(id);if(!r)return;closeView();const s=recStats(r);
+  viewOv=document.createElement('div');viewOv.className='ov';
+  viewOv.innerHTML=`<div class="dlg wide"><div class="row" style="align-items:center;margin-bottom:10px"><h3 style="margin:0">${shiftName(r.shift)} · ${fmtDate(r.date)} <span class="pill st-${r.status}">${STATUS[r.status]}</span></h3><span class="small muted">Đạt ${s.ok} · Không đạt ${s.ng} · Not run ${s.nr} · ${s.done}/${s.total}</span><div class="spacer"></div>
+    ${r.status==='done'?`<button class="btn sm primary" onclick="verifyRecord('${r.id}')">✔ Xác nhận</button>`:''}<button class="btn sm" onclick="printRecord('${r.id}')">🖨 In / PDF</button><button class="btn sm" onclick="exportRecord('${r.id}')">⬇ Excel</button><button class="btn sm" onclick="closeView()">✕ Đóng</button></div>${paperHTML(r)}</div>`;
+  viewOv.addEventListener('click',e=>{if(e.target===viewOv)closeView();});document.body.appendChild(viewOv);}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&viewOv)closeView();});
+function printRecord(id){const r=recById(id);if(!r)return;$('printArea').innerHTML=paperHTML(r);document.title=`${STATE.settings.code} ${shiftName(r.shift)} ${fmtDate(r.date).replace(/\//g,'-')}`;window.print();setTimeout(()=>document.title='M&I Daily Checklist · ILD Coffee Vietnam',1000);}
+
+/* ===================== [EXCEL EXPORT · SpreadsheetML 2003] ===================== */
+function xlsXml(sheets){
+  const x=v=>esc(v).replace(/\n/g,'&#10;');
+  const cell=v=>{if(v&&typeof v==='object')return `<Cell ss:StyleID="${v.s||'d'}"${v.m?` ss:MergeAcross="${v.m}"`:''}><Data ss:Type="${typeof v.v==='number'?'Number':'String'}">${x(v.v)}</Data></Cell>`;
+    return `<Cell ss:StyleID="d"><Data ss:Type="${typeof v==='number'?'Number':'String'}">${x(v)}</Data></Cell>`;};
+  return `<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+<Styles><Style ss:ID="d"><Alignment ss:Vertical="Top" ss:WrapText="1"/><Borders><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/></Borders></Style>
+<Style ss:ID="h" ss:Parent="d"><Font ss:Bold="1"/><Interior ss:Color="#EEEEEE" ss:Pattern="Solid"/><Alignment ss:Horizontal="Center" ss:Vertical="Center" ss:WrapText="1"/></Style>
+<Style ss:ID="t"><Font ss:Bold="1" ss:Size="16"/><Alignment ss:Horizontal="Center"/></Style><Style ss:ID="i"><Font ss:Bold="1"/></Style>
+<Style ss:ID="x" ss:Parent="d"><Font ss:Bold="1"/><Alignment ss:Horizontal="Center" ss:Vertical="Top"/></Style><Style ss:ID="ng" ss:Parent="d"><Font ss:Bold="1" ss:Color="#B3261E"/><Alignment ss:Horizontal="Center" ss:Vertical="Top"/></Style></Styles>
+${sheets.map(s=>`<Worksheet ss:Name="${x(s.name.slice(0,31).replace(/[\\/?*\[\]:]/g,'-'))}"><Table>${(s.widths||[]).map(w=>`<Column ss:Width="${w}"/>`).join('')}${s.rows.map(r=>`<Row>${r.map(cell).join('')}</Row>`).join('')}</Table></Worksheet>`).join('')}
+</Workbook>`;}
+const saveXls=(name,sheets)=>download(name,'﻿'+xlsXml(sheets),'application/vnd.ms-excel');
+const HDR=['No.','Area','THIẾT BỊ / EQUIPMENTS','Công việc thực hiện / Tasklist','Tiêu chuẩn kiểm tra / Standard','Phương pháp thực hiện / Method'];
+function recordSheet(r){const S=STATE.settings,h=v=>({v,s:'h'});
+  const rows=[[{v:'M&I DAILY CHECK LIST',s:'t',m:11}],[{v:'ILD COFFEE VIETNAM · '+S.code,s:'i',m:5},{v:'Shift: '+shiftName(r.shift),s:'i',m:2},{v:'Ngày: '+fmtDate(r.date),s:'i',m:2}],
+    [{v:'Hệ thống/System: '+S.system,s:'i',m:5},{v:'Department: '+S.dept,s:'i',m:2},{v:'Tên: '+(r.checker||''),s:'i',m:2}],
+    [...HDR,'Run','Not run','Đạt','Không Đạt','Lý do không đạt / Reason','Ghi chú / Remark'].map(h)];
+  r.items.forEach((it,i)=>{const x=r.results[it.id]||{},X=b=>({v:b?'X':'',s:'x'});rows.push([i+1,it.area,it.equip,it.task,it.std,it.method,X(x.run==='RUN'),X(x.run==='NOTRUN'),X(x.ok==='OK'),{v:x.ok==='NG'?'X':'',s:'ng'},x.reason||'',[x.note,x.fixedAt?'Đã khắc phục '+fmtDT(x.fixedAt)+(x.fixNote?': '+x.fixNote:''):''].filter(Boolean).join('\n')]);});
+  rows.push([],[{v:'Checked By: '+(r.checker||'')+(r.doneAt?' — '+fmtDT(r.doneAt):''),s:'i',m:5},{v:'Verified By: '+(r.verifiedBy||'')+(r.verifiedAt?' — '+fmtDT(r.verifiedAt):''),s:'i',m:5}]);
+  return {name:`${shiftName(r.shift)} ${fmtDate(r.date).replace(/\//g,'-')}`,widths:[30,50,120,160,220,100,32,40,32,48,150,150],rows};}
+function exportRecord(id){const r=recById(id);if(r)saveXls(`MI_DailyChecklist_${shiftName(r.shift).replace(' ','')}_${r.date}.xls`,[recordSheet(r)]);}
+function exportHistory(){const list=histFiltered();if(!list.length){toast('Không có phiếu để xuất');return;}
+  const sum={name:'Tổng hợp',widths:[70,50,130,60,40,60,60,80,130,110],rows:[['Ngày','Ca','Checked by','Tiến độ','Đạt','Không đạt','Not run','Trạng thái','Verified by','Thời điểm xác nhận'].map(v=>({v,s:'h'})),
+    ...list.map(r=>{const s=recStats(r);return [fmtDate(r.date),shiftName(r.shift),r.checker||'',`${s.done}/${s.total}`,s.ok,s.ng,s.nr,STATUS[r.status],r.verifiedBy||'',fmtDT(r.verifiedAt)];})]};
+  saveXls(`MI_LichSuPhieu_${todayISO()}.xls`,[sum,...list.slice(0,60).map(recordSheet)]);if(list.length>60)toast('File gồm bảng tổng hợp + 60 phiếu mới nhất');}
+
+/* ===================== [NG LIST] ===================== */
+function ngRows(){const out=[];STATE.records.forEach(r=>r.items.forEach(it=>{const x=r.results[it.id];if(x&&x.ok==='NG')out.push({r,it,x});}));
+  return out.sort((a,b)=>b.r.date.localeCompare(a.r.date)||a.r.shift.localeCompare(b.r.shift));}
+function ngFiltered(){const f=$('ngFrom').value,t=$('ngTo').value,s=$('ngShift').value,fx=$('ngFix').value,q=fold($('ngQ').value.trim());
+  return ngRows().filter(({r,it,x})=>(!f||r.date>=f)&&(!t||r.date<=t)&&(!s||r.shift===s)&&(!fx||(fx==='fixed')===!!x.fixedAt)&&(!q||fold([it.area,it.equip,it.task,it.std,x.reason,x.note,x.fixNote,r.checker].join(' ')).includes(q)));}
+function updateNgCount(){const n=ngRows().filter(o=>!o.x.fixedAt).length,el=$('ngCnt');el.hidden=!n;el.textContent=n;}
+function renderNg(){
+  if($('ngShift').options.length<2)$('ngShift').innerHTML+=SHIFTS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+  if(!$('ngFrom').value)$('ngFrom').value=addDays(todayISO(),-30);if(!$('ngTo').value)$('ngTo').value=todayISO();
+  const list=ngFiltered();
+  $('ngTbl').innerHTML=`<thead><tr><th>Ngày</th><th>Ca</th><th>Khu vực</th><th>Thiết bị</th><th>Hạng mục</th><th>Tiêu chuẩn</th><th>Lý do không đạt</th><th>Ghi chú</th><th>Checked by</th><th>Khắc phục</th></tr></thead><tbody>`+
+    (list.map(({r,it,x})=>{const e=splitEquip(it.equip);return `<tr><td>${fmtDate(r.date)}</td><td>${shiftName(r.shift)}</td><td>${esc(it.area)}</td><td><b>${esc(e.name)}</b><div class="small muted">${esc(e.code)}</div></td><td>${esc(it.task)}</td><td class="small">${esc(it.std)}</td>
+      <td style="color:var(--fail);font-weight:600">${esc(x.reason||'')}</td><td class="small">${esc(x.note||'')}</td><td>${esc(r.checker||'')}</td>
+      <td>${x.fixedAt?`<span class="pill st-verified">✓ ${fmtDate(x.fixedAt.slice(0,10))}</span><div class="small">${esc(x.fixNote||'')}${x.fixBy?' — '+esc(x.fixBy):''}</div><button class="btn sm" style="margin-top:4px" onclick="ngUnfix('${r.id}','${it.id}')">Bỏ</button>`:`<button class="btn sm" onclick="ngFix('${r.id}','${it.id}')">✔ Đã khắc phục</button>`}</td></tr>`;}).join('')||`<tr><td colspan="10" class="muted">Không có mục không đạt trong bộ lọc 👍</td></tr>`)+'</tbody>';
+  const cnt={};list.forEach(({it})=>{const k=it.area+' | '+it.equip;cnt[k]=(cnt[k]||0)+1;});
+  const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,10),max=top.length?top[0][1]:1;
+  $('ngTop').innerHTML=top.length?top.map(([k,n])=>{const [a,eq]=k.split(' | '),e=splitEquip(eq);return `<div style="display:grid;grid-template-columns:minmax(0,260px) 1fr 36px;gap:10px;align-items:center;margin:6px 0"><div class="small"><b>${esc(e.name)}</b> ${esc(e.code)} <span class="muted">· ${esc(a)}</span></div><div style="height:12px;background:var(--gray-bg);border-radius:99px;overflow:hidden"><i style="display:block;height:100%;width:${n/max*100}%;background:var(--fail)"></i></div><b class="num">${n}</b></div>`;}).join(''):'<p class="muted small">Chưa có dữ liệu.</p>';
+}
+['ngFrom','ngTo','ngShift','ngFix'].forEach(id=>$(id).addEventListener('change',renderNg));$('ngQ').addEventListener('input',renderNg);
+async function ngFix(rid,iid){const r=recById(rid);if(!r)return;const x=r.results[iid];
+  const v=await modal({title:'Đánh dấu đã khắc phục',ok:'Lưu',body:`<label class="fld">Người xử lý<input type="text" id="fxBy" list="peopleList" value="${esc($('ckWho').value)}"></label><label class="fld" style="margin-top:8px">Nội dung khắc phục<textarea id="fxNote" rows="3" placeholder="VD: Đã thay seal, châm dầu…"></textarea></label>`,
+    onOpen:ov=>{ov._value=()=>({by:ov.querySelector('#fxBy').value.trim(),note:ov.querySelector('#fxNote').value.trim()});}});
+  if(!v)return;x.fixedAt=new Date().toISOString();x.fixBy=v.by;x.fixNote=v.note;rememberPerson(v.by);logAudit(`Khắc phục: ${splitEquip(r.items.find(i=>i.id===iid).equip).name} (${fmtDate(r.date)})`);save();renderNg();updateNgCount();}
+async function ngUnfix(rid,iid){const r=recById(rid);if(!r||!await confirmBox('Bỏ đánh dấu','Đánh dấu lại là chưa khắc phục?','Đồng ý'))return;const x=r.results[iid];delete x.fixedAt;delete x.fixBy;delete x.fixNote;save();renderNg();updateNgCount();}
+function exportNg(){const list=ngFiltered();if(!list.length){toast('Không có dữ liệu');return;}
+  saveXls(`MI_KhongDat_${todayISO()}.xls`,[{name:'Không đạt',widths:[70,45,55,150,150,200,180,150,110,90,180],rows:[['Ngày','Ca','Khu vực','Thiết bị','Hạng mục','Tiêu chuẩn','Lý do không đạt','Ghi chú','Checked by','Ngày khắc phục','Nội dung khắc phục'].map(v=>({v,s:'h'})),
+    ...list.map(({r,it,x})=>[fmtDate(r.date),shiftName(r.shift),it.area,it.equip,it.task,it.std,x.reason||'',x.note||'',r.checker||'',x.fixedAt?fmtDT(x.fixedAt):'',[x.fixNote,x.fixBy].filter(Boolean).join(' — ')])]}]);}
+
+/* ===================== [CHECKLIST EDITOR] ===================== */
+const ED={shift:'S1',items:[],dirty:false};
+function edLoad(){if(!$('edShift').options.length)$('edShift').innerHTML=SHIFTS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+  ED.shift=$('edShift').value||ED.shift;const t=STATE.templates[ED.shift];ED.items=clone(t.items);$('edAreas').value=t.areas||'';ED.dirty=false;edRender();}
+$('edShift').addEventListener('change',e=>{if(ED.dirty&&!window.confirm('Bỏ thay đổi chưa lưu của ca đang sửa?')){e.target.value=ED.shift;return;}ED.shift=e.target.value;edLoad();});
+$('edAreas').addEventListener('input',()=>edMark());
+function edMark(){ED.dirty=true;$('edDirty').textContent='● Có thay đổi chưa lưu';}
+function edRender(){$('edDirty').textContent=ED.dirty?'● Có thay đổi chưa lưu':'';
+  $('edTbl').innerHTML=`<thead><tr><th>#</th><th style="width:90px">Khu vực</th><th style="width:170px">Thiết bị (dòng 2: mã)</th><th>Công việc</th><th>Tiêu chuẩn</th><th style="width:130px">Phương pháp</th><th style="width:110px"></th></tr></thead><tbody>`+
+  ED.items.map((it,i)=>`<tr><td class="muted">${i+1}</td><td><input value="${esc(it.area)}" data-i="${i}" data-k="area"></td><td><textarea data-i="${i}" data-k="equip">${esc(it.equip)}</textarea></td><td><textarea data-i="${i}" data-k="task">${esc(it.task)}</textarea></td><td><textarea data-i="${i}" data-k="std">${esc(it.std)}</textarea></td><td><textarea data-i="${i}" data-k="method">${esc(it.method)}</textarea></td>
+    <td><div class="acts"><button class="btn sm" title="Lên" onclick="edMove(${i},-1)">↑</button><button class="btn sm" title="Xuống" onclick="edMove(${i},1)">↓</button><button class="btn sm" title="Chèn dòng dưới" onclick="edAdd(${i})">＋</button><button class="btn sm danger" title="Xoá" onclick="edDel(${i})">✕</button></div></td></tr>`).join('')+'</tbody>';}
+$('edTbl').addEventListener('input',e=>{const el=e.target;if(el.dataset.k){ED.items[+el.dataset.i][el.dataset.k]=el.value;edMark();}});
+function edAdd(after){const i=after==null?ED.items.length-1:after,p=ED.items[i]||{};ED.items.splice(i+1,0,{id:uid('it'),area:p.area||'',equip:p.equip||'',task:'',std:'',method:'quan sát trực quan'});edMark();edRender();
+  const t=document.querySelector(`#edTbl textarea[data-i="${i+1}"][data-k="task"]`);t&&t.focus();}
+function edMove(i,d){const j=i+d;if(j<0||j>=ED.items.length)return;[ED.items[i],ED.items[j]]=[ED.items[j],ED.items[i]];edMark();edRender();}
+function edDel(i){ED.items.splice(i,1);edMark();edRender();}
+function edSave(){const items=ED.items.map(it=>({id:it.id||uid('it'),area:it.area.trim(),equip:it.equip.trim(),task:it.task.trim(),std:it.std.trim(),method:it.method.trim()})).filter(it=>it.task||it.equip);
+  if(!items.length){toast('Checklist không được trống');return;}
+  if(items.some(it=>!it.equip||!it.task)){toast('Mỗi dòng cần có Thiết bị và Công việc');return;}
+  STATE.templates[ED.shift]={areas:$('edAreas').value.trim()||areasOf(items),items};logAudit(`Lưu checklist ${shiftName(ED.shift)} (${items.length} mục)`);save();ED.dirty=false;edLoad();toast('💾 Đã lưu checklist '+shiftName(ED.shift));}
+function edExport(){saveXls(`MI_Checklist_Template_${todayISO()}.xls`,SHIFTS.map((s,k)=>({name:`Shift ${k+1} check list`,widths:[30,55,140,180,240,120],
+  rows:[HDR.map(v=>({v,s:'h'})),...STATE.templates[s.id].items.map((it,i)=>[i+1,it.area,it.equip,it.task,it.std,it.method])]})));}
+
+/* --- Excel import (.xlsx / .xls SpreadsheetML) --- */
+function colIndex(ref){const m=/^([A-Z]+)/.exec(ref);let n=0;for(const ch of m[1])n=n*26+ch.charCodeAt(0)-64;return n-1;}
+async function unzipXlsx(buffer){
+  const u=new Uint8Array(buffer),v=new DataView(buffer);let e=-1;for(let i=u.length-22;i>=Math.max(0,u.length-65557);i--)if(v.getUint32(i,true)===0x06054b50){e=i;break;}
+  if(e<0)throw new Error('Không tìm thấy cấu trúc XLSX');let p=v.getUint32(e+16,true);const count=v.getUint16(e+10,true),files={};
+  for(let k=0;k<count;k++){if(v.getUint32(p,true)!==0x02014b50)throw new Error('XLSX bị lỗi');const method=v.getUint16(p+10,true),size=v.getUint32(p+20,true),nl=v.getUint16(p+28,true),xl=v.getUint16(p+30,true),cl=v.getUint16(p+32,true),lo=v.getUint32(p+42,true);
+    const name=new TextDecoder().decode(u.slice(p+46,p+46+nl)),lnl=v.getUint16(lo+26,true),lxl=v.getUint16(lo+28,true),data=u.slice(lo+30+lnl+lxl,lo+30+lnl+lxl+size);
+    let bytes=data;if(method===8){const st=new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'));bytes=new Uint8Array(await new Response(st).arrayBuffer());}else if(method!==0)throw new Error('Kiểu nén XLSX chưa được hỗ trợ');files[name]=bytes;p+=46+nl+xl+cl;}
+  return files;}
+async function xlsxSheets(buffer){
+  const files=await unzipXlsx(buffer),dec=new TextDecoder('utf-8'),P=s=>new DOMParser().parseFromString(dec.decode(s),'application/xml');
+  const shared=files['xl/sharedStrings.xml']?[...P(files['xl/sharedStrings.xml']).getElementsByTagNameNS('*','si')].map(si=>[...si.getElementsByTagNameNS('*','t')].map(t=>t.textContent).join('')):[];
+  const wb=P(files['xl/workbook.xml']),rels=P(files['xl/_rels/workbook.xml.rels']);
+  return [...wb.getElementsByTagNameNS('*','sheet')].map(sh=>{const rid=sh.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships','id')||sh.getAttribute('r:id');
+    const rel=[...rels.getElementsByTagNameNS('*','Relationship')].find(r=>r.getAttribute('Id')===rid);let target=rel?rel.getAttribute('Target'):'';target='xl/'+target.replace(/^\/?xl\//,'').replace(/^\.\//,'');
+    const raw=files[target];if(!raw)return {name:sh.getAttribute('name'),rows:[]};const doc=P(raw),rows=[];
+    [...doc.getElementsByTagNameNS('*','row')].forEach(row=>{const ri=+row.getAttribute('r')-1,out=[];[...row.getElementsByTagNameNS('*','c')].forEach(c=>{const i=colIndex(c.getAttribute('r')||'A1'),t=c.getAttribute('t'),ve=c.getElementsByTagNameNS('*','v')[0],is=c.getElementsByTagNameNS('*','is')[0];
+      out[i]=t==='s'?(shared[+(ve?.textContent||0)]||''):t==='inlineStr'?[...is.getElementsByTagNameNS('*','t')].map(x=>x.textContent).join(''):(ve?.textContent||'');});rows[ri>=0?ri:rows.length]=out;});
+    return {name:sh.getAttribute('name'),rows:[...rows].map(r=>r||[])};});}
+function xmlSheets(text){const doc=new DOMParser().parseFromString(text,'application/xml');
+  return [...doc.getElementsByTagNameNS('*','Worksheet')].map(ws=>({name:ws.getAttributeNS('urn:schemas-microsoft-com:office:spreadsheet','Name')||ws.getAttribute('ss:Name'),
+    rows:[...ws.getElementsByTagNameNS('*','Row')].map(row=>{let n=0;const out=[];[...row.getElementsByTagNameNS('*','Cell')].forEach(c=>{const ix=c.getAttributeNS('urn:schemas-microsoft-com:office:spreadsheet','Index')||c.getAttribute('ss:Index');if(ix)n=+ix-1;const d=c.getElementsByTagNameNS('*','Data')[0];out[n]=d?d.textContent:'';
+      const m=c.getAttributeNS('urn:schemas-microsoft-com:office:spreadsheet','MergeAcross')||c.getAttribute('ss:MergeAcross');n+=1+(m?+m:0);});return out;})}));}
+function parseChecklistSheet(rows){
+  const clean=rows.map(r=>[...(r||[])].map(v=>String(v??'').replace(/\r/g,'').trim()));
+  const hi=clean.findIndex(r=>r.some(v=>/tasklist|công việc/i.test(v)));if(hi<0)return null;
+  const h=clean[hi].map(v=>fold(v)),col=re=>h.findIndex(v=>re.test(v));
+  const c={no:col(/^no/),area:col(/area|khu vuc/),eq:col(/thiet bi|equip/),task:col(/tasklist|cong viec/),std:col(/standard|tieu chuan/),m:col(/method|phuong phap/)};
+  if(c.eq<0||c.task<0)return null;let area='',equip='';const items=[];
+  clean.slice(hi+1).forEach(r=>{const task=r[c.task]||'';if(/checked by|verified by/i.test(r.join(' ')))return;
+    if(c.area>=0&&r[c.area])area=r[c.area];if(r[c.eq])equip=r[c.eq].replace(/[ \t]+\n/g,'\n');
+    if(!task)return;items.push({id:uid('it'),area,equip,task:task.replace(/[ \t]+/g,' '),std:(c.std>=0?r[c.std]:'')||'',method:(c.m>=0?r[c.m]:'')||''});});
+  return items.length?items:null;}
+async function edImport(){
+  const f=await pickFile('.xlsx,.xls,.xml');if(!f)return;
+  try{const buf=await f.arrayBuffer(),head=new TextDecoder().decode(new Uint8Array(buf.slice(0,200)));
+    const sheets=/^\s*(﻿)?\s*</.test(head)?xmlSheets(new TextDecoder().decode(buf)):await xlsxSheets(buf);
+    const found={};let order=0;
+    sheets.forEach(s=>{const items=parseChecklistSheet(s.rows);if(!items)return;const m=/(?:shift|ca)\s*(\d)/i.exec(s.name||'');const id=m?'S'+m[1]:SHIFTS[order]&&SHIFTS[order].id;order++;if(id&&STATE.templates[id]&&!found[id])found[id]=items;});
+    const ids=Object.keys(found);if(!ids.length)throw new Error('Không tìm thấy sheet checklist (cần dòng tiêu đề có “Tasklist / Công việc”, “Thiết bị / Equipments”)');
+    const msg=ids.map(id=>`<li><b>${shiftName(id)}</b>: ${found[id].length} mục (${esc(areasOf(found[id]))})</li>`).join('');
+    if(!await confirmBox('Nhập checklist từ Excel',`<ul>${msg}</ul>Thay thế checklist hiện tại của các ca trên? Phiếu đã tạo không bị ảnh hưởng.`,'Nhập'))return;
+    ids.forEach(id=>STATE.templates[id]={areas:areasOf(found[id]),items:found[id]});logAudit(`Nhập checklist từ ${f.name}`);save();ED.dirty=false;edLoad();toast('✔ Đã nhập checklist');
+  }catch(e){console.error(e);modal({title:'Không nhập được',body:`<p>${esc(e.message)}</p>`,cancel:''});}}
+
+/* ===================== [SETTINGS] ===================== */
+function renderSettings(){const S=STATE.settings;$('stCode').value=S.code;$('stSystem').value=S.system;$('stDept').value=S.dept;$('stReqOk').checked=!!S.reqOkNotRun;
+  const size=new Blob([localStorage.getItem(KEY)||'']).size;$('stInfo').textContent=`${STATE.records.length} phiếu · dung lượng ~${(size/1024).toFixed(0)} KB (giới hạn trình duyệt ~5 MB)`;
+  $('auditTbl').innerHTML='<thead><tr><th>Thời gian</th><th>Người</th><th>Thao tác</th></tr></thead><tbody>'+(STATE.audit.slice(0,200).map(a=>`<tr><td style="white-space:nowrap">${fmtDT(a.t)}</td><td>${esc(a.who)}</td><td>${esc(a.action)}</td></tr>`).join('')||'<tr><td colspan="3" class="muted">Chưa có</td></tr>')+'</tbody>';}
+function stSave(){const S=STATE.settings;S.code=$('stCode').value.trim()||'ENG.M&I.F.001';S.system=$('stSystem').value.trim();S.dept=$('stDept').value.trim();S.reqOkNotRun=$('stReqOk').checked;logAudit('Lưu cài đặt');save();renderSettings();toast('💾 Đã lưu cài đặt');}
+function backupJson(){download(`MI_Checklist_Backup_${todayISO()}.json`,JSON.stringify(STATE,null,1),'application/json');}
+async function restoreJson(){const f=await pickFile('.json');if(!f)return;try{const s=JSON.parse(await f.text());if(!s||!s.templates||!Array.isArray(s.records))throw new Error('File không đúng định dạng sao lưu');
+  if(!await confirmBox('Phục hồi dữ liệu',`File có <b>${s.records.length}</b> phiếu. Dữ liệu hiện tại trên máy này (${STATE.records.length} phiếu) sẽ bị <b>thay thế</b>.`,'Phục hồi',true))return;
+  localStorage.setItem(KEY,JSON.stringify(s));STATE=load();logAudit('Phục hồi dữ liệu từ '+f.name);save();renderPeople();switchTab('settings');toast('✔ Đã phục hồi');}catch(e){modal({title:'Lỗi',body:`<p>${esc(e.message)}</p>`,cancel:''});}}
+async function resetTemplates(){if(!await confirmBox('Nạp lại checklist gốc','Thay checklist cả 3 ca bằng nội dung gốc của biểu mẫu ENG.M&I.F.001 v2? Phiếu đã có không bị ảnh hưởng.','Nạp lại',true))return;
+  STATE.templates=freshTemplates();logAudit('Nạp lại checklist gốc');save();toast('Đã nạp lại checklist gốc');}
+async function resetAll(){if(!await confirmBox('Xoá toàn bộ dữ liệu',`Xoá <b>${STATE.records.length}</b> phiếu, checklist đã sửa và cài đặt trên máy này? Nên <b>Sao lưu JSON</b> trước. Không thể hoàn tác.`,'Xoá tất cả',true))return;
+  STATE=freshState();save();renderPeople();switchTab('check');toast('Đã xoá dữ liệu');}
+
+/* ===================== [BOOT] ===================== */
+(function boot(){
+  try{const p=JSON.parse(localStorage.getItem('ild_mi_ui')||'{}');if(p.who)$('ckWho').value=p.who;}catch(e){}
+  renderPeople();let t='check';try{t=sessionStorage.getItem('ild_mi_tab')||'check';}catch(e){}
+  if(!document.getElementById('tab-'+t))t='check';switchTab(t);
+  window.addEventListener('storage',e=>{if(e.key===KEY){STATE=load();switchTab(curTab);}});
+})();
+</script>
+</body>
+</html>
