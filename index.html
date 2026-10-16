@@ -1149,7 +1149,9 @@ const META_KEYS=['shift','date','items','status','checker','checkerCode','doneAt
 const ITEM_KEYS=['run','ok','reason','note','fixedAt','fixBy','fixNote'];
 const CLOUD={ready:false,user:null,db:null,auth:null,unsub:[],timer:null,busy:false,again:false,state:'off',err:'',skip:false,first:{recs:false,cfg:false},
   st:(()=>{try{const s=JSON.parse(localStorage.getItem(CLOUD_KEY)||'null');if(s&&s.shadow)return s;}catch(e){}return {shadow:{recs:{},cfg:null},del:[]};})()};
-const J=v=>JSON.stringify(v===undefined?null:v);
+// JSON chuẩn hoá (sắp xếp khoá): Firestore trả map theo thứ tự khoá khác → so sánh bằng chuỗi thường sẽ luôn "khác"
+const canon=v=>Array.isArray(v)?v.map(canon):(v&&typeof v==='object')?Object.keys(v).sort().reduce((o,k)=>{if(v[k]!==undefined)o[k]=canon(v[k]);return o;},{}):v;
+const J=v=>JSON.stringify(canon(v===undefined?null:v));
 const cloudSaveSt=()=>{try{localStorage.setItem(CLOUD_KEY,JSON.stringify(CLOUD.st));}catch(e){}};
 function normItem(x){const o={};if(x)ITEM_KEYS.forEach(k=>{if(x[k]!=null&&x[k]!=='')o[k]=x[k];});return o;}
 function normRec(r){const o={};META_KEYS.forEach(k=>{if(r[k]!=null&&r[k]!=='')o[k]=r[k];});o.results={};Object.keys(r.results||{}).forEach(k=>{const n=normItem(r.results[k]);if(Object.keys(n).length)o.results[k]=n;});return o;}
@@ -1316,6 +1318,7 @@ function authStart(u){
     if(!p)return authDeny('Tài khoản này chưa được cấp quyền vào app — liên hệ Admin.');
     if(p.active===false)return authDeny('Tài khoản đã bị khoá — liên hệ Admin.');
     const first=!AUTH.profile||AUTH.profile.uid!==u.uid;AUTH.profile=p;authCache();applyRoleUI();
+    if(can('admin')&&!AUTH.permChecked){AUTH.permChecked=true;db.collection('mi').doc('permissions').get().then(d=>{if(!d.exists)return db.collection('mi').doc('permissions').set({matrix:permNorm(null),updatedAt:new Date().toISOString(),updatedBy:u.email});}).catch(e=>console.warn('perm init',e));}
     if(!CLOUD.unsub.length){cloudSet('sync','Đang tải dữ liệu…');cloudListen();}
     if(first)toast(`Xin chào ${p.displayName} · ${ROLE_LABEL[p.role]||''}`);
     if(curTab==='users')renderUsers();},
