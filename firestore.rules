@@ -34,6 +34,13 @@ service cloud.firestore {
         && (!(isDel(request.resource.data) && !isDel(resource.data)) || can('deleteRec'));
     }
 
+    // Checklist theo phiên bản (mi_tpl/{ca-hash}, nội dung cố định): ai có quyền đều tạo được, không sửa được nội dung
+    match /mi_tpl/{tplId} {
+      allow read: if active();
+      allow create: if active();
+      allow update: if active() && request.resource.data.items == resource.data.items;
+    }
+
     // Hồ sơ quyền: mỗi người đọc hồ sơ của mình; Admin quản lý tất cả
     match /mi_users/{uid} {
       allow read: if signedIn() && (request.auth.uid == uid || isAdmin());

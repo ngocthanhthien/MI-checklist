@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>M&amp;I Daily Checklist · ILD Coffee Vietnam</title>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#382E28">
+<meta name="theme-color" content="#1E3A8A">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,27 +14,30 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>try{var t=localStorage.getItem('ild_mi_theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}</script>
 <style>
-/* ===================== [TOKENS · ILD Crafted] ===================== */
+/* ===================== [TOKENS · ILD Blue] ===================== */
 :root{
-  --bg:#F7F0E6;--surface:#FFFFFF;--surface2:#FBF4E8;--selected:#F6E8CF;--line:#E6D6BA;--input:#99897A;
-  --text:#2A2018;--muted:#6B5842;--primary:#382E28;--primary-hover:#514135;--primary-text:#FFFFFF;--accent:#8A5A2F;
-  --red:#E30613;--focus:#2563EB;--th:#FBF4E8;--zebra:#FDF9F3;--overlay:rgba(42,32,24,.45);
-  --ok:#1B7A36;--warn:#A15C07;--fail:#B3261E;--ok-bg:#E4F2E7;--warn-bg:#FBEFD9;--fail-bg:#F9E4E1;--gray-bg:#F1E7D8;--info:#1D5FA8;--info-bg:#E3EEFA;
-  --shadow:0 1px 2px rgba(56,46,40,.08),0 2px 8px rgba(56,46,40,.06);--shadow-pop:0 14px 40px rgba(42,32,24,.22);
+  --bg:#EEF3FB;--surface:#FFFFFF;--surface2:#F5F8FE;--selected:#DCE8FD;--line:#D3DEEF;--input:#8797B2;
+  --text:#0F1B2D;--muted:#475569;--primary:#1D4ED8;--primary-hover:#1E40AF;--primary-text:#FFFFFF;--accent:#2563EB;
+  --red:#E30613;--focus:#F59E0B;--th:#EAF1FC;--zebra:#F8FAFE;--overlay:rgba(15,27,45,.5);
+  --ok:#15803D;--warn:#B45309;--fail:#B91C1C;--ok-bg:#DCFCE7;--warn-bg:#FEF3C7;--fail-bg:#FEE2E2;--gray-bg:#E8EEF7;--info:#1D4ED8;--info-bg:#DBEAFE;
+  --hdr1:#1E3A8A;--hdr2:#2563EB;
+  --shadow:0 1px 2px rgba(15,40,90,.08),0 3px 10px rgba(15,40,90,.07);--shadow-pop:0 16px 44px rgba(15,40,90,.28);
   --r:10px;color-scheme:light;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#1F1A17;--surface:#2A231F;--surface2:#261F1B;--selected:#3F332B;--line:#4A3F37;--input:#968575;
-  --text:#F5EEE5;--muted:#C7B8A8;--primary:#E5D8C8;--primary-hover:#F2E8DC;--primary-text:#382E28;--accent:#D9A774;
-  --red:#FF4B55;--focus:#8AB0FF;--th:#342B25;--zebra:#2F2722;--overlay:rgba(0,0,0,.6);
-  --ok:#7CD699;--warn:#F2B24C;--fail:#FF8A80;--ok-bg:#1E3A27;--warn-bg:#44321A;--fail-bg:#4A2320;--gray-bg:#3A302A;--info:#8AB8F0;--info-bg:#1E2E44;
-  --shadow:0 1px 2px rgba(0,0,0,.35);--shadow-pop:0 14px 40px rgba(0,0,0,.55);color-scheme:dark;}}
+  --bg:#0B1220;--surface:#111A2E;--surface2:#16213A;--selected:#1E2D50;--line:#27375C;--input:#60739B;
+  --text:#E8EEFA;--muted:#A6B5D2;--primary:#60A5FA;--primary-hover:#93C5FD;--primary-text:#0B1220;--accent:#93C5FD;
+  --red:#FF4B55;--focus:#FBBF24;--th:#16213A;--zebra:#131D33;--overlay:rgba(0,0,0,.65);
+  --ok:#4ADE80;--warn:#FBBF24;--fail:#F87171;--ok-bg:#0F2E1D;--warn-bg:#3A2A0A;--fail-bg:#3B1414;--gray-bg:#1A2640;--info:#93C5FD;--info-bg:#172554;
+  --hdr1:#0B1A3D;--hdr2:#1E3A8A;
+  --shadow:0 1px 2px rgba(0,0,0,.4);--shadow-pop:0 16px 44px rgba(0,0,0,.6);color-scheme:dark;}}
 :root[data-theme="dark"]{
-  --bg:#1F1A17;--surface:#2A231F;--surface2:#261F1B;--selected:#3F332B;--line:#4A3F37;--input:#968575;
-  --text:#F5EEE5;--muted:#C7B8A8;--primary:#E5D8C8;--primary-hover:#F2E8DC;--primary-text:#382E28;--accent:#D9A774;
-  --red:#FF4B55;--focus:#8AB0FF;--th:#342B25;--zebra:#2F2722;--overlay:rgba(0,0,0,.6);
-  --ok:#7CD699;--warn:#F2B24C;--fail:#FF8A80;--ok-bg:#1E3A27;--warn-bg:#44321A;--fail-bg:#4A2320;--gray-bg:#3A302A;--info:#8AB8F0;--info-bg:#1E2E44;
-  --shadow:0 1px 2px rgba(0,0,0,.35);--shadow-pop:0 14px 40px rgba(0,0,0,.55);color-scheme:dark;}
+  --bg:#0B1220;--surface:#111A2E;--surface2:#16213A;--selected:#1E2D50;--line:#27375C;--input:#60739B;
+  --text:#E8EEFA;--muted:#A6B5D2;--primary:#60A5FA;--primary-hover:#93C5FD;--primary-text:#0B1220;--accent:#93C5FD;
+  --red:#FF4B55;--focus:#FBBF24;--th:#16213A;--zebra:#131D33;--overlay:rgba(0,0,0,.65);
+  --ok:#4ADE80;--warn:#FBBF24;--fail:#F87171;--ok-bg:#0F2E1D;--warn-bg:#3A2A0A;--fail-bg:#3B1414;--gray-bg:#1A2640;--info:#93C5FD;--info-bg:#172554;
+  --hdr1:#0B1A3D;--hdr2:#1E3A8A;
+  --shadow:0 1px 2px rgba(0,0,0,.4);--shadow-pop:0 16px 44px rgba(0,0,0,.6);color-scheme:dark;}
 
 /* ===================== [BASE] ===================== */
 *{box-sizing:border-box}
@@ -49,23 +52,26 @@ h3{font-size:16px;margin:0 0 8px}
 .small{font-size:13px}
 .hidden{display:none!important}
 
-header.top{display:flex;align-items:center;gap:12px;padding:10px 18px;background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30}
-.logo-wrap{background:#fff;border-radius:8px;padding:4px 8px;display:flex;align-items:center;border:1px solid #eadfcd}
+header.top{display:flex;align-items:center;gap:12px;padding:10px 18px;background:linear-gradient(100deg,var(--hdr1),var(--hdr2));color:#fff;border-bottom:0;box-shadow:0 2px 10px rgba(15,40,90,.25);position:sticky;top:0;z-index:30}
+header.top .app-title small{color:rgba(255,255,255,.82)}
+.logo-wrap{background:#fff;border-radius:8px;padding:4px 8px;display:flex;align-items:center;border:1px solid rgba(255,255,255,.6)}
 .logo-wrap img{height:30px;display:block}
 .app-title{font-weight:700;font-size:17px;line-height:1.15}
 .app-title small{display:block;font-weight:400;font-size:12px;color:var(--muted)}
 .spacer{flex:1}
 .hbtn{border:1px solid var(--line);background:var(--surface2);border-radius:999px;padding:6px 12px;font-size:13px}
 .hbtn:hover{background:var(--selected)}
+header.top .hbtn{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.4);color:#fff}
+header.top .hbtn:hover{background:rgba(255,255,255,.26)}
 
 nav.tabs{display:flex;gap:4px;padding:8px 18px 0;background:var(--surface);border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:thin;position:sticky;top:53px;z-index:29}
 .tab{border:0;background:none;padding:9px 14px 11px;border-bottom:3px solid transparent;white-space:nowrap;color:var(--muted);font-weight:600}
 .tab:hover{color:var(--text)}
-.tab.active{color:var(--text);border-bottom-color:var(--red)}
-#cloudBtn[data-state="ok"]{color:var(--ok)}
-#cloudBtn[data-state="err"]{color:var(--fail);border-color:var(--fail)}
-#cloudBtn[data-state="pending"],#cloudBtn[data-state="sync"]{color:var(--info)}
-#cloudBtn[data-state="nouser"],#cloudBtn[data-state="off"]{color:var(--muted)}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+header.top #cloudBtn[data-state="ok"]{background:rgba(34,197,94,.28);border-color:rgba(134,239,172,.7)}
+header.top #cloudBtn[data-state="err"]{background:rgba(239,68,68,.45);border-color:#FCA5A5}
+header.top #cloudBtn[data-state="pending"],header.top #cloudBtn[data-state="sync"]{background:rgba(250,204,21,.22);border-color:rgba(253,224,71,.7)}
+header.top #cloudBtn[data-state="nouser"],header.top #cloudBtn[data-state="off"]{background:rgba(255,255,255,.08)}
 .no-admin .need-admin,.no-verify .need-verify,.no-reopen .need-reopen,.no-fixNg .need-fixNg,.no-deleteRec .need-deleteRec{display:none!important}
 .tab .cnt.info{background:var(--info-bg);color:var(--info)}
 .tab .cnt[hidden]{display:none}
@@ -83,7 +89,7 @@ input[type=text],input[type=date],input[type=search],select,textarea{background:
 textarea{resize:vertical}
 .btn{border:1px solid var(--line);background:var(--surface2);border-radius:8px;padding:8px 14px;font-weight:600;min-height:40px;display:inline-flex;align-items:center;gap:6px}
 .btn:hover{background:var(--selected)}
-.btn.primary{background:var(--primary);color:var(--primary-text);border-color:var(--primary)}
+.btn.primary{background:var(--primary);color:var(--primary-text);border-color:var(--primary);box-shadow:0 2px 6px rgba(29,78,216,.28)}
 .btn.primary:hover{background:var(--primary-hover)}
 .btn.danger{color:var(--fail);border-color:color-mix(in srgb,var(--fail) 40%,var(--line))}
 .btn.sm{min-height:32px;padding:4px 10px;font-size:13px}
@@ -110,7 +116,7 @@ textarea{resize:vertical}
 .start-grid .step .small{margin-top:6px;min-height:1.3em}
 @media (max-width:760px){.start-grid{grid-template-columns:1fr}.start-grid .step{margin-top:14px}}
 .step-h{display:flex;gap:8px;align-items:center;font-weight:700;margin-bottom:10px;flex-wrap:wrap}
-.step-h .n{width:26px;height:26px;border-radius:50%;background:var(--red);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex:none}
+.step-h .n{width:26px;height:26px;border-radius:50%;background:var(--primary);color:var(--primary-text)!important;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex:none}
 .step-h .sel{font-weight:600;color:var(--ok);font-size:14px}
 .big-inp{width:min(420px,100%);min-height:50px;font-size:16px;font-weight:600;padding:10px 12px;border-radius:10px}
 select.big-inp{cursor:pointer}
@@ -244,6 +250,7 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
 .dlg{background:var(--surface);border-radius:14px;box-shadow:var(--shadow-pop);width:min(520px,100%);padding:18px}
 .dlg.wide{width:min(1200px,100%)}
 .dlg-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.upd-bar{position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:85;background:var(--surface);color:var(--text);border:1px solid var(--line);box-shadow:var(--shadow-pop);border-radius:12px;padding:10px 12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;max-width:calc(100vw - 24px);font-size:14px}
 #toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--primary);color:var(--primary-text);padding:10px 16px;border-radius:10px;z-index:80;box-shadow:var(--shadow-pop);opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw}
 #toast.show{opacity:1}
 
@@ -400,6 +407,7 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
         <label class="fld">Ca<select id="hsShift"><option value="">Tất cả</option></select></label>
         <label class="fld">Trạng thái<select id="hsStatus"><option value="">Tất cả</option><option value="draft">Nháp</option><option value="done">Đã kiểm</option><option value="verified">Đã xác nhận</option></select></label>
         <div class="spacer"></div>
+        <button class="btn hidden" id="hsLoadOld" onclick="cloudLoadRange($('hsFrom').value,$('hsTo').value).then(renderHistory)" title="Máy chỉ tự tải phiếu 60 ngày gần nhất để tiết kiệm băng thông">⤓ Tải phiếu cũ từ Firebase</button>
         <button class="btn primary" onclick="exportHistoryForms()" title="Mỗi phiếu là 1 sheet, đúng biểu mẫu ENG.M&amp;I.F.001">⬇ Excel biểu mẫu</button><button class="btn" onclick="exportHistory()" title="Bảng tổng hợp các phiếu">⬇ Bảng tổng hợp</button>
       </div>
       <div class="tbl-wrap"><table class="tbl" id="hsTbl"></table></div>
@@ -845,7 +853,7 @@ function renderHistory(){
       ${r.status==='done'?`<button class="btn sm primary need-verify" onclick="verifyRecord('${r.id}')">✔ Xác nhận</button>`:''}${r.status==='verified'?`<button class="btn sm need-verify" onclick="unverifyRecord('${r.id}')">Huỷ xác nhận</button>`:''}
       ${r.status!=='verified'?`<button class="btn sm danger need-deleteRec" onclick="deleteRecord('${r.id}')" title="Xoá phiếu">🗑</button>`:''}</div></td></tr>`;}).join('')||`<tr><td colspan="10" class="muted">Không có phiếu trong khoảng đã chọn.</td></tr>`)+'</tbody>';
 }
-function histFiltered(){const f=$('hsFrom').value,t=$('hsTo').value,s=$('hsShift').value,st=$('hsStatus').value;
+function histFiltered(){try{$('hsLoadOld').classList.toggle('hidden',!(CLOUD.user&&$('hsFrom').value&&$('hsFrom').value<addDays(todayISO(),-CLOUD_DAYS)));}catch(e){}const f=$('hsFrom').value,t=$('hsTo').value,s=$('hsShift').value,st=$('hsStatus').value;
   return STATE.records.filter(r=>(!f||r.date>=f)&&(!t||r.date<=t)&&(!s||r.shift===s)&&(!st||r.status===st)).sort((a,b)=>b.date.localeCompare(a.date)||a.shift.localeCompare(b.shift));}
 ['hsFrom','hsTo','hsShift','hsStatus'].forEach(id=>$(id).addEventListener('change',renderHistory));
 const recById=id=>STATE.records.find(r=>r.id===id);
@@ -1144,19 +1152,27 @@ async function resetAll(){if(!await confirmBox('Xoá toàn bộ dữ liệu',`Xo
 const FIREBASE_CONFIG={apiKey:"AIzaSyAALnaCZtqM8Cx2g4Sc7YkZ09CnGMJzr9k",authDomain:"ild-mi-checklist.firebaseapp.com",projectId:"ild-mi-checklist",
   storageBucket:"ild-mi-checklist.firebasestorage.app",messagingSenderId:"18100427073",appId:"1:18100427073:web:fd515d48c5b3c042f2e9c0"};
 const FB_SDK='https://www.gstatic.com/firebasejs/10.14.1/';
-const CLOUD_KEY='ild_mi_cloud_v1',CLOUD_DAYS=400;
-const META_KEYS=['shift','date','items','status','checker','checkerCode','doneAt','verifiedBy','verifiedAt','createdAt'];
+const CLOUD_KEY='ild_mi_cloud_v2',TPL_KEY='ild_mi_tpl_v1',CLOUD_DAYS=60,PUSH_DELAY=2500;
+/* Tối ưu egress: phiếu KHÔNG mang bản sao checklist (108 mục ~34 KB) — chỉ tham chiếu "tpl" (mi_tpl/{ca-hash},
+   lưu 1 lần, nội dung không đổi); mỗi hạng mục chỉ ghi trường có giá trị. Nhận dữ liệu theo mốc updatedAt
+   (watermark) → mở lại app chỉ tải phiếu thay đổi; mi/config chỉ tải lại khi mi/version đổi. */
+const META_KEYS=['shift','date','tpl','status','checker','checkerCode','doneAt','verifiedBy','verifiedAt','verifiedByUid','createdAt'];
 const ITEM_KEYS=['run','ok','reason','note','fixedAt','fixBy','fixNote'];
-const CLOUD={ready:false,user:null,db:null,auth:null,unsub:[],timer:null,busy:false,again:false,state:'off',err:'',skip:false,first:{recs:false,cfg:false},
-  st:(()=>{try{const s=JSON.parse(localStorage.getItem(CLOUD_KEY)||'null');if(s&&s.shadow)return s;}catch(e){}return {shadow:{recs:{},cfg:null},del:[]};})()};
+const CLOUD={ready:false,user:null,db:null,auth:null,unsub:[],timer:null,busy:false,again:false,state:'off',err:'',skip:false,first:{recs:false,cfg:false},tplWait:{},
+  st:(()=>{try{const s=JSON.parse(localStorage.getItem(CLOUD_KEY)||'null');if(s&&s.shadow)return s;}catch(e){}return {shadow:{recs:{},cfg:null},del:[],wm:0,cfgAt:null,tplUp:{}};})()};
+const TPL=(()=>{try{return JSON.parse(localStorage.getItem(TPL_KEY)||'{}')||{};}catch(e){return {};}})();
+const tplSave=()=>{try{localStorage.setItem(TPL_KEY,JSON.stringify(TPL));}catch(e){}};
 // JSON chuẩn hoá (sắp xếp khoá): Firestore trả map theo thứ tự khoá khác → so sánh bằng chuỗi thường sẽ luôn "khác"
 const canon=v=>Array.isArray(v)?v.map(canon):(v&&typeof v==='object')?Object.keys(v).sort().reduce((o,k)=>{if(v[k]!==undefined)o[k]=canon(v[k]);return o;},{}):v;
 const J=v=>JSON.stringify(canon(v===undefined?null:v));
 const cloudSaveSt=()=>{try{localStorage.setItem(CLOUD_KEY,JSON.stringify(CLOUD.st));}catch(e){}};
+function hash16(str){let a=0x811c9dc5,b=0x01000193^0x5bd1e995;for(let i=0;i<str.length;i++){const c=str.charCodeAt(i);a=Math.imul(a^c,16777619)>>>0;b=Math.imul(b^c,2246822519)>>>0;}return a.toString(16).padStart(8,'0')+b.toString(16).padStart(8,'0');}
+function tplOf(r){if(!r.tpl&&r.items&&r.items.length){r.tpl=`${r.shift}-${hash16(J(r.items))}`;if(!TPL[r.tpl]){TPL[r.tpl]=clone(r.items);tplSave();}}return r.tpl;}
 function normItem(x){const o={};if(x)ITEM_KEYS.forEach(k=>{if(x[k]!=null&&x[k]!=='')o[k]=x[k];});return o;}
-function normRec(r){const o={};META_KEYS.forEach(k=>{if(r[k]!=null&&r[k]!=='')o[k]=r[k];});o.results={};Object.keys(r.results||{}).forEach(k=>{const n=normItem(r.results[k]);if(Object.keys(n).length)o.results[k]=n;});return o;}
+function normRec(r){tplOf(r);const o={};META_KEYS.forEach(k=>{if(r[k]!=null&&r[k]!=='')o[k]=r[k];});o.results={};Object.keys(r.results||{}).forEach(k=>{const n=normItem(r.results[k]);if(Object.keys(n).length)o.results[k]=n;});return o;}
 const normCfg=()=>({templates:STATE.templates,employees:STATE.employees,settings:STATE.settings});
 const recDocId=(date,shift)=>`rec_${date}_${shift}`;
+const tsMs=v=>v&&typeof v.toMillis==='function'?v.toMillis():(typeof v==='number'?v:0);
 
 /* ---- tải SDK (compat) theo yêu cầu; offline thì bỏ qua ---- */
 function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('Không tải được '+src));document.head.appendChild(s);});}
@@ -1201,13 +1217,29 @@ async function cloudMenu(){
 
 /* ---- nhận dữ liệu ---- */
 function cloudStop(){CLOUD.unsub.forEach(f=>{try{f();}catch(e){}});CLOUD.unsub=[];}
-function cloudListen(){cloudStop();CLOUD.first={recs:false,cfg:false};
-  const since=addDays(todayISO(),-CLOUD_DAYS),db=CLOUD.db,onErr=e=>{console.error('listen',e);cloudSet('err',e.code==='permission-denied'?'Không có quyền đọc dữ liệu (kiểm tra tài khoản / Rules)':'Lỗi kết nối: '+(e.code||e.message));};
-  CLOUD.unsub.push(db.collection('mi').doc('config').onSnapshot(snap=>{if(snap.metadata.hasPendingWrites)return;cloudApplyCfg(snap.exists?snap.data():null);CLOUD.first.cfg=true;cloudAfterFirst();},onErr));
-  CLOUD.unsub.push(db.collection('mi_records').where('date','>=',since).onSnapshot(snap=>{const changed=new Set();
-    snap.docChanges().forEach(ch=>{if(ch.doc.metadata.hasPendingWrites||ch.type==='removed')return;if(cloudApplyRec(ch.doc.id,ch.doc.data()))changed.add(ch.doc.id);});
-    if(changed.size){save(true);cloudRefreshUI(changed);}CLOUD.first.recs=true;cloudAfterFirst();},onErr));}
+const cloudErr=e=>{console.error('listen',e);cloudSet('err',e.code==='permission-denied'?'Không có quyền đọc dữ liệu (kiểm tra tài khoản / Rules)':'Lỗi kết nối: '+(e.code||e.message));};
+function cloudApplyDocs(docs){const changed=new Set();let wm=CLOUD.st.wm||0;
+  docs.forEach(doc=>{const d=doc.data();wm=Math.max(wm,tsMs(d.updatedAt));if(cloudApplyRec(doc.id,d))changed.add(doc.id);});
+  CLOUD.st.wm=wm;cloudSaveSt();if(changed.size){save(true);cloudRefreshUI(changed);}}
+function cloudListen(){cloudStop();CLOUD.first={recs:false,cfg:false};const db=CLOUD.db;
+  // Cấu hình: chỉ nghe mi/version (vài byte); mi/config (~50 KB) chỉ tải khi phiên bản đổi
+  CLOUD.unsub.push(db.collection('mi').doc('version').onSnapshot(async snap=>{if(snap.metadata.hasPendingWrites)return;
+    const v=snap.exists?snap.data().cfgAt:null;
+    if(!v||v!==CLOUD.st.cfgAt||!CLOUD.st.shadow.cfg){try{const c=await db.collection('mi').doc('config').get();cloudApplyCfg(c.exists?c.data():null);
+        if(v){CLOUD.st.cfgAt=v;cloudSaveSt();}else if(c.exists&&can('admin')){const at=Date.now();await db.collection('mi').doc('version').set({cfgAt:at});CLOUD.st.cfgAt=at;cloudSaveSt();}}
+      catch(e){cloudErr(e);}}
+    CLOUD.first.cfg=true;cloudAfterFirst();},cloudErr));
+  // Phiếu: lần đầu tải CLOUD_DAYS ngày gần nhất; sau đó chỉ nghe phiếu có updatedAt mới hơn mốc đã đồng bộ
+  (async()=>{try{if(!CLOUD.st.wm){const q=await db.collection('mi_records').where('date','>=',addDays(todayISO(),-CLOUD_DAYS)).get();cloudApplyDocs(q.docs);if(!CLOUD.st.wm){CLOUD.st.wm=Date.now()-60000;cloudSaveSt();}}
+      const from=firebase.firestore.Timestamp.fromMillis(Math.max(0,CLOUD.st.wm-120000));
+      CLOUD.unsub.push(db.collection('mi_records').where('updatedAt','>',from).onSnapshot(snap=>{
+        cloudApplyDocs(snap.docChanges().filter(ch=>!ch.doc.metadata.hasPendingWrites&&ch.type!=='removed').map(ch=>ch.doc));
+        CLOUD.first.recs=true;cloudAfterFirst();},cloudErr));}
+    catch(e){cloudErr(e);}})();}
 function cloudAfterFirst(){if(CLOUD.first.recs&&CLOUD.first.cfg){if(CLOUD.state==='sync')cloudSet('ok','Đã đồng bộ');cloudSchedule(50);}}
+async function cloudLoadRange(from,to){if(!CLOUD.user)return toast('Cần đăng nhập Firebase');
+  try{let q=CLOUD.db.collection('mi_records').where('date','>=',from);if(to)q=q.where('date','<=',to);const s=await q.get();cloudApplyDocs(s.docs);toast(`Đã tải ${s.size} phiếu từ Firebase`);}
+  catch(e){toast('Lỗi tải: '+(e.code||e.message));}}
 function cloudApplyCfg(d){
   if(!d){return;} // chưa có trên cloud → lần gửi tới sẽ tạo
   const remote={templates:d.templates,employees:d.employees,settings:d.settings},sh=CLOUD.st.shadow.cfg;
@@ -1215,15 +1247,23 @@ function cloudApplyCfg(d){
   if(!dirty&&J(normCfg())!==J(remote)){if(remote.templates)STATE.templates=remote.templates;if(remote.employees)STATE.employees=remote.employees;if(remote.settings)STATE.settings=Object.assign({},STATE.settings,remote.settings);
     save(true);renderPeople();if(curTab!=='editor'||!ED.dirty)cloudRefreshUI(new Set(['*cfg']));}
   CLOUD.st.shadow.cfg=JSON.parse(J(remote));cloudSaveSt();}
+/* checklist của phiếu (mi_tpl): lấy từ bộ nhớ máy, thiếu thì tải 1 lần rồi điền vào mọi phiếu cùng tpl */
+function cloudNeedTpl(tpl){if(!tpl||TPL[tpl]||CLOUD.tplWait[tpl]||!CLOUD.db)return;
+  CLOUD.tplWait[tpl]=CLOUD.db.collection('mi_tpl').doc(tpl).get().then(d=>{if(!d.exists)return;TPL[tpl]=d.data().items||[];tplSave();CLOUD.st.tplUp[tpl]=1;cloudSaveSt();
+    const ch=new Set();STATE.records.forEach(r=>{if(r.tpl===tpl&&(!r.items||!r.items.length)){r.items=clone(TPL[tpl]);ch.add(r.id);}});if(ch.size){save(true);cloudRefreshUI(ch);}})
+    .catch(e=>console.warn('tpl',tpl,e)).finally(()=>{delete CLOUD.tplWait[tpl];});}
 function cloudApplyRec(id,d){
   const sh=CLOUD.st.shadow.recs[id];
   if(d.deleted){delete CLOUD.st.shadow.recs[id];cloudSaveSt();const i=STATE.records.findIndex(r=>r.id===id);if(i>=0){STATE.records.splice(i,1);return true;}return false;}
+  if(d.items&&d.items.length&&!d.tpl){d.tpl=`${d.shift}-${hash16(J(d.items))}`;if(!TPL[d.tpl]){TPL[d.tpl]=d.items;tplSave();}} // phiếu kiểu cũ (mang cả checklist)
   const remote={};META_KEYS.forEach(k=>{if(d[k]!=null&&d[k]!=='')remote[k]=d[k];});remote.results={};Object.keys(d.results||{}).forEach(k=>{const n=normItem(d.results[k]);if(Object.keys(n).length)remote.results[k]=n;});
   let r=STATE.records.find(x=>x.id===id)||STATE.records.find(x=>x.shift===remote.shift&&x.date===remote.date);let changed=false;
-  if(!r){r={id,results:{}};META_KEYS.forEach(k=>{if(remote[k]!=null)r[k]=clone(remote[k]);});r.status=r.status||'draft';r.items=r.items||[];r.updatedAt=new Date().toISOString();STATE.records.push(r);changed=true;}
+  if(!r){r={id,results:{}};META_KEYS.forEach(k=>{if(remote[k]!=null)r[k]=clone(remote[k]);});r.status=r.status||'draft';r.items=r.tpl&&TPL[r.tpl]?clone(TPL[r.tpl]):[];r.updatedAt=new Date().toISOString();STATE.records.push(r);changed=true;}
   else{if(r.id!==id)r.id=id;const loc=normRec(r);
     const metaDirty=sh?META_KEYS.some(k=>J(loc[k])!==J(sh[k])):false;
-    if(!metaDirty&&META_KEYS.some(k=>J(loc[k])!==J(remote[k]))){META_KEYS.forEach(k=>{if(remote[k]!=null)r[k]=clone(remote[k]);else delete r[k];});changed=true;}}
+    if(!metaDirty&&META_KEYS.some(k=>J(loc[k])!==J(remote[k]))){const oldTpl=r.tpl;META_KEYS.forEach(k=>{if(remote[k]!=null)r[k]=clone(remote[k]);else delete r[k];});
+      if(r.tpl!==oldTpl)r.items=r.tpl&&TPL[r.tpl]?clone(TPL[r.tpl]):[];changed=true;}}
+  if(r.tpl&&(!r.items||!r.items.length))cloudNeedTpl(r.tpl);
   const loc=normRec(r);
   Object.keys(remote.results).concat(Object.keys(sh?.results||{})).forEach(k=>{
     const li=loc.results[k]||{},ri=remote.results[k]||{},si=sh?.results?.[k];
@@ -1232,24 +1272,28 @@ function cloudApplyRec(id,d){
   CLOUD.st.shadow.recs[id]=JSON.parse(J(remote));cloudSaveSt();return changed;}
 
 /* ---- gửi dữ liệu ---- */
-function cloudSchedule(ms){if(!CLOUD.user)return;clearTimeout(CLOUD.timer);CLOUD.timer=setTimeout(cloudFlush,ms??1200);if(CLOUD.state==='ok')cloudSet('pending','Có thay đổi chờ gửi');}
+function cloudSchedule(ms){if(!CLOUD.user)return;clearTimeout(CLOUD.timer);CLOUD.timer=setTimeout(cloudFlush,ms??PUSH_DELAY);if(CLOUD.state==='ok')cloudSet('pending','Có thay đổi chờ gửi');}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&CLOUD.timer){clearTimeout(CLOUD.timer);CLOUD.timer=null;cloudFlush();}});
 async function cloudFlush(){
-  if(!CLOUD.user||!CLOUD.first.recs||!CLOUD.first.cfg)return;
+  CLOUD.timer=null;if(!CLOUD.user||!CLOUD.first.recs||!CLOUD.first.cfg)return;
   if(CLOUD.busy){CLOUD.again=true;return;}CLOUD.busy=true;
-  const now=Date.now(),db=CLOUD.db,ops=[],newSh={},ts=firebase.firestore.FieldValue.serverTimestamp(),dev=CLOUD.user.email;
-  STATE.records.forEach(r=>{const cur=normRec(r),sh=CLOUD.st.shadow.recs[r.id],p={};
-    if(!sh||META_KEYS.some(k=>J(cur[k])!==J(sh[k]))){META_KEYS.forEach(k=>p[k]=cur[k]??null);p.metaAt=now;p.deleted=false;}
+  const now=Date.now(),db=CLOUD.db,ops=[],newSh={},ts=firebase.firestore.FieldValue.serverTimestamp(),dev=CLOUD.user.email,tpls=new Set();
+  STATE.records.forEach(r=>{const cur=normRec(r),sh=CLOUD.st.shadow.recs[r.id],p={},fields=['updatedAt'];
+    if(!sh||META_KEYS.some(k=>J(cur[k])!==J(sh[k]))){META_KEYS.forEach(k=>{p[k]=cur[k]??null;fields.push(k);});p.metaAt=now;p.deleted=false;fields.push('metaAt','deleted');}
     const ks=new Set([...Object.keys(cur.results),...Object.keys(sh?.results||{})]);const res={};
-    ks.forEach(k=>{if(J(cur.results[k]||{})!==J(sh?.results?.[k]||{})){const o={t:now,by:dev};ITEM_KEYS.forEach(f=>o[f]=cur.results[k]?.[f]??null);res[k]=o;}});
+    ks.forEach(k=>{if(J(cur.results[k]||{})!==J(sh?.results?.[k]||{})){res[k]={...(cur.results[k]||{}),t:now};fields.push('results.'+k);}});  // chỉ trường có giá trị — thay cả mục (mergeFields)
     if(Object.keys(res).length)p.results=res;
-    if(Object.keys(p).length){p.updatedAt=ts;ops.push([db.collection('mi_records').doc(r.id),p,'rec',r.id]);newSh[r.id]=cur;}});
-  const dels=[...CLOUD.st.del];dels.forEach(id=>ops.push([db.collection('mi_records').doc(id),{deleted:true,metaAt:now,updatedAt:ts},'del',id]));
-  const cfg=normCfg(),cfgDirty=can('admin')&&J(cfg)!==J(CLOUD.st.shadow.cfg);if(cfgDirty)ops.push([db.collection('mi').doc('config'),{...JSON.parse(J(cfg)),updatedAt:ts,updatedBy:dev},'cfg','config']);
+    if(fields.length>1){p.updatedAt=ts;ops.push([db.collection('mi_records').doc(r.id),p,'rec',r.id,{mergeFields:fields}]);newSh[r.id]=cur;if(cur.tpl&&!CLOUD.st.tplUp[cur.tpl]&&TPL[cur.tpl])tpls.add(cur.tpl);}});
+  const dels=[...CLOUD.st.del];dels.forEach(id=>ops.push([db.collection('mi_records').doc(id),{deleted:true,metaAt:now,updatedAt:ts},'del',id,{merge:true}]));
+  const cfg=normCfg(),cfgDirty=can('admin')&&J(cfg)!==J(CLOUD.st.shadow.cfg);
+  if(cfgDirty){ops.push([db.collection('mi').doc('config'),{...JSON.parse(J(cfg)),updatedAt:ts,updatedBy:dev},'cfg','config',{}]);ops.push([db.collection('mi').doc('version'),{cfgAt:now},'ver','version',{}]);}
   if(!ops.length){CLOUD.busy=false;cloudSet('ok','Đã đồng bộ');return;}
   cloudSet('pending',navigator.onLine?`Đang gửi ${ops.length} thay đổi…`:`${ops.length} thay đổi chờ có mạng`);
-  try{const res=await Promise.allSettled(ops.map(([ref,data])=>ref.set(data,{merge:ref.parent.id==='mi_records'})));let denied=0,failed=0,lastErr='';
+  try{ // checklist (mi_tpl) phải có trước khi phiếu tham chiếu tới nó
+    await Promise.allSettled([...tpls].map(t=>db.collection('mi_tpl').doc(t).set({shift:t.split('-')[0],items:TPL[t],createdAt:new Date().toISOString(),by:dev}).then(()=>{CLOUD.st.tplUp[t]=1;})));
+    const res=await Promise.allSettled(ops.map(([ref,data,,,opt])=>ref.set(data,opt)));let denied=0,failed=0,lastErr='';
     res.forEach((x,i)=>{const [,,kind,key]=ops[i];
-      if(x.status==='fulfilled'){if(kind==='rec')CLOUD.st.shadow.recs[key]=JSON.parse(J(newSh[key]));if(kind==='del'){delete CLOUD.st.shadow.recs[key];CLOUD.st.del=CLOUD.st.del.filter(z=>z!==key);}if(kind==='cfg')CLOUD.st.shadow.cfg=JSON.parse(J(cfg));}
+      if(x.status==='fulfilled'){if(kind==='rec')CLOUD.st.shadow.recs[key]=JSON.parse(J(newSh[key]));if(kind==='del'){delete CLOUD.st.shadow.recs[key];CLOUD.st.del=CLOUD.st.del.filter(z=>z!==key);}if(kind==='cfg')CLOUD.st.shadow.cfg=JSON.parse(J(cfg));if(kind==='ver')CLOUD.st.cfgAt=now;}
       else if(x.reason&&x.reason.code==='permission-denied'){denied++;if(kind==='del')CLOUD.st.del=CLOUD.st.del.filter(z=>z!==key);if(kind==='rec'||kind==='del')cloudRevertRec(key);if(kind==='cfg')cloudRevertCfg();}
       else{failed++;lastErr=x.reason&&(x.reason.code||x.reason.message);}});
     cloudSaveSt();
@@ -1259,10 +1303,11 @@ async function cloudFlush(){
   finally{CLOUD.busy=false;if(CLOUD.again){CLOUD.again=false;cloudSchedule(300);}}}
 function cloudRevertRec(id){const sh=CLOUD.st.shadow.recs[id],i=STATE.records.findIndex(r=>r.id===id);
   if(!sh){if(i>=0)STATE.records.splice(i,1);return;}
-  const r=i>=0?STATE.records[i]:(STATE.records[STATE.records.push({id,results:{}})-1]);META_KEYS.forEach(k=>{if(sh[k]!=null)r[k]=clone(sh[k]);else delete r[k];});r.results=clone(sh.results||{});r.status=r.status||'draft';r.items=r.items||[];}
+  const r=i>=0?STATE.records[i]:(STATE.records[STATE.records.push({id,results:{}})-1]);META_KEYS.forEach(k=>{if(sh[k]!=null)r[k]=clone(sh[k]);else delete r[k];});r.results=clone(sh.results||{});r.status=r.status||'draft';
+  if(!r.items||!r.items.length)r.items=r.tpl&&TPL[r.tpl]?clone(TPL[r.tpl]):[];}
 function cloudRevertCfg(){const c=CLOUD.st.shadow.cfg;if(!c)return;if(c.templates)STATE.templates=clone(c.templates);if(c.employees)STATE.employees=clone(c.employees);if(c.settings)STATE.settings=Object.assign({},STATE.settings,c.settings);renderPeople();}
 function cloudMarkDeleted(id){if(!CLOUD.st.del.includes(id))CLOUD.st.del.push(id);cloudSaveSt();}
-function cloudResync(msg){CLOUD.st.shadow={recs:{},cfg:null};cloudSaveSt();if(CLOUD.user){cloudSet('sync',msg||'Đang đồng bộ lại…');cloudListen();}}
+function cloudResync(msg){CLOUD.st.shadow={recs:{},cfg:null};CLOUD.st.wm=0;CLOUD.st.cfgAt=null;cloudSaveSt();if(CLOUD.user){cloudSet('sync',msg||'Đang đồng bộ lại…');cloudListen();}}
 
 /* ---- vẽ lại giao diện khi có dữ liệu mới từ máy khác (không phá ô đang gõ) ---- */
 function cloudRefreshUI(changed){
@@ -1446,6 +1491,9 @@ function netBadge(){$('offBadge').classList.toggle('hidden',navigator.onLine);}
 window.addEventListener('online',()=>{netBadge();toast('Đã có mạng lại');});window.addEventListener('offline',()=>{netBadge();toast('Mất mạng — app vẫn chạy, dữ liệu lưu trên máy');});netBadge();
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){
   window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(e=>console.warn('SW',e)));
+  // SW báo có bản mới (đã tải ngầm) → hiện nút Tải lại; không tự reload để không mất thao tác đang dở
+  navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.type==='mi-update'&&!$('updBar')){const d=document.createElement('div');d.id='updBar';d.className='upd-bar';
+    d.innerHTML='🔄 Có bản cập nhật mới của app. <button class="btn sm primary" onclick="location.reload()">Tải lại</button> <button class="btn sm" onclick="this.parentNode.remove()">Để sau</button>';document.body.appendChild(d);}});
   if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
 }
 cloudInit();
