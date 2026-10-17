@@ -487,16 +487,22 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
       <p class="small muted" style="margin:8px 0 0">Nhập Excel: file có cột <b>Employee code · Full name · Function · Dept.</b> — trùng mã thì cập nhật.</p>
     </div>
     <div class="card">
-      <div class="row" style="align-items:center"><h3 style="margin:0">Đồng bộ Firebase</h3><div class="spacer"></div><button class="btn" onclick="cloudMenu()">☁ Tài khoản &amp; đồng bộ</button></div>
-      <p class="small" id="cloudInfo" style="margin:8px 0 0"></p>
-      <p class="small muted" style="margin:6px 0 0">Project <b>ild-mi-checklist</b> · mỗi phiếu là 1 bản ghi theo ngày + ca; nhiều máy kiểm cùng 1 ca sẽ gộp theo từng hạng mục. Tạo / đổi mật khẩu tài khoản ở Firebase Console → Authentication → Users.</p>
+      <div class="row" style="align-items:center"><h3 style="margin:0">Máy chủ &amp; thông tin đồng bộ</h3><div class="spacer"></div><button class="btn" onclick="cloudMenu()">☁ Tài khoản &amp; đồng bộ</button><button class="btn" onclick="renderSyncInfo()" title="Làm mới">↻</button></div>
+      <div class="tbl-wrap" style="margin-top:10px"><table class="tbl"><tbody id="syncInfo"></tbody></table></div>
+      <div class="row" style="margin-top:12px">
+        <label class="fld">Máy chủ đồng bộ<select id="bkMode" onchange="$('bkCfgWrap').classList.toggle('hidden',this.value!=='custom')">
+          <option value="firebase">Firebase mặc định (ild-mi-checklist)</option><option value="custom">Firebase khác (dán firebaseConfig)</option><option value="local">Nội bộ — không đồng bộ (chuyển bằng JSON)</option></select></label>
+        <button class="btn" onclick="backendSave()">Áp dụng &amp; tải lại</button></div>
+      <div id="bkCfgWrap" class="hidden" style="margin-top:8px"><label class="fld">firebaseConfig của project mới<textarea id="bkCfg" rows="6" style="width:100%;font-family:Consolas,monospace;font-size:12px" placeholder='{ "apiKey": "…", "authDomain": "….firebaseapp.com", "projectId": "…", "storageBucket": "…", "messagingSenderId": "…", "appId": "…" }'></textarea></label>
+        <p class="small muted" style="margin:6px 0 0">Project mới cần: bật Authentication Email/Password, tạo Firestore, Publish file <code>firestore.rules</code>, thêm tên miền của web nội bộ vào Authorized domains.</p></div>
+      <p class="small muted" style="margin:8px 0 0">Chuyển máy chủ không gián đoạn: (1) <b>Xuất toàn bộ dữ liệu</b> ở máy chủ cũ → (2) mở app ở địa chỉ mới / chọn máy chủ mới → (3) đăng nhập Admin → <b>Nhập dữ liệu</b>, tick “Đẩy toàn bộ lên máy chủ”. Mở app với <code>?backend=reset</code> để quay về Firebase mặc định.</p>
     </div>
     <div class="card">
       <h3>Dữ liệu</h3>
-      <p class="small muted" style="margin-top:0">Dữ liệu lưu trên máy (<code>localStorage</code>) và tự đồng bộ lên Firebase khi đã đăng nhập. Sao lưu JSON vẫn dùng được như bản dự phòng.</p>
+      <p class="small muted" style="margin-top:0">Dữ liệu lưu trên máy (<code>localStorage</code>) và tự đồng bộ lên máy chủ khi đã đăng nhập. File JSON xuất ra chứa <b>gần như toàn bộ thông tin của app</b> (trừ mật khẩu) — dùng để sao lưu định kỳ và chuyển máy chủ. Vẫn nhập được file sao lưu kiểu cũ.</p>
       <div class="row">
-        <button class="btn" onclick="backupJson()">⬇ Sao lưu JSON</button>
-        <button class="btn" onclick="restoreJson()">⬆ Phục hồi JSON</button>
+        <button class="btn primary" onclick="backupFull()" title="Phiếu trên máy + toàn bộ Firebase, checklist các phiên bản, nhân viên, cài đặt, phân quyền, người dùng, nhật ký">⬇ Xuất toàn bộ dữ liệu (JSON)</button>
+        <button class="btn" onclick="backupImport()" title="Gộp hoặc thay thế; tuỳ chọn đẩy lên máy chủ">⬆ Nhập dữ liệu (JSON)</button>
         <button class="btn danger" onclick="resetTemplates()">↺ Nạp lại checklist gốc</button>
         <button class="btn danger" onclick="resetAll()">🗑 Xoá toàn bộ dữ liệu</button>
       </div>
@@ -528,6 +534,7 @@ table.tbl{border-collapse:collapse;width:100%;font-size:14px}
         <li><b>In / PDF</b>: mở phiếu ở Lịch sử → 🖨 In (A4 ngang, đúng bố cục biểu mẫu giấy). <b>Xuất Excel</b> có ở từng phiếu, lịch sử và danh sách lỗi.</li>
         <li><b>Đồng bộ:</b> mỗi máy đăng nhập 1 lần bằng tài khoản chung của tổ. Nút ☁ ở góc trên cho biết trạng thái (Đã đồng bộ / Chờ gửi / Lỗi). Mất mạng vẫn kiểm bình thường; có mạng lại app tự gửi.</li>
         <li><b>Vai trò:</b> 👤 Kỹ thuật viên — kiểm & hoàn tất phiếu · ✅ Giám sát (duyệt) — thêm <b>Xác nhận</b> (ký Verified by bằng tên tài khoản, phiếu bị khoá) và Mở lại phiếu · 🛡 Admin — toàn quyền: Checklist, Cài đặt, <b>Người dùng</b> (tạo tài khoản, tài khoản chung cho tablet, ma trận phân quyền). Số xanh trên tab Lịch sử = phiếu chờ duyệt.</li>
+        <li><b>Sao lưu / chuyển máy chủ:</b> Cài đặt → <b>Xuất toàn bộ dữ liệu (JSON)</b> (Admin, đã đăng nhập → kèm toàn bộ phiếu trên máy chủ). Ở máy chủ mới: <b>Nhập dữ liệu</b> → tick “Đẩy toàn bộ lên máy chủ”. Đổi máy chủ ở thẻ <b>Máy chủ &amp; thông tin đồng bộ</b>.</li>
         <li>Danh sách nhân viên quản lý ở tab <b>Cài đặt</b> (thêm, sửa, xoá, nhập Excel).</li>
         <li>Tab <b>Checklist</b>: sửa / thêm / bớt hạng mục từng ca, hoặc <b>Nhập Excel</b> lại từ file biểu mẫu (mỗi sheet “Shift N check list” là một ca).</li>
       </ol>
@@ -1099,7 +1106,7 @@ async function edImport(){if(!can('admin'))return toast('Chỉ Admin');
 /* ===================== [SETTINGS] ===================== */
 function renderSettings(){const S=STATE.settings;$('stCode').value=S.code;$('stSystem').value=S.system;$('stDept').value=S.dept;$('stReqOk').checked=!!S.reqOkNotRun;
   const size=new Blob([localStorage.getItem(KEY)||'']).size;$('stInfo').textContent=`${STATE.records.length} phiếu · dung lượng ~${(size/1024).toFixed(0)} KB (giới hạn trình duyệt ~5 MB)`;
-  renderEmployees();
+  renderEmployees();renderSyncInfo();
   $('auditTbl').innerHTML='<thead><tr><th>Thời gian</th><th>Người</th><th>Thao tác</th></tr></thead><tbody>'+(STATE.audit.slice(0,200).map(a=>`<tr><td style="white-space:nowrap">${fmtDT(a.t)}</td><td>${esc(a.who)}</td><td>${esc(a.action)}</td></tr>`).join('')||'<tr><td colspan="3" class="muted">Chưa có</td></tr>')+'</tbody>';}
 function renderEmployees(){
   $('empTbl').innerHTML='<thead><tr><th>Employee code</th><th>Full name</th><th>Function</th><th>Dept.</th><th class="num">Số phiếu</th><th></th></tr></thead><tbody>'+
@@ -1132,10 +1139,6 @@ async function empImport(){if(!can('admin'))return toast('Chỉ Admin');const f=
   }catch(e){modal({title:'Không nhập được',body:`<p>${esc(e.message)}</p>`,cancel:''});}}
 function empExport(){saveXls(`MI_NhanVien_${todayISO()}.xls`,[{name:'Employees',widths:[90,180,80,60],rows:[['Employee code','Full name','Function','Dept.'].map(v=>({v,s:'h'})),...STATE.employees.map(e=>[e.code,e.name,e.func,e.dept])]}]);}
 function stSave(){if(!can('admin'))return toast('Chỉ Admin');const S=STATE.settings;S.code=$('stCode').value.trim()||'ENG.M&I.F.001';S.system=$('stSystem').value.trim();S.dept=$('stDept').value.trim();S.reqOkNotRun=$('stReqOk').checked;logAudit('Lưu cài đặt');save();renderSettings();toast('💾 Đã lưu cài đặt');}
-function backupJson(){download(`MI_Checklist_Backup_${todayISO()}.json`,JSON.stringify(STATE,null,1),'application/json');}
-async function restoreJson(){const f=await pickFile('.json');if(!f)return;try{const s=JSON.parse(await f.text());if(!s||!s.templates||!Array.isArray(s.records))throw new Error('File không đúng định dạng sao lưu');
-  if(!await confirmBox('Phục hồi dữ liệu',`File có <b>${s.records.length}</b> phiếu. Dữ liệu hiện tại trên máy này (${STATE.records.length} phiếu) sẽ bị <b>thay thế</b>.`,'Phục hồi',true))return;
-  localStorage.setItem(KEY,JSON.stringify(s));STATE=load();logAudit('Phục hồi dữ liệu từ '+f.name);save(true);cloudResync('Đang đồng bộ dữ liệu vừa phục hồi…');renderPeople();switchTab('settings');toast('✔ Đã phục hồi');}catch(e){modal({title:'Lỗi',body:`<p>${esc(e.message)}</p>`,cancel:''});}}
 async function resetTemplates(){if(!can('admin'))return toast('Chỉ Admin');if(!await confirmBox('Nạp lại checklist gốc','Thay checklist cả 3 ca bằng nội dung gốc của biểu mẫu ENG.M&I.F.001 v2? Phiếu đã có không bị ảnh hưởng.','Nạp lại',true))return;
   STATE.templates=freshTemplates();logAudit('Nạp lại checklist gốc');save();toast('Đã nạp lại checklist gốc');}
 async function resetAll(){if(!await confirmBox('Xoá toàn bộ dữ liệu',`Xoá <b>${STATE.records.length}</b> phiếu, checklist đã sửa và cài đặt trên máy này? (Nếu đã đăng nhập Firebase, dữ liệu trên cloud <b>không</b> bị xoá và sẽ được tải lại.) Nên <b>Sao lưu JSON</b> trước. Không thể hoàn tác.`,'Xoá tất cả',true))return;
@@ -1152,6 +1155,13 @@ async function resetAll(){if(!await confirmBox('Xoá toàn bộ dữ liệu',`Xo
 const FIREBASE_CONFIG={apiKey:"AIzaSyAALnaCZtqM8Cx2g4Sc7YkZ09CnGMJzr9k",authDomain:"ild-mi-checklist.firebaseapp.com",projectId:"ild-mi-checklist",
   storageBucket:"ild-mi-checklist.firebasestorage.app",messagingSenderId:"18100427073",appId:"1:18100427073:web:fd515d48c5b3c042f2e9c0"};
 const FB_SDK='https://www.gstatic.com/firebasejs/10.14.1/';
+/* Máy chủ đồng bộ (Admin đổi ở Cài đặt): firebase = project mặc định · custom = Firebase khác (dán firebaseConfig) ·
+   local = chạy nội bộ, không đồng bộ (vd. đặt app trên web server của nhà máy, chuyển dữ liệu bằng JSON).
+   Cứu hộ: mở app với ?backend=reset để quay về Firebase mặc định. */
+const BACKEND_KEY='ild_mi_backend_v1';
+if(/[?&]backend=reset/.test(location.search)){try{localStorage.removeItem(BACKEND_KEY);}catch(e){}history.replaceState(null,'',location.pathname);}
+const BACKEND=(()=>{try{const b=JSON.parse(localStorage.getItem(BACKEND_KEY)||'null');if(b&&['firebase','local','custom'].includes(b.mode))return b;}catch(e){}return {mode:'firebase',config:null};})();
+const FB_CFG=BACKEND.mode==='custom'&&BACKEND.config?BACKEND.config:FIREBASE_CONFIG;
 const CLOUD_KEY='ild_mi_cloud_v2',TPL_KEY='ild_mi_tpl_v1',CLOUD_DAYS=60,PUSH_DELAY=2500;
 /* Tối ưu egress: phiếu KHÔNG mang bản sao checklist (108 mục ~34 KB) — chỉ tham chiếu "tpl" (mi_tpl/{ca-hash},
    lưu 1 lần, nội dung không đổi); mỗi hạng mục chỉ ghi trường có giá trị. Nhận dữ liệu theo mốc updatedAt
@@ -1177,10 +1187,11 @@ const tsMs=v=>v&&typeof v.toMillis==='function'?v.toMillis():(typeof v==='number
 /* ---- tải SDK (compat) theo yêu cầu; offline thì bỏ qua ---- */
 function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('Không tải được '+src));document.head.appendChild(s);});}
 async function cloudInit(){
+  if(BACKEND.mode==='local'){cloudSet('off','Chế độ nội bộ — dữ liệu lưu trên máy, chuyển bằng file JSON');return;}
   if(!/^https?:$/.test(location.protocol)){cloudSet('off','Mở bằng file trên máy — không đồng bộ');return;}
   try{for(const f of ['firebase-app-compat.js','firebase-auth-compat.js','firebase-firestore-compat.js'])if(!window.firebase||!(f.includes('auth')?firebase.auth:f.includes('firestore')?firebase.firestore:1))await loadScript(FB_SDK+f);}
   catch(e){cloudSet('off','Chưa tải được Firebase (mất mạng?) — đang dùng dữ liệu trên máy');window.addEventListener('online',()=>{if(!CLOUD.ready)cloudInit();},{once:true});return;}
-  const app=firebase.apps.length?firebase.app():firebase.initializeApp(FIREBASE_CONFIG);
+  const app=firebase.apps.length?firebase.app():firebase.initializeApp(FB_CFG);
   CLOUD.auth=firebase.auth(app);CLOUD.db=firebase.firestore(app);
   try{CLOUD.db.settings({ignoreUndefinedProperties:true,merge:true});}catch(e){}
   try{await CLOUD.db.enablePersistence({synchronizeTabs:true});}catch(e){console.warn('persistence',e.code||e);}
@@ -1191,7 +1202,7 @@ async function cloudInit(){
 function cloudSet(state,msg){CLOUD.state=state;CLOUD.err=state==='err'?msg:'';const b=$('cloudBtn');if(!b)return;
   const L={off:['☁︎','Không đồng bộ'],nouser:['🔒','Chưa đăng nhập'],sync:['↻','Đang đồng bộ'],ok:['☁','Đã đồng bộ'],pending:['↻','Chờ gửi'],err:['⚠','Lỗi đồng bộ']}[state]||['☁',''];
   b.innerHTML=`${L[0]}<span class="hide-sm"> ${L[1]}</span>`;b.title=msg||L[1];b.dataset.state=state;
-  const s=$('cloudInfo');if(s)s.textContent=(msg||L[1])+(CLOUD.user?` · Tài khoản: ${CLOUD.user.email}`:'');}
+  if(curTab==='settings')try{renderSyncInfo();}catch(e){}}
 
 /* ---- đăng nhập ---- */
 function renderLoginGate(){const show=CLOUD.ready&&!CLOUD.user&&!CLOUD.skip;$('loginGate').classList.toggle('hidden',!show);if(show)setTimeout(()=>$('lgEmail').focus(),50);}
@@ -1375,7 +1386,7 @@ function authStart(u){
     if(snap.exists){AUTH.perms=permNorm(snap.data().matrix);authCache();applyRoleUI();if(curTab==='users')renderUsers();else if(curTab!=='check')switchTab(curTab);}},()=>{}));}
 
 /* phiên Firebase phụ (in-memory) để tạo / đổi mật khẩu tài khoản khác mà không đăng xuất Admin */
-async function authSecondary(fn){const app=firebase.initializeApp(FIREBASE_CONFIG,'sec-'+Date.now()),a=app.auth();
+async function authSecondary(fn){const app=firebase.initializeApp(FB_CFG,'sec-'+Date.now()),a=app.auth();
   try{await a.setPersistence(firebase.auth.Auth.Persistence.NONE);return await fn(a);}finally{try{await a.signOut();}catch(e){}try{await app.delete();}catch(e){}}}
 const authErrMsg=e=>({'auth/email-already-in-use':'Tên đăng nhập / email đã tồn tại','auth/invalid-email':'Email không hợp lệ','auth/weak-password':'Mật khẩu quá yếu (tối thiểu 6 ký tự)',
   'auth/invalid-credential':'Sai mật khẩu hiện tại','auth/wrong-password':'Sai mật khẩu hiện tại','auth/too-many-requests':'Thử quá nhiều lần — đợi vài phút','auth/network-request-failed':'Không có mạng',
@@ -1474,6 +1485,115 @@ async function userPassword(uid){const u=USERS_LIST.find(x=>x.uid===uid)||(AUTH.
   if(!v)return;
   try{await authSecondary(async a=>{const c=await a.signInWithEmailAndPassword(u.email,v.old);await c.user.updatePassword(v.nw);});logAudit('Đổi mật khẩu: '+(u.displayName||u.email));save(true);toast('✔ Đã đổi mật khẩu');}
   catch(e){toast('Lỗi: '+authErrMsg(e));}}
+
+/* ===================== [BACKUP · xuất / nhập toàn bộ dữ liệu] =====================
+   Gói JSON tự đủ (format "ild-mi-checklist-backup", schema 2) để chuyển máy chủ (Firebase → web nội bộ nhà máy)
+   không gián đoạn: phiếu (đã gộp dữ liệu trên máy + toàn bộ Firebase, kèm đủ checklist từng phiếu), các phiên bản
+   checklist (tpl), checklist hiện hành 3 ca, nhân viên, cài đặt, ma trận quyền, hồ sơ người dùng, danh sách
+   phiếu đã xoá, tên người đã nhập, nhật ký. Không chứa mật khẩu (Firebase Auth không cho xuất) — tạo lại tài
+   khoản trên máy chủ mới ở tab Người dùng. */
+const APP_VERSION='2026.10.17',FORM_VERSION='ENG.M&I.F.001 v2',BACKUP_FORMAT='ild-mi-checklist-backup';
+function backendLabel(){return BACKEND.mode==='local'?'Nội bộ (không đồng bộ)':BACKEND.mode==='custom'?`Firebase khác (${FB_CFG.projectId||'?'})`:`Firebase (${FB_CFG.projectId})`;}
+async function cloudFetchAll(){ // toàn bộ dữ liệu trên Firestore (Admin) — dùng khi xuất
+  const db=CLOUD.db,g=async(c)=>(await db.collection(c).get()).docs.map(d=>({id:d.id,...d.data()}));
+  const [recs,tpls,cfg,perm,users]=await Promise.all([g('mi_records'),g('mi_tpl'),db.collection('mi').doc('config').get(),db.collection('mi').doc('permissions').get(),g(USERS_COL).catch(()=>[])]);
+  return {recs,tpls,cfg:cfg.exists?cfg.data():null,perm:perm.exists?perm.data().matrix:null,users};}
+const plainTs=v=>JSON.parse(JSON.stringify(v,(k,x)=>x&&typeof x==='object'&&typeof x.toMillis==='function'?new Date(x.toMillis()).toISOString():x));
+async function backupFull(){
+  const recs=new Map(),deleted=new Set(),tpl={...TPL};let cloud=null,note='';
+  STATE.records.forEach(r=>{tplOf(r);recs.set(r.id,clone(r));});
+  if(CLOUD.user&&can('admin')){toast('Đang tải toàn bộ dữ liệu từ Firebase…');
+    try{cloud=await cloudFetchAll();
+      cloud.tpls.forEach(t=>{if(t.items)tpl[t.id]=t.items;});
+      cloud.recs.forEach(d=>{if(d.deleted){if(!recs.has(d.id))deleted.add(d.id);return;}if(recs.has(d.id))return; // bản trên máy đã gộp & mới hơn
+        const r={id:d.id,results:{}};META_KEYS.forEach(k=>{if(d[k]!=null&&d[k]!=='')r[k]=d[k];});
+        Object.keys(d.results||{}).forEach(k=>{const n=normItem(d.results[k]);if(Object.keys(n).length)r.results[k]=n;});
+        r.items=d.items&&d.items.length?d.items:(tpl[r.tpl]||[]);r.status=r.status||'draft';r.updatedAt=d.updatedAt&&d.updatedAt.toMillis?new Date(d.updatedAt.toMillis()).toISOString():'';recs.set(r.id,r);});}
+    catch(e){note='⚠ Không tải được dữ liệu Firebase ('+(e.code||e.message)+') — file chỉ gồm dữ liệu trên máy này.';}}
+  else if(BACKEND.mode!=='local')note=CLOUD.user?'File gồm dữ liệu trên máy này (chỉ Admin mới xuất kèm toàn bộ Firebase).':'Chưa đăng nhập Firebase — file chỉ gồm dữ liệu trên máy này.';
+  const records=[...recs.values()].sort((a,b)=>a.date.localeCompare(b.date)||a.shift.localeCompare(b.shift));
+  const usedTpl={};records.forEach(r=>{if(r.tpl&&tpl[r.tpl])usedTpl[r.tpl]=tpl[r.tpl];});SHIFTS.forEach(s=>{const x={shift:s.id,items:STATE.templates[s.id].items};tplOf(x);if(x.tpl)usedTpl[x.tpl]=STATE.templates[s.id].items;});
+  const users=(cloud&&cloud.users||[]).map(u=>plainTs({uid:u.id,...u,id:undefined}));
+  const data={settings:STATE.settings,templates:STATE.templates,employees:STATE.employees,permissions:AUTH.perms,people:STATE.people,
+    records,deleted:[...deleted],tpl:usedTpl,users,audit:STATE.audit};
+  const b={format:BACKUP_FORMAT,schema:2,app:APP_VERSION,form:FORM_VERSION,exportedAt:new Date().toISOString(),
+    exportedBy:AUTH.profile?AUTH.profile.displayName:(CLOUD.user?CLOUD.user.email:'(máy này)'),
+    source:{backend:BACKEND.mode,label:backendLabel(),projectId:BACKEND.mode==='local'?null:FB_CFG.projectId,origin:location.origin+location.pathname,includesCloud:!!cloud},
+    counts:{records:records.length,verified:records.filter(r=>r.status==='verified').length,done:records.filter(r=>r.status==='done').length,draft:records.filter(r=>r.status==='draft').length,
+      from:records[0]?.date||null,to:records[records.length-1]?.date||null,templates:Object.keys(usedTpl).length,employees:STATE.employees.length,users:users.length,deleted:deleted.size,audit:STATE.audit.length},data};
+  const d=new Date(),stamp=`${todayISO()}_${pad(d.getHours())}${pad(d.getMinutes())}`;
+  download(`MI_Checklist_FullBackup_${stamp}.json`,JSON.stringify(b,null,1),'application/json');
+  logAudit(`Xuất toàn bộ dữ liệu: ${records.length} phiếu${cloud?' (kèm Firebase)':''}`);save(true);
+  modal({title:'Đã xuất dữ liệu',cancel:'',body:`<p class="small">${records.length} phiếu (${b.counts.from?fmtDate(b.counts.from)+' → '+fmtDate(b.counts.to):'—'}) · ${b.counts.templates} phiên bản checklist · ${STATE.employees.length} nhân viên · ${users.length} hồ sơ người dùng · ${deleted.size} phiếu đã xoá · ${STATE.audit.length} dòng nhật ký.</p>${note?`<p class="small" style="color:var(--warn)">${esc(note)}</p>`:''}<p class="small muted">Mật khẩu không có trong file — tạo lại tài khoản trên máy chủ mới ở tab Người dùng.</p>`});}
+function backupParse(o){ // hỗ trợ cả file cũ (STATE thô)
+  if(o&&o.format===BACKUP_FORMAT&&o.data)return o;
+  if(o&&o.templates&&Array.isArray(o.records))return {format:BACKUP_FORMAT,schema:1,legacy:true,exportedAt:null,source:{label:'File sao lưu cũ'},counts:{records:o.records.length},
+    data:{settings:o.settings,templates:o.templates,employees:o.employees,people:o.people,records:o.records,audit:o.audit,deleted:[],tpl:{},users:[],permissions:null}};
+  throw new Error('File không đúng định dạng sao lưu của M&I Daily Checklist');}
+async function backupImport(){
+  if(!can('admin'))return toast('Chỉ Admin');
+  const f=await pickFile('.json');if(!f)return;let b;
+  try{b=backupParse(JSON.parse(await f.text()));}catch(e){return modal({title:'Không đọc được file',body:`<p>${esc(e.message)}</p>`,cancel:''});}
+  const D=b.data,cloudOk=!!(CLOUD.user&&can('admin'));
+  const v=await modal({title:'Nhập dữ liệu từ file',ok:'Nhập dữ liệu',body:`
+    <p class="small">File: <b>${esc(f.name)}</b><br>Nguồn: ${esc(b.source?.label||'?')}${b.exportedAt?` · xuất lúc ${fmtDT(b.exportedAt)} bởi ${esc(b.exportedBy||'')}`:''}${b.app?` · app ${esc(b.app)}`:''}</p>
+    <p class="small"><b>${(D.records||[]).length}</b> phiếu · ${Object.keys(D.tpl||{}).length} phiên bản checklist · ${(D.employees||[]).length} nhân viên · ${(D.users||[]).length} hồ sơ người dùng · ${(D.deleted||[]).length} phiếu đã xoá</p>
+    <label class="small" style="display:flex;gap:8px;margin:8px 0"><input type="radio" name="imMode" value="merge" checked> <span><b>Gộp</b> với dữ liệu hiện có — phiếu trùng ngày + ca giữ bản cập nhật sau</span></label>
+    <label class="small" style="display:flex;gap:8px;margin:8px 0"><input type="radio" name="imMode" value="replace"> <span><b>Thay thế</b> toàn bộ dữ liệu trên máy này bằng nội dung file</span></label>
+    <label class="small" style="display:flex;gap:8px;margin:8px 0"><input type="checkbox" id="imCfg" checked> <span>Nhập cả checklist 3 ca, nhân viên, cài đặt, ma trận quyền</span></label>
+    ${cloudOk?`<label class="small" style="display:flex;gap:8px;margin:8px 0"><input type="checkbox" id="imPush" checked> <span><b>Đẩy toàn bộ lên máy chủ</b> (${esc(backendLabel())}) ngay — dùng khi chuyển sang máy chủ mới</span></label>
+      <label class="small" style="display:flex;gap:8px;margin:8px 0"><input type="checkbox" id="imUsers"> <span>Khôi phục hồ sơ người dùng (chỉ dùng khi <b>cùng</b> project Firebase — tài khoản đăng nhập phải đã tồn tại)</span></label>`
+      :`<p class="small muted">Chưa đăng nhập Admin Firebase → chỉ nhập vào máy này; khi đăng nhập, phiếu sẽ được đồng bộ như bình thường.</p>`}`,
+    onOpen:ov=>{ov._value=()=>({mode:ov.querySelector('[name=imMode]:checked').value,cfg:ov.querySelector('#imCfg').checked,push:!!ov.querySelector('#imPush')?.checked,users:!!ov.querySelector('#imUsers')?.checked});}});
+  if(!v)return;
+  if(v.mode==='replace'&&!await confirmBox('Xác nhận thay thế',`Thay <b>${STATE.records.length}</b> phiếu đang có trên máy bằng <b>${(D.records||[]).length}</b> phiếu trong file? Nên <b>Xuất toàn bộ dữ liệu</b> trước để dự phòng.`,'Thay thế',true))return;
+  // checklist các phiên bản
+  Object.entries(D.tpl||{}).forEach(([k,items])=>{if(!TPL[k])TPL[k]=items;});tplSave();
+  // phiếu
+  const incoming=(D.records||[]).map(r=>{const x=clone(r);x.results=x.results||{};x.status=x.status||'draft';if((!x.items||!x.items.length)&&x.tpl&&TPL[x.tpl])x.items=clone(TPL[x.tpl]);if(!x.id)x.id=recDocId(x.date,x.shift);tplOf(x);return x;});
+  const newer=(a,b)=>(a.updatedAt||a.doneAt||a.createdAt||'')>=(b.updatedAt||b.doneAt||b.createdAt||'');
+  let added=0,updated=0;
+  if(v.mode==='replace'){STATE.records=incoming;added=incoming.length;}
+  else incoming.forEach(x=>{const i=STATE.records.findIndex(r=>r.id===x.id||(r.shift===x.shift&&r.date===x.date));if(i<0){STATE.records.push(x);added++;}else if(newer(x,STATE.records[i])){STATE.records[i]=x;updated++;}});
+  const delSet=new Set(D.deleted||[]);if(delSet.size)STATE.records=STATE.records.filter(r=>!delSet.has(r.id)||incoming.some(x=>x.id===r.id));
+  if(v.cfg){if(D.templates)STATE.templates=D.templates;if(D.employees)STATE.employees=D.employees;if(D.settings)STATE.settings=Object.assign({},STATE.settings,D.settings);if(D.permissions){AUTH.perms=permNorm(D.permissions);authCache();}}
+  STATE.people=[...new Set([...(STATE.people||[]),...(D.people||[])])].slice(0,200);
+  if(Array.isArray(D.audit)){const seen=new Set(STATE.audit.map(a=>a.t+a.action));STATE.audit=[...STATE.audit,...D.audit.filter(a=>!seen.has(a.t+a.action))].sort((a,b)=>(b.t||'').localeCompare(a.t||'')).slice(0,500);}
+  logAudit(`Nhập dữ liệu từ ${f.name}: +${added} phiếu, cập nhật ${updated} (${v.mode==='replace'?'thay thế':'gộp'})`);save(true);renderPeople();applyRoleUI();
+  if(v.push){try{await backupPushAll(D,v,delSet);}catch(e){modal({title:'Đẩy lên máy chủ bị lỗi',body:`<p>${esc(e.code||e.message)}</p><p class="small muted">Dữ liệu đã có trên máy này; bấm ☁ → Đồng bộ ngay để thử lại.</p>`,cancel:''});}}
+  else if(CLOUD.user)cloudResync('Đang đồng bộ dữ liệu vừa nhập…');
+  switchTab('settings');toast(`✔ Đã nhập: +${added} phiếu, cập nhật ${updated}`);}
+async function backupPushAll(D,v,delSet){ // ghi thẳng lên Firestore (Admin) rồi đồng bộ lại
+  const db=CLOUD.db,ts=firebase.firestore.FieldValue.serverTimestamp(),now=Date.now(),dev=CLOUD.user.email,ops=[];
+  const tplIds=new Set(STATE.records.map(r=>tplOf(r)).filter(Boolean));SHIFTS.forEach(s=>{const x={shift:s.id,items:STATE.templates[s.id].items};tplOf(x);if(x.tpl)tplIds.add(x.tpl);});
+  tplIds.forEach(t=>{if(TPL[t])ops.push([db.collection('mi_tpl').doc(t),{shift:t.split('-')[0],items:TPL[t],createdAt:new Date().toISOString(),by:dev}]);});
+  if(v.cfg){ops.push([db.collection('mi').doc('config'),{...JSON.parse(J(normCfg())),updatedAt:ts,updatedBy:dev}]);ops.push([db.collection('mi').doc('permissions'),{matrix:AUTH.perms,updatedAt:new Date().toISOString(),updatedBy:dev}]);ops.push([db.collection('mi').doc('version'),{cfgAt:now}]);}
+  STATE.records.forEach(r=>{const c=normRec(r),p={metaAt:now,deleted:false,updatedAt:ts,results:{}};META_KEYS.forEach(k=>p[k]=c[k]??null);Object.keys(c.results).forEach(k=>p.results[k]={...c.results[k],t:now});ops.push([db.collection('mi_records').doc(r.id),p]);});
+  delSet.forEach(id=>{if(!STATE.records.some(r=>r.id===id))ops.push([db.collection('mi_records').doc(id),{deleted:true,metaAt:now,updatedAt:ts},{merge:true}]);});
+  if(v.users)(D.users||[]).forEach(u=>{if(!u.uid)return;const {uid,...p}=u;ops.push([db.collection(USERS_COL).doc(uid),p,{merge:true}]);});
+  cloudSet('pending',`Đang đẩy ${ops.length} bản ghi lên máy chủ…`);
+  for(let i=0;i<ops.length;i+=400){const bt=db.batch();ops.slice(i,i+400).forEach(([ref,data,opt])=>opt?bt.set(ref,data,opt):bt.set(ref,data));await bt.commit();}
+  tplIds.forEach(t=>{CLOUD.st.tplUp[t]=1;});logAudit(`Đẩy dữ liệu nhập lên máy chủ: ${ops.length} bản ghi`);save(true);
+  cloudResync('Đang đồng bộ lại sau khi đẩy dữ liệu…');toast(`✔ Đã đẩy ${ops.length} bản ghi lên máy chủ`);}
+
+/* ---- thông tin đồng bộ + chọn máy chủ ---- */
+function renderSyncInfo(){const el=$('syncInfo');if(!el)return;
+  const recs=STATE.records,dates=recs.map(r=>r.date).sort(),pend=STATE.records.filter(r=>J(normRec(r))!==J(CLOUD.st.shadow.recs[r.id])).length;
+  const lsKB=k=>((localStorage.getItem(k)||'').length/1024).toFixed(0);
+  const rows=[['Máy chủ',backendLabel()],['Địa chỉ app',location.origin+location.pathname],['Tài khoản',CLOUD.user?`${AUTH.profile?AUTH.profile.displayName+' · ':''}${authName(CLOUD.user.email)} · ${ROLE_LABEL[curRole()]||curRole()}`:'— chưa đăng nhập —'],
+    ['Trạng thái',$('cloudBtn').title],['Đồng bộ lần cuối (mốc)',CLOUD.st.wm?fmtDT(new Date(CLOUD.st.wm).toISOString()):'—'],['Thay đổi chờ gửi',CLOUD.user?`${pend} phiếu${CLOUD.st.del.length?` · ${CLOUD.st.del.length} lệnh xoá`:''}`:'—'],
+    ['Phiếu trên máy',`${recs.length}${dates.length?` (${fmtDate(dates[0])} → ${fmtDate(dates[dates.length-1])})`:''} · tự tải ${CLOUD_DAYS} ngày gần nhất`],
+    ['Checklist (phiên bản)',`${Object.keys(TPL).length} bản trên máy · ${SHIFTS.map(s=>`${s.name}: ${STATE.templates[s.id].items.length} mục`).join(' · ')}`],
+    ['Dung lượng trên máy',`dữ liệu ${lsKB(KEY)} KB · đồng bộ ${lsKB(CLOUD_KEY)} KB · checklist ${lsKB(TPL_KEY)} KB`],['Phiên bản',`App ${APP_VERSION} · Biểu mẫu ${FORM_VERSION}`]];
+  el.innerHTML=rows.map(([k,v])=>`<tr><th style="width:190px;text-transform:none;letter-spacing:0;font-size:13px">${esc(k)}</th><td>${esc(v)}</td></tr>`).join('');
+  const sel=$('bkMode');if(sel){sel.value=BACKEND.mode;$('bkCfg').value=BACKEND.mode==='custom'&&BACKEND.config?JSON.stringify(BACKEND.config,null,1):'';$('bkCfgWrap').classList.toggle('hidden',sel.value!=='custom');}}
+async function backendSave(){if(!can('admin'))return toast('Chỉ Admin');
+  const mode=$('bkMode').value;let config=null;
+  if(mode==='custom'){try{const t=$('bkCfg').value.trim().replace(/^[^{]*/,'').replace(/[^}]*$/,'');config=Function('return ('+t+')')();if(!config||!config.apiKey||!config.projectId)throw 0;}catch(e){return toast('firebaseConfig không hợp lệ (cần apiKey, projectId…)');}}
+  if(!await confirmBox('Đổi máy chủ đồng bộ',`Chuyển sang <b>${mode==='local'?'Nội bộ (không đồng bộ)':mode==='custom'?'Firebase khác: '+esc(config.projectId):'Firebase mặc định'}</b>? App sẽ tải lại. Dữ liệu trên máy vẫn giữ nguyên; nên <b>Xuất toàn bộ dữ liệu</b> trước khi chuyển.`,'Đổi & tải lại',true))return;
+  try{if(CLOUD.auth)await CLOUD.auth.signOut();}catch(e){}
+  localStorage.setItem(BACKEND_KEY,JSON.stringify({mode,config}));try{localStorage.removeItem(CLOUD_KEY);localStorage.removeItem(PROFILE_KEY);}catch(e){}
+  logAudit('Đổi máy chủ đồng bộ → '+mode);save(true);location.reload();}
 
 /* ===================== [BOOT] ===================== */
 (function boot(){
